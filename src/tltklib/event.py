@@ -7,14 +7,14 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from datetime import date
 from datetime import datetime
 from datetime import time
-from datetime import timedelta
 
-from pytimelinelib.dt_helper import get_timestamp
+from tltklib.dt_helper import get_timestamp
 
 
 class Event:
 
     def __init__(self,
+            on_element_change=None,
             title=None,
             scDate=None,
             scTime=None,
@@ -23,6 +23,10 @@ class Event:
             lastsHours=None,
             lastsDays=None,
             ):
+        if on_element_change is None:
+            self.on_element_change = self.do_nothing
+        else:
+            self.on_element_change = on_element_change
         self._title = title
         try:
             newDate = date.fromisoformat(scDate)
@@ -139,6 +143,10 @@ class Event:
             self._lastsDays = newVal
             self.on_element_change()
 
+    def do_nothing(self):
+        """Standard callback routine for element changes."""
+        pass
+
     def draw(self, canvas, yPos):
         dt = datetime.fromisoformat(f'{self.date} {self.time}')
         eventTimestamp = get_timestamp(dt)
@@ -164,3 +172,4 @@ class Event:
         if self.lastsMinutes:
             lastsSeconds += int(self.lastsMinutes) * 60
         return lastsSeconds
+
