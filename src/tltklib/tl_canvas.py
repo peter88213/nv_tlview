@@ -47,7 +47,7 @@ class TlCanvas(tk.Canvas):
             self.bind("<Control-MouseWheel>", self.on_ctrl_mouse_wheel)
             self.bind("<Shift-MouseWheel>", self.on_shft_mouse_wheel)
 
-        self._scale = 10
+        self._scale = self.SCALE_MIN
         self._startTimestamp = get_timestamp(datetime.now()) - self.HOUR
         self.draw_timeline()
 
