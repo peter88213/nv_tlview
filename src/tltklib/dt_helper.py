@@ -14,3 +14,16 @@ def from_timestamp(ts):
 
 def get_timestamp(dt):
     return int((dt - datetime.min).total_seconds() + 0.5)
+
+
+def get_seconds(days, hours, minutes):
+    """Return seconds calculated from days, hours, and minutes."""
+    seconds = 0
+    if days:
+        seconds = int(days) * 24 * 3600
+    if hours:
+        seconds += int(hours) * 3600
+    if minutes:
+        seconds += int(minutes) * 60
+    return seconds
+

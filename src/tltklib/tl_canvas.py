@@ -7,9 +7,10 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from datetime import datetime
 import platform
 
-from tltklib.dt_helper import get_timestamp
-from tltklib.dt_helper import from_timestamp
 import tkinter as tk
+from tltklib.dt_helper import from_timestamp
+from tltklib.dt_helper import get_seconds
+from tltklib.dt_helper import get_timestamp
 
 
 class TlCanvas(tk.Canvas):
@@ -119,6 +120,31 @@ class TlCanvas(tk.Canvas):
             self.startTimestamp -= deltaOffset
 
     def draw_events(self):
-        for i, event in enumerate(self.events):
-            event.draw(self, self.EVENT_Y + (i * self.EVENT_Y))
+        srtEvents = []
+        for event in self.events:
+            srtEvents.append(
+                    (
+                    get_timestamp(datetime.fromisoformat(f'{event.date} {event.time}')),
+                    get_seconds(event.lastsDays, event.lastsHours, event.lastsMinutes),
+                    event.title
+                    )
+                )
+        for i, event in enumerate(sorted(srtEvents)):
+            yPos = self.EVENT_Y + (i * self.EVENT_Y)
+            timestamp, duration, title = event
+            self.draw_event(timestamp, duration, title, yPos)
+
+    def draw_event(self, timestamp, duration, title, yPos):
+        xStart = (timestamp - self.startTimestamp) / self.scale
+        xEnd = (timestamp - self.startTimestamp + duration) / self.scale
+        self.create_polygon(
+                (xStart, yPos),
+                (xStart - 5, yPos + 5),
+                (xStart, yPos + 10),
+                (xEnd, yPos + 10),
+                (xEnd + 5, yPos + 5),
+                (xEnd, yPos),
+                fill='red'
+            )
+        self.create_text((xEnd + 10, yPos), text=title, fill='white', anchor='nw')
 

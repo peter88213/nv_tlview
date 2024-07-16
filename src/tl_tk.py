@@ -29,19 +29,19 @@ def main():
     canvas.pack()
     canvas.events.append(Event(
             on_element_change=canvas.draw_timeline,
+            title='Event 2',
+            scDate='2024-07-14',
+            scTime='14:15',
+            lastsHours=2
+            )
+        )
+    canvas.events.append(Event(
+            on_element_change=canvas.draw_timeline,
             title='Event 1',
             scDate='2024-07-14',
             scTime='13:00',
             lastsHours=1,
             lastsMinutes=30,
-            )
-        )
-    canvas.events.append(Event(
-            on_element_change=canvas.draw_timeline,
-            title='Event 2',
-            scDate='2024-07-14',
-            scTime='14:15',
-            lastsHours=2
             )
         )
     canvas.startTimestamp = get_timestamp(

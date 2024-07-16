@@ -5,10 +5,7 @@ For further information see https://github.com/peter88213/
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import date
-from datetime import datetime
 from datetime import time
-
-from tltklib.dt_helper import get_timestamp
 
 
 class Event:
@@ -146,30 +143,4 @@ class Event:
     def do_nothing(self):
         """Standard callback routine for element changes."""
         pass
-
-    def draw(self, canvas, yPos):
-        dt = datetime.fromisoformat(f'{self.date} {self.time}')
-        eventTimestamp = get_timestamp(dt)
-        xStart = (eventTimestamp - canvas.startTimestamp) / canvas.scale
-        xEnd = (eventTimestamp - canvas.startTimestamp + self.get_duration()) / canvas.scale
-        canvas.create_polygon(
-            (xStart, yPos),
-            (xStart - 5, yPos + 5),
-            (xStart, yPos + 10),
-            (xEnd, yPos + 10),
-            (xEnd + 5, yPos + 5),
-            (xEnd, yPos),
-            fill='red'
-            )
-        canvas.create_text((xEnd + 10, yPos), text=self.title, fill='white', anchor='nw')
-
-    def get_duration(self):
-        lastsSeconds = 0
-        if self.lastsDays:
-            lastsSeconds = int(self.lastsDays) * 24 * 3600
-        if self.lastsHours:
-            lastsSeconds += int(self.lastsHours) * 3600
-        if self.lastsMinutes:
-            lastsSeconds += int(self.lastsMinutes) * 60
-        return lastsSeconds
 
