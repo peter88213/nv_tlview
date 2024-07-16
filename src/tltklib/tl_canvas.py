@@ -19,8 +19,11 @@ class TlCanvas(tk.Canvas):
     MAJOR_WIDTH_MIN = 120
     MAJOR_WIDTH_MAX = 360
     SCALE_HEIGHT = MAJOR_HEIGHT + 5
-    EVENT_Y = 30
-    # vertical distance between events
+    EVENT_DIST_Y = 20
+    # vertical distance between event marks
+    LABEL_DIST_X = 10
+    # horizontal distance between event mark and label
+    MARK_HALF = 4
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
@@ -40,13 +43,13 @@ class TlCanvas(tk.Canvas):
         self._background = kw['background']
 
         if platform.system() == 'Linux':
-            self.bind("<Control-Button-4>", self.on_ctrl_mouse_wheel)
-            self.bind("<Control-Button-5>", self.on_ctrl_mouse_wheel)
-            self.bind("<Shift-Button-4>", self.on_shft_mouse_wheel)
-            self.bind("<Shift-Button-5>", self.on_shft_mouse_wheel)
+            self.bind("<Control-Button-4>", self.on_control_mouse_wheel)
+            self.bind("<Control-Button-5>", self.on_control_mouse_wheel)
+            self.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
+            self.bind("<Shift-Button-5>", self.on_shift_mouse_wheel)
         else:
-            self.bind("<Control-MouseWheel>", self.on_ctrl_mouse_wheel)
-            self.bind("<Shift-MouseWheel>", self.on_shft_mouse_wheel)
+            self.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
+            self.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
 
         self._scale = self.SCALE_MIN
         self._startTimestamp = get_timestamp(datetime.now()) - self.HOUR
@@ -103,15 +106,15 @@ class TlCanvas(tk.Canvas):
 
         self.draw_events()
 
-    def on_ctrl_mouse_wheel(self, event):
-        """Expand or compress the time scale using the mouse wheel."""
+    def on_control_mouse_wheel(self, event):
+        """Stretch the time scale using the mouse wheel."""
         deltaScale = 1.5
         if event.num == 5 or event.delta == -120:
             self.scale *= deltaScale
         if event.num == 4 or event.delta == 120:
             self.scale /= deltaScale
 
-    def on_shft_mouse_wheel(self, event):
+    def on_shift_mouse_wheel(self, event):
         """Move the time scale horizontally using the mouse wheel."""
         deltaOffset = self.scale / self.SCALE_MIN * self.majorWidth
         if event.num == 5 or event.delta == -120:
@@ -121,6 +124,7 @@ class TlCanvas(tk.Canvas):
 
     def draw_events(self):
         srtEvents = []
+        # list of tuples to sort by timestamp
         for event in self.events:
             srtEvents.append(
                     (
@@ -130,27 +134,30 @@ class TlCanvas(tk.Canvas):
                     )
                 )
         xEnd = 0
-        i = 0
+        yPos = self.EVENT_DIST_Y * 2
         labelEnd = 0
         for event in sorted(srtEvents):
             timestamp, duration, title = event
             xStart = (timestamp - self.startTimestamp) / self.scale
+
+            # Cascade events.
             if xStart > labelEnd:
-                i = 0
-            yPos = self.EVENT_Y + (i * self.EVENT_Y)
+                yPos = self.EVENT_DIST_Y * 2
+
+            # Draw event mark.
             xEnd = (timestamp - self.startTimestamp + duration) / self.scale
             self.create_polygon(
-                    (xStart, yPos),
-                    (xStart - 5, yPos + 5),
-                    (xStart, yPos + 10),
-                    (xEnd, yPos + 10),
-                    (xEnd + 5, yPos + 5),
-                    (xEnd, yPos),
+                    (xStart, yPos - self.MARK_HALF),
+                    (xStart - self.MARK_HALF, yPos),
+                    (xStart, yPos + self.MARK_HALF),
+                    (xEnd, yPos + self.MARK_HALF),
+                    (xEnd + self.MARK_HALF, yPos),
+                    (xEnd, yPos - self.MARK_HALF),
                     fill='red'
                 )
-            label = self.create_text((xEnd + 10, yPos), text=title, fill='white', anchor='nw')
+            label = self.create_text((xEnd + self.LABEL_DIST_X, yPos), text=title, fill='white', anchor='w')
             bounds = self.bbox(label)
             # returns a tuple like (x1, y1, x2, y2)
             labelEnd = bounds[2]
-            i += 1
+            yPos += self.EVENT_DIST_Y
 

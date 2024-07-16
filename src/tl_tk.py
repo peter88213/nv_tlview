@@ -37,7 +37,7 @@ def main():
         )
     canvas.events.append(Event(
             on_element_change=canvas.draw_timeline,
-            title='Event 2',
+            title='The second event',
             scDate='2024-07-14',
             scTime='14:15',
             lastsHours=2
@@ -49,6 +49,13 @@ def main():
             scDate='2024-07-14',
             scTime='18:15',
             lastsMinutes=2
+            )
+        )
+    canvas.events.append(Event(
+            on_element_change=canvas.draw_timeline,
+            title='Event six',
+            scDate='2024-07-14',
+            scTime='17:45',
             )
         )
     canvas.events.append(Event(
