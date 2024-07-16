@@ -3,32 +3,14 @@
 Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
-
-
-Resolution maximum
-3600 s / 360 px = 10 s/px
-
-Resolution scales
------------------
-
-hour:  3600 / 10 
-day
-month
-year
-
-
-
-
-
-
-
-
 """
 from datetime import datetime
-from datetime import timedelta
 import locale
 import platform
 
+from pytimelinelib.event import Event
+from pytimelinelib.dt_helper import get_timestamp
+from pytimelinelib.dt_helper import from_timestamp
 import tkinter as tk
 
 # Constants in pixels.
@@ -46,15 +28,6 @@ YEAR = DAY * 365
 SCALE_MAX = YEAR * 5
 # TODO: calculate SCALE_MAX so that the whole date range fits on the canvas
 
-
-def from_timestamp(ts):
-    return datetime.min + timedelta(seconds=ts)
-
-
-def get_timestamp(dt):
-    return int((dt - datetime.min).total_seconds() + 0.5)
-
-
 MIN_TIMESTAMP = get_timestamp(datetime.min)
 MAX_TIMESTAMP = get_timestamp(datetime.max)
 
@@ -65,9 +38,9 @@ class TlView(tk.Canvas):
 
     def __init__(self, master=None, cnf={}, **kw):
         super().__init__(master, cnf, **kw)
+        self.events = []
         self._width = kw['width']
         self._background = kw['background']
-        self._scale = 10
 
         if platform.system() == 'Linux':
             self.bind("<Control-Button-4>", self.on_ctrl_mouse_wheel)
@@ -78,29 +51,47 @@ class TlView(tk.Canvas):
             self.bind("<Control-MouseWheel>", self.on_ctrl_mouse_wheel)
             self.bind("<Shift-MouseWheel>", self.on_shft_mouse_wheel)
 
-        self.startTimestamp = get_timestamp(datetime.now()) - HOUR
-        self.draw_scale()
+        self._scale = 10
+        self._startTimestamp = get_timestamp(datetime.now()) - HOUR
+        self.draw_timeline()
 
-    def draw_scale(self):
-        if self._scale < SCALE_MIN:
-            self._scale = SCALE_MIN
-        elif self._scale > SCALE_MAX:
-            self._scale = SCALE_MAX
-        if self.startTimestamp < MIN_TIMESTAMP:
-            self.startTimestamp = MIN_TIMESTAMP
-        elif self.startTimestamp > MAX_TIMESTAMP:
-            self.startTimestamp = MAX_TIMESTAMP
+    @property
+    def startTimestamp(self):
+        return self._startTimestamp
+
+    @startTimestamp.setter
+    def startTimestamp(self, newVal):
+        if newVal < MIN_TIMESTAMP:
+            self._startTimestamp = MIN_TIMESTAMP
+        elif newVal > MAX_TIMESTAMP:
+            self._startTimestamp = MAX_TIMESTAMP
             # Todo: calculate the upper limit so that the whole scale fits
+        else:
+            self._startTimestamp = newVal
+        self.draw_timeline()
 
-        # Clear the _scale.
-        self.create_rectangle(0, 0, self._width, SCALE_HEIGHT + 30, fill=self._background)
+    @property
+    def scale(self):
+        return self._scale
+
+    @scale.setter
+    def scale(self, newVal):
+        if newVal < SCALE_MIN:
+            self._scale = SCALE_MIN
+        elif newVal > SCALE_MAX:
+            self._scale = SCALE_MAX
+        else:
+            self._scale = newVal
+        self.draw_timeline()
+
+    def draw_timeline(self):
+        self.delete("all")
 
         resolution = HOUR
-
-        self.majorWidth = resolution / self._scale
+        self.majorWidth = resolution / self.scale
         while self.majorWidth < MAJOR_WIDTH_MIN:
             resolution *= 2
-            self.majorWidth = resolution / self._scale
+            self.majorWidth = resolution / self.scale
 
         # Draw the major scale.
         timestamp = self.startTimestamp
@@ -111,37 +102,50 @@ class TlView(tk.Canvas):
             self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill='white')
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
             xPos += self.majorWidth
-            timestamp += self._scale * self.majorWidth
+            timestamp += self.scale * self.majorWidth
 
-        self.draw_event(datetime.now())
+        self.draw_events()
 
     def on_ctrl_mouse_wheel(self, event):
         """Expand or compress the time scale using the mouse wheel."""
         deltaScale = 1.5
         if event.num == 5 or event.delta == -120:
-            self._scale *= deltaScale
+            self.scale *= deltaScale
         if event.num == 4 or event.delta == 120:
-            self._scale /= deltaScale
-        self.draw_scale()
+            self.scale /= deltaScale
 
     def on_shft_mouse_wheel(self, event):
         """Move the time scale horizontally using the mouse wheel."""
-        deltaOffset = self._scale / SCALE_MIN * self.majorWidth
+        deltaOffset = self.scale / SCALE_MIN * self.majorWidth
         if event.num == 5 or event.delta == -120:
             self.startTimestamp += deltaOffset
         if event.num == 4 or event.delta == 120:
             self.startTimestamp -= deltaOffset
-        self.draw_scale()
 
-    def draw_event(self, dt):
-        eventTimestamp = get_timestamp(dt)
-        xpos = (eventTimestamp - self.startTimestamp) / self._scale
-        self.create_rectangle(xpos, 30, xpos + 5, 35, fill='red')
+    def draw_events(self):
+        for i, event in enumerate(self.events):
+            event.draw(self, 30 + (i * 30))
 
 
 if __name__ == '__main__':
     root = tk.Tk()
 
+    events = []
+    events.append(Event(
+                    title='Event 1',
+                    scDate='2024-07-14',
+                    scTime='13:00',
+                    lastsHours=1,
+                    lastsMinutes=30,
+                    )
+        )
+    events.append(Event(
+                    title='Event 2',
+                    scDate='2024-07-14',
+                    scTime='14:15',
+                    lastsHours=2
+                    )
+        )
     canvas = TlView(
         root,
         background='black',
@@ -149,4 +153,7 @@ if __name__ == '__main__':
         height=200,
         )
     canvas.pack()
+    canvas.events = events
+    canvas.startTimestamp = get_timestamp(
+        datetime.fromisoformat('2024-07-14 12:00'))
     tk.mainloop()
