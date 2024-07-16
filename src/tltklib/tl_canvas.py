@@ -129,22 +129,28 @@ class TlCanvas(tk.Canvas):
                     event.title
                     )
                 )
-        for i, event in enumerate(sorted(srtEvents)):
-            yPos = self.EVENT_Y + (i * self.EVENT_Y)
+        xEnd = 0
+        i = 0
+        labelEnd = 0
+        for event in sorted(srtEvents):
             timestamp, duration, title = event
-            self.draw_event(timestamp, duration, title, yPos)
-
-    def draw_event(self, timestamp, duration, title, yPos):
-        xStart = (timestamp - self.startTimestamp) / self.scale
-        xEnd = (timestamp - self.startTimestamp + duration) / self.scale
-        self.create_polygon(
-                (xStart, yPos),
-                (xStart - 5, yPos + 5),
-                (xStart, yPos + 10),
-                (xEnd, yPos + 10),
-                (xEnd + 5, yPos + 5),
-                (xEnd, yPos),
-                fill='red'
-            )
-        self.create_text((xEnd + 10, yPos), text=title, fill='white', anchor='nw')
+            xStart = (timestamp - self.startTimestamp) / self.scale
+            if xStart > labelEnd:
+                i = 0
+            yPos = self.EVENT_Y + (i * self.EVENT_Y)
+            xEnd = (timestamp - self.startTimestamp + duration) / self.scale
+            self.create_polygon(
+                    (xStart, yPos),
+                    (xStart - 5, yPos + 5),
+                    (xStart, yPos + 10),
+                    (xEnd, yPos + 10),
+                    (xEnd + 5, yPos + 5),
+                    (xEnd, yPos),
+                    fill='red'
+                )
+            label = self.create_text((xEnd + 10, yPos), text=title, fill='white', anchor='nw')
+            bounds = self.bbox(label)
+            # returns a tuple like (x1, y1, x2, y2)
+            labelEnd = bounds[2]
+            i += 1
 

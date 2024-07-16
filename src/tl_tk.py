@@ -29,10 +29,34 @@ def main():
     canvas.pack()
     canvas.events.append(Event(
             on_element_change=canvas.draw_timeline,
+            title='Event 5',
+            scDate='2024-07-14',
+            scTime='18:56',
+            lastsMinutes=20
+            )
+        )
+    canvas.events.append(Event(
+            on_element_change=canvas.draw_timeline,
             title='Event 2',
             scDate='2024-07-14',
             scTime='14:15',
             lastsHours=2
+            )
+        )
+    canvas.events.append(Event(
+            on_element_change=canvas.draw_timeline,
+            title='Event 3',
+            scDate='2024-07-14',
+            scTime='18:15',
+            lastsMinutes=2
+            )
+        )
+    canvas.events.append(Event(
+            on_element_change=canvas.draw_timeline,
+            title='Event 4',
+            scDate='2024-07-14',
+            scTime='18:16',
+            lastsMinutes=20
             )
         )
     canvas.events.append(Event(
