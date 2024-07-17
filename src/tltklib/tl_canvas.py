@@ -86,25 +86,35 @@ class TlCanvas(tk.Canvas):
 
     def draw_timeline(self):
         self.delete("all")
+        self.draw_scale()
+        self.draw_events()
 
+    def draw_scale(self):
+
+        #--- Draw the major scale.
+
+        # Calculate the resolution.
         resolution = self.HOUR
         self.majorWidth = resolution / self.scale
         while self.majorWidth < self.MAJOR_WIDTH_MIN:
             resolution *= 2
             self.majorWidth = resolution / self.scale
 
-        # Draw the major scale.
-        timestamp = self.startTimestamp
-        xPos = 0
+        # Calculate the position of the first scale line.
+        tsOffset = resolution - self.startTimestamp % resolution
+        if tsOffset == resolution:
+            tsOffset = 0
+        xPos = tsOffset / self.scale
+        timestamp = self.startTimestamp + tsOffset
+
+        # Draw the scale lines.
         while xPos < self._width:
             dt = from_timestamp(timestamp)
             dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
             self.create_line((xPos, 0), (xPos, self.MAJOR_HEIGHT), width=1, fill='white')
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
             xPos += self.majorWidth
-            timestamp += self.scale * self.majorWidth
-
-        self.draw_events()
+            timestamp += resolution
 
     def on_control_mouse_wheel(self, event):
         """Stretch the time scale using the mouse wheel."""
