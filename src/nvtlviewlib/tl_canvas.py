@@ -1,7 +1,7 @@
 """Provide a class for a tkinter timeline canvas.
 
 Copyright (c) 2024 Peter Triesberger
-For further information see https://github.com/peter88213/
+For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
@@ -31,7 +31,6 @@ class TlCanvas(tk.Canvas):
     DAY = HOUR * 24
     YEAR = DAY * 365
     SCALE_MAX = YEAR * 5
-    # TODO: calculate SCALE_MAX so that the whole date range fits on the canvas
 
     MIN_TIMESTAMP = get_timestamp(datetime.min)
     MAX_TIMESTAMP = get_timestamp(datetime.max)
@@ -39,8 +38,7 @@ class TlCanvas(tk.Canvas):
     def __init__(self, master=None, cnf={}, **kw):
         super().__init__(master, cnf, **kw)
         self.events = {}
-        self._width = kw['width']
-        self._background = kw['background']
+        self['background'] = 'black'
 
         if platform.system() == 'Linux':
             self.bind("<Control-Button-4>", self.on_control_mouse_wheel)
@@ -50,10 +48,10 @@ class TlCanvas(tk.Canvas):
         else:
             self.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
             self.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
+        self.bind('<Configure>', self.draw_timeline)
 
         self._scale = self.SCALE_MIN
         self._startTimestamp = get_timestamp(datetime.now()) - self.HOUR
-        self.draw_timeline()
 
     @property
     def startTimestamp(self):
@@ -84,7 +82,7 @@ class TlCanvas(tk.Canvas):
             self._scale = newVal
         self.draw_timeline()
 
-    def draw_timeline(self):
+    def draw_timeline(self, event=None):
         self.delete("all")
         self.draw_scale()
         self.draw_events()
@@ -115,8 +113,13 @@ class TlCanvas(tk.Canvas):
         timestamp = self.startTimestamp + tsOffset
 
         # Draw the scale lines.
-        while xPos < self._width:
-            dt = from_timestamp(timestamp)
+        xMax = self.winfo_width()
+        while xPos < xMax:
+            try:
+                dt = from_timestamp(timestamp)
+            except OverflowError:
+                break
+
             if units == 0:
                 dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
             elif units == 1:

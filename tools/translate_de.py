@@ -44,7 +44,7 @@ MO_COPY = f'../../novelibre/src/locale/de/LC_MESSAGES/{APP_NAME}.mo'
 
 
 def main(version='unknown'):
-    if translations.main('de', app=APP_NAME, appVersion=version):
+    if translations.main('de', app=APP_NAME, appVersion=version, json=True):
         print(f'Writing "{MO_PATH}" ...')
         msgfmt.make(PO_PATH, MO_PATH)
         copyfile(MO_PATH, MO_COPY)
