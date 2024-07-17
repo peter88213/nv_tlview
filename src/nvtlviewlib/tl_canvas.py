@@ -148,6 +148,8 @@ class TlCanvas(tk.Canvas):
             self.startTimestamp -= deltaOffset
 
     def draw_events(self):
+        yMax = (len(self.events) + 2) * self.EVENT_DIST_Y
+        self.configure(scrollregion=(0, 0, 0, yMax))
         srtEvents = []
         # list of tuples to sort by timestamp
         for eventId in self.events:
