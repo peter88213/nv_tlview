@@ -23,7 +23,7 @@ class TlCanvas(tk.Canvas):
     # vertical distance between event marks
     LABEL_DIST_X = 10
     # horizontal distance between event mark and label
-    MARK_HALF = 4
+    MARK_HALF = 5
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
