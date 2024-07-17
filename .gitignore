@@ -3,3 +3,6 @@
 *.bak
 .pydevproject
 .project
+/test/work/
+/test/temp/
+/test/nv_tlview.py
