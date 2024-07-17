@@ -8,9 +8,9 @@ from datetime import datetime
 import platform
 
 import tkinter as tk
-from tltklib.dt_helper import from_timestamp
-from tltklib.dt_helper import get_seconds
-from tltklib.dt_helper import get_timestamp
+from nvtlviewlib.dt_helper import from_timestamp
+from nvtlviewlib.dt_helper import get_seconds
+from nvtlviewlib.dt_helper import get_timestamp
 
 
 class TlCanvas(tk.Canvas):

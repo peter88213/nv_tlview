@@ -9,9 +9,9 @@ from datetime import datetime
 import locale
 
 import tkinter as tk
-from tltklib.dt_helper import get_timestamp
-from tltklib.event import Event
-from tltklib.tl_canvas import TlCanvas
+from nvtlviewlib.dt_helper import get_timestamp
+from nvtlviewlib.event import Event
+from nvtlviewlib.tl_canvas import TlCanvas
 
 
 def main():

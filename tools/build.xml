@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="nv_tlview" basedir=".">
+	<property name="version" value="0.1.0" />
+	<property name="plugin" value="nv_tlview" />
+	
+	<property name="source-path" location="../src" />
+	<property name="test-path" location="../test" />
+	<property name="build-path" location="../build" />
+	<property name="dist-path" location="../dist" />
+	<property name="docs-path" location="../docs" />
+	<property name="i18n-path" location="../i18n" />
+	<property name="application" value="${ant.project.name}" />
+	<property name="release" value="${application}_v${version}" />
+
+	<target name="build" description="inline all library modules">
+		<exec executable="python" failonerror="true">
+		    <arg value="make_pot.py"/>
+		    <arg value="${version}"/>
+		</exec>
+		<exec executable="python" failonerror="true">
+		    <arg value="translate_de.py"/>
+		    <arg value="${version}"/>
+		</exec>
+	</target>
+
+	<target name="dist" description="generate the distribution">		
+		<delete dir="${build-path}" />
+		<delete dir="${dist-path}" />
+		<mkdir dir="${build-path}" />
+		<mkdir dir="${dist-path}" />
+		<mkdir dir="${build-path}/${release}" />
+		
+		<copy file="${test-path}/${plugin}.py" todir="${build-path}/${release}" />
+		<replace encoding="utf-8" file="${build-path}/${release}/${plugin}.py" token="@release" value="${version}" />
+		
+      <copy file="${source-path}/setuplib.py" todir="${build-path}/${release}" />     
+      <replace encoding="utf-8" file="${build-path}/${release}/setuplib.py" token="@release" value="${version}" />
+
+		<copy file="../LICENSE" todir="${build-path}/${release}" />	
+				
+		<fixcrlf encoding="utf-8" eol="lf" srcdir="${build-path}/${release}" includes="**/*.*" />
+				
+		<copy todir="${build-path}/${release}/locale"> 
+			<fileset dir="${i18n-path}/locale" />
+		</copy>
+		
+      <exec executable="python" failonerror="true">
+         <arg value="-m"/>
+         <arg value="zipapp"/>
+         <arg value="-o=${dist-path}/${release}.pyzw"/>
+         <arg value="-m=setuplib:main"/>
+         <arg value="-c"/>
+         <arg value="${build-path}/${release}"/>
+      </exec>  
+		
+		<copy file="${docs-path}/template/README.md" overwrite="True" todir=".." />
+		<replace encoding="utf-8" file="../README.md" token="0.99.0" value="${version}" />
+		
+		<copy file="${docs-path}/template/VERSION" overwrite="True" todir=".." />
+		<replace encoding="utf-8" file="../VERSION" token="0.99.0" value="${version}" />
+	</target>
+
+	<target name="clean" description="clean up">		
+		<delete file="${test-path}/${plugin}.py" />
+	</target>
+
+   <target name="zip" description="generate a zipfile">      
+      <copy file="${docs-path}/usage.md" tofile="${build-path}/${release}/README.md" />
+      <copy file="${source-path}/setup.pyw" todir="${build-path}/${release}" />     
+      <zip destfile="${dist-path}/${release}.zip" basedir="${build-path}" />
+   </target>
+   
+</project>
