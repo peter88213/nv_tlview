@@ -27,46 +27,41 @@ def main():
         height=200,
         )
     canvas.pack()
-    canvas.events.append(Event(
+    canvas.events[1] = Event(
             on_element_change=canvas.draw_timeline,
             title='Event 5',
             scDate='2024-07-14',
             scTime='18:56',
             lastsMinutes=20
             )
-        )
-    canvas.events.append(Event(
+    canvas.events[2] = Event(
             on_element_change=canvas.draw_timeline,
             title='The second event',
             scDate='2024-07-14',
             scTime='14:15',
             lastsHours=2
             )
-        )
-    canvas.events.append(Event(
+    canvas.events[3] = Event(
             on_element_change=canvas.draw_timeline,
             title='Event 3',
             scDate='2024-07-14',
             scTime='18:15',
             lastsMinutes=2
             )
-        )
-    canvas.events.append(Event(
+    canvas.events[4] = Event(
             on_element_change=canvas.draw_timeline,
             title='Event six',
             scDate='2024-07-14',
             scTime='17:45',
             )
-        )
-    canvas.events.append(Event(
+    canvas.events[5] = Event(
             on_element_change=canvas.draw_timeline,
             title='Event 4',
             scDate='2024-07-14',
             scTime='18:16',
             lastsMinutes=20
             )
-        )
-    canvas.events.append(Event(
+    canvas.events[6] = Event(
             on_element_change=canvas.draw_timeline,
             title='Event 1',
             scDate='2024-07-14',
@@ -74,7 +69,6 @@ def main():
             lastsHours=1,
             lastsMinutes=30,
             )
-        )
     canvas.startTimestamp = get_timestamp(
         datetime.fromisoformat('2024-07-14 12:00'))
     tk.mainloop()

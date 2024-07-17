@@ -22,6 +22,9 @@ import locale
 import gettext
 import webbrowser
 from nvlib.plugin.plugin_base import PluginBase
+from nvtlviewlib.tl_canvas import TlCanvas
+from nvtlviewlib.dt_helper import get_timestamp
+from datetime import datetime
 
 # Initialize localization.
 LOCALE_PATH = f'{os.path.dirname(sys.argv[0])}/locale/'
@@ -37,6 +40,9 @@ except:
 
     def _(message):
         return message
+
+APPLICATION = _('Timeline view')
+PLUGIN = f'{APPLICATION} plugin v@release'
 
 
 class Plugin(PluginBase):
@@ -64,6 +70,54 @@ class Plugin(PluginBase):
         self._ui = view
         self._ctrl = controller
 
+        # Add an entry to the Tools menu.
+        self._ui.toolsMenu.add_command(label=APPLICATION, command=self._start_ui)
+        self._ui.toolsMenu.entryconfig(APPLICATION, state='disabled')
+
         # Add an entry to the Help menu.
         self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=lambda: webbrowser.open(self._HELP_URL))
+
+        self._tlViewer = None
+
+    def _start_ui(self):
+        if not self._mdl.prjFile:
+            return
+
+        canvas = TlCanvas(
+            self._ui.root,
+            background='black',
+            width=2000,
+            height=200,
+            )
+        canvas.pack()
+        canvas.events = self._mdl.novel.sections
+        canvas.startTimestamp = get_timestamp(
+            datetime.fromisoformat(self._mdl.novel.referenceDate))
+        return
+
+        if self._tlViewer:
+            if self._tlViewer.isOpen:
+                self._tlViewer.lift()
+                self._tlViewer.focus()
+                return
+
+        self._tlViewer = TlCanvas(self._mdl, self._ui, self._ctrl, self, **self.kwargs)
+        self._tlViewer.title(f'{self._mdl.novel.title} - {PLUGIN}')
+        # set_icon(self._tlViewer, icon='mLogo32', default=False)
+
+    def disable_menu(self):
+        """Disable menu entries when no project is open.
+        
+        Overrides the superclass method.
+        """
+        self._ui.toolsMenu.entryconfig(APPLICATION, state='disabled')
+        # self._matrixButton.disable()
+
+    def enable_menu(self):
+        """Enable menu entries when a project is open.
+        
+        Overrides the superclass method.
+        """
+        self._ui.toolsMenu.entryconfig(APPLICATION, state='normal')
+        # self._matrixButton.enable()
 

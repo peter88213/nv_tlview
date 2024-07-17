@@ -38,7 +38,7 @@ class TlCanvas(tk.Canvas):
 
     def __init__(self, master=None, cnf={}, **kw):
         super().__init__(master, cnf, **kw)
-        self.events = []
+        self.events = {}
         self._width = kw['width']
         self._background = kw['background']
 
@@ -147,14 +147,18 @@ class TlCanvas(tk.Canvas):
     def draw_events(self):
         srtEvents = []
         # list of tuples to sort by timestamp
-        for event in self.events:
-            srtEvents.append(
-                    (
-                    get_timestamp(datetime.fromisoformat(f'{event.date} {event.time}')),
-                    get_seconds(event.lastsDays, event.lastsHours, event.lastsMinutes),
-                    event.title
+        for eventId in self.events:
+            event = self.events[eventId]
+            try:
+                srtEvents.append(
+                        (
+                        get_timestamp(datetime.fromisoformat(f'{event.date} {event.time}')),
+                        get_seconds(event.lastsDays, event.lastsHours, event.lastsMinutes),
+                        event.title
+                        )
                     )
-                )
+            except:
+                pass
         xEnd = 0
         yPos = self.EVENT_DIST_Y * 2
         labelEnd = 0
@@ -183,7 +187,7 @@ class TlCanvas(tk.Canvas):
             titleLabel = self.create_text((xLabel, yPos), text=title, fill='white', anchor='w')
             titleBounds = self.bbox(titleLabel)
             # returns a tuple like (x1, y1, x2, y2)
-            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill='gray', anchor='nw')
+            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill='lightgray', anchor='nw')
             timeBounds = self.bbox(timeLabel)
             labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
