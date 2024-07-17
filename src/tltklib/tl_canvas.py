@@ -179,11 +179,12 @@ class TlCanvas(tk.Canvas):
                     (xEnd, yPos - self.MARK_HALF),
                     fill='red'
                 )
-            titleLabel = self.create_text((xEnd + self.LABEL_DIST_X, yPos), text=title, fill='white', anchor='w')
+            xLabel = xEnd + self.LABEL_DIST_X
+            titleLabel = self.create_text((xLabel, yPos), text=title, fill='white', anchor='w')
             titleBounds = self.bbox(titleLabel)
-            timeLabel = self.create_text((xEnd + self.LABEL_DIST_X, yPos + 15), text=timeStr, fill='gray', anchor='w')
+            # returns a tuple like (x1, y1, x2, y2)
+            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill='gray', anchor='nw')
             timeBounds = self.bbox(timeLabel)
-            titleBounds = self.bbox(titleLabel)
-            labelEnd = max(timeBounds[2], titleBounds[2])
+            labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
 
