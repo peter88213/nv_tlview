@@ -19,7 +19,7 @@ class TlCanvas(tk.Canvas):
     MAJOR_WIDTH_MIN = 120
     MAJOR_WIDTH_MAX = 360
     SCALE_HEIGHT = MAJOR_HEIGHT + 5
-    EVENT_DIST_Y = 20
+    EVENT_DIST_Y = 35
     # vertical distance between event marks
     LABEL_DIST_X = 10
     # horizontal distance between event mark and label
@@ -96,8 +96,15 @@ class TlCanvas(tk.Canvas):
         # Calculate the resolution.
         resolution = self.HOUR
         self.majorWidth = resolution / self.scale
+        units = 0
         while self.majorWidth < self.MAJOR_WIDTH_MIN:
             resolution *= 2
+            if units == 0 and resolution > self.DAY:
+                resolution = self.DAY
+                units = 1
+            elif units == 1 and resolution > self.YEAR:
+                resolution = self.YEAR
+                units = 2
             self.majorWidth = resolution / self.scale
 
         # Calculate the position of the first scale line.
@@ -110,7 +117,12 @@ class TlCanvas(tk.Canvas):
         # Draw the scale lines.
         while xPos < self._width:
             dt = from_timestamp(timestamp)
-            dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+            if units == 0:
+                dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+            elif units == 1:
+                dtStr = f"{dt.strftime('%x')}"
+            elif units == 2:
+                dtStr = f"{dt.year}"
             self.create_line((xPos, 0), (xPos, self.MAJOR_HEIGHT), width=1, fill='white')
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
             xPos += self.majorWidth
@@ -149,6 +161,8 @@ class TlCanvas(tk.Canvas):
         for event in sorted(srtEvents):
             timestamp, duration, title = event
             xStart = (timestamp - self.startTimestamp) / self.scale
+            dt = from_timestamp(timestamp)
+            timeStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
 
             # Cascade events.
             if xStart > labelEnd:
@@ -165,9 +179,11 @@ class TlCanvas(tk.Canvas):
                     (xEnd, yPos - self.MARK_HALF),
                     fill='red'
                 )
-            label = self.create_text((xEnd + self.LABEL_DIST_X, yPos), text=title, fill='white', anchor='w')
-            bounds = self.bbox(label)
-            # returns a tuple like (x1, y1, x2, y2)
-            labelEnd = bounds[2]
+            titleLabel = self.create_text((xEnd + self.LABEL_DIST_X, yPos), text=title, fill='white', anchor='w')
+            titleBounds = self.bbox(titleLabel)
+            timeLabel = self.create_text((xEnd + self.LABEL_DIST_X, yPos + 15), text=timeStr, fill='gray', anchor='w')
+            timeBounds = self.bbox(timeLabel)
+            titleBounds = self.bbox(titleLabel)
+            labelEnd = max(timeBounds[2], titleBounds[2])
             yPos += self.EVENT_DIST_Y
 
