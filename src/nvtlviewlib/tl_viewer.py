@@ -36,6 +36,9 @@ class TlViewer(tk.Toplevel):
         #--- Register the view.
         self._ui.views.append(self)
 
+        #--- Initialize the view update mechanism.
+        self._skipUpdate = False
+
         #--- Main window.
         self.mainWindow = TlFrame(self)
 
@@ -81,3 +84,8 @@ class TlViewer(tk.Toplevel):
         #--- Unregister the view.
         self._ui.views.remove(self)
 
+    def refresh(self):
+        """Refresh the view after changes have been made "outsides"."""
+        if self.isOpen:
+            if not self._skipUpdate:
+                self.mainWindow.eventCanvas.draw_timeline()
