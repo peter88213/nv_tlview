@@ -126,6 +126,9 @@ class TlCanvas(tk.Canvas):
                 dtStr = f"{dt.strftime('%x')}"
             elif units == 2:
                 dtStr = f"{dt.year}"
+
+            dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+
             self.create_line((xPos, 0), (xPos, self.MAJOR_HEIGHT), width=1, fill='white')
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
             xPos += self.majorWidth
@@ -197,3 +200,19 @@ class TlCanvas(tk.Canvas):
             labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
 
+    def go_to_first(self, event=None):
+        startTimestamp = get_timestamp(datetime.now())
+        self.startTimestamp = startTimestamp
+
+    def go_to_last(self, event=None):
+        startTimestamp = get_timestamp(datetime.now())
+        self.startTimestamp = startTimestamp
+
+    def set_hour_scale(self, event=None):
+        self.scale = (self.HOUR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
+
+    def set_day_scale(self, event=None):
+        self.scale = (self.DAY * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
+
+    def set_year_scale(self, event=None):
+        self.scale = (self.YEAR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)

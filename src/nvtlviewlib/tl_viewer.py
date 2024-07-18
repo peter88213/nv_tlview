@@ -6,9 +6,8 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
 import platform
-from tkinter import ttk
 
-from novxlib.novx_globals import _
+from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
@@ -37,10 +36,6 @@ class TlViewer(tk.Toplevel):
         #--- Register the view.
         self._ui.views.append(self)
 
-        #--- Main menu.
-        self.mainMenu = tk.Menu(self)
-        self.config(menu=self.mainMenu)
-
         #--- Main window.
         self.mainWindow = TlFrame(self)
 
@@ -55,8 +50,26 @@ class TlViewer(tk.Toplevel):
         self.isOpen = True
         self.mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
 
-        # "Close" button.
-        ttk.Button(self, text=_('Close'), command=self.on_quit).pack(side='right', padx=5, pady=5)
+        #--- Main menu.
+        self.mainMenu = tk.Menu(self)
+        self.config(menu=self.mainMenu)
+
+        #--- Add menu entries.
+        # Go menu.
+        self.goMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Go to'), menu=self.goMenu)
+        self.goMenu.add_command(label=_('First event'), command=self.mainWindow.eventCanvas.go_to_first)
+        self.goMenu.add_command(label=_('Last event'), command=self.mainWindow.eventCanvas.go_to_last)
+
+        # Scale menu.
+        self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Scale'), menu=self.scaleMenu)
+        self.scaleMenu.add_command(label=_('Hours'), command=self.mainWindow.eventCanvas.set_hour_scale)
+        self.scaleMenu.add_command(label=_('Days'), command=self.mainWindow.eventCanvas.set_day_scale)
+        self.scaleMenu.add_command(label=_('Years'), command=self.mainWindow.eventCanvas.set_year_scale)
+
+        # "Close" entry.
+        self.mainMenu.add_command(label=_('Close'), command=self.on_quit)
 
     def on_quit(self, event=None):
         self.isOpen = False

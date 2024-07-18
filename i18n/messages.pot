@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.2.3\n"
-"POT-Creation-Date: 2024-07-18 11:59:37\n"
+"Project-Id-Version: 0.3.0\n"
+"POT-Creation-Date: 2024-07-18 13:12:34\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -17,8 +17,29 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
+msgid "Days"
+msgstr ""
+
+msgid "First event"
+msgstr ""
+
+msgid "Go to"
+msgstr ""
+
+msgid "Hours"
+msgstr ""
+
+msgid "Last event"
+msgstr ""
+
+msgid "Scale"
+msgstr ""
+
 msgid "Timeline view"
 msgstr ""
 
 msgid "Timeline view Online help"
+msgstr ""
+
+msgid "Years"
 msgstr ""

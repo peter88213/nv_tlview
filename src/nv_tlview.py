@@ -15,15 +15,12 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
-import gettext
-import locale
-import os
 from pathlib import Path
-import sys
 import webbrowser
 
 from novxlib.ui.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
+from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.tl_button import TlButton
 from nvtlviewlib.tl_viewer import TlViewer
 import tkinter as tk
@@ -32,21 +29,6 @@ SETTINGS = dict(
         window_geometry='600x800',
 )
 OPTIONS = {}
-
-# Initialize localization.
-LOCALE_PATH = f'{os.path.dirname(sys.argv[0])}/locale/'
-try:
-    CURRENT_LANGUAGE = locale.getlocale()[0][:2]
-except:
-    # Fallback for old Windows versions.
-    CURRENT_LANGUAGE = locale.getdefaultlocale()[0][:2]
-try:
-    t = gettext.translation('nv_tlview', LOCALE_PATH, languages=[CURRENT_LANGUAGE])
-    _ = t.gettext
-except:
-
-    def _(message):
-        return message
 
 APPLICATION = _('Timeline view')
 PLUGIN = f'{APPLICATION} plugin v@release'
