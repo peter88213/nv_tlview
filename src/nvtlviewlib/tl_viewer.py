@@ -47,8 +47,11 @@ class TlViewer(tk.Toplevel):
         #--- The timeline canvas.
         if self._mdl.novel is not None:
             self.mainWindow.eventCanvas.events = self._mdl.novel.sections
-            self.mainWindow.eventCanvas.startTimestamp = get_timestamp(
-                datetime.fromisoformat(self._mdl.novel.referenceDate))
+            if self._mdl.novel.referenceDate:
+                startTimestamp = get_timestamp(datetime.fromisoformat(self._mdl.novel.referenceDate))
+            else:
+                startTimestamp = get_timestamp(datetime.now())
+            self.mainWindow.eventCanvas.startTimestamp = startTimestamp
         self.isOpen = True
         self.mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
 
