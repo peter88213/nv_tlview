@@ -13,6 +13,7 @@ class Event:
     def __init__(self,
             on_element_change=None,
             title=None,
+            scType=0,
             scDate=None,
             scTime=None,
             day=None,
@@ -25,6 +26,7 @@ class Event:
         else:
             self.on_element_change = on_element_change
         self._title = title
+        self._scType = scType
         try:
             newDate = date.fromisoformat(scDate)
             self._weekDay = newDate.weekday()
@@ -39,6 +41,20 @@ class Event:
         self._lastsMinutes = lastsMinutes
         self._lastsHours = lastsHours
         self._lastsDays = lastsDays
+
+    @property
+    def scType(self):
+        # 0 = Normal
+        # 1 = Unused
+        # 2 = Level 1 stage
+        # 3 = Level 2 stage
+        return self._scType
+
+    @scType.setter
+    def scType(self, newVal):
+        if self._scType != newVal:
+            self._scType = newVal
+            self.on_element_change()
 
     @property
     def title(self):

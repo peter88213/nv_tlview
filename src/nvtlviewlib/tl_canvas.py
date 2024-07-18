@@ -5,6 +5,7 @@ For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
+from datetime import timedelta
 import platform
 
 import tkinter as tk
@@ -39,6 +40,9 @@ class TlCanvas(tk.Canvas):
         super().__init__(master, cnf, **kw)
         self.events = {}
         self['background'] = 'black'
+        self.eventMarkColor = 'red'
+        self.eventTitleColor = 'white'
+        self.eventDateColor = 'gray'
 
         if platform.system() == 'Linux':
             self.bind("<Control-Button-4>", self.on_control_mouse_wheel)
@@ -91,6 +95,9 @@ class TlCanvas(tk.Canvas):
 
         #--- Draw the major scale.
 
+        # Get the start date.
+        startDt = from_timestamp(self.startTimestamp)
+
         # Calculate the resolution.
         resolution = self.HOUR
         self.majorWidth = resolution / self.scale
@@ -106,11 +113,22 @@ class TlCanvas(tk.Canvas):
             self.majorWidth = resolution / self.scale
 
         # Calculate the position of the first scale line.
-        tsOffset = resolution - self.startTimestamp % resolution
-        if tsOffset == resolution:
-            tsOffset = 0
-        xPos = tsOffset / self.scale
-        timestamp = self.startTimestamp + tsOffset
+        if startDt.second > 0 or startDt.minute > 0:
+            startDt = startDt.replace(second=0)
+            startDt = startDt.replace(minute=0)
+            startDt += timedelta(hours=1)
+        if units > 0:
+            if startDt.hour > 0:
+                startDt = startDt.replace(hour=0)
+                startDt += timedelta(days=1)
+        if units > 1:
+            if startDt.day > 1 or startDt.month > 1:
+                startDt = startDt.replace(day=1)
+                startDt = startDt.replace(month=1)
+                nextYear = startDt.year + 1
+                startDt.replace(year=nextYear)
+        timestamp = get_timestamp(startDt)
+        xPos = (timestamp - self.startTimestamp) / self.scale
 
         # Draw the scale lines.
         xMax = self.winfo_width()
@@ -123,11 +141,11 @@ class TlCanvas(tk.Canvas):
             if units == 0:
                 dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
             elif units == 1:
-                dtStr = f"{dt.strftime('%x')}"
+                # dtStr = f"{dt.strftime('%x')}"
+                dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
             elif units == 2:
-                dtStr = f"{dt.year}"
-
-            dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+                # dtStr = f"{dt.year}"
+                dtStr = f"{dt.strftime('%x')}"
 
             self.create_line((xPos, 0), (xPos, self.MAJOR_HEIGHT), width=1, fill='white')
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
@@ -157,6 +175,9 @@ class TlCanvas(tk.Canvas):
         # list of tuples to sort by timestamp
         for eventId in self.events:
             event = self.events[eventId]
+            if event.scType != 0:
+                continue
+
             try:
                 srtEvents.append(
                         (
@@ -189,13 +210,13 @@ class TlCanvas(tk.Canvas):
                     (xEnd, yPos + self.MARK_HALF),
                     (xEnd + self.MARK_HALF, yPos),
                     (xEnd, yPos - self.MARK_HALF),
-                    fill='red'
+                    fill=self.eventMarkColor
                 )
             xLabel = xEnd + self.LABEL_DIST_X
-            titleLabel = self.create_text((xLabel, yPos), text=title, fill='white', anchor='w')
+            titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
             titleBounds = self.bbox(titleLabel)
             # returns a tuple like (x1, y1, x2, y2)
-            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill='lightgray', anchor='nw')
+            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
             timeBounds = self.bbox(timeLabel)
             labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
