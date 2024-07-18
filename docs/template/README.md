@@ -4,6 +4,13 @@ The [novelibre](https://github.com/peter88213/novelibre/) Python program helps a
 
 *nv_tlview* is a plugin providing a timeline view. 
 
+---
+
+**Note:** This plugin is still under development. Not all features have been implemented yet, and errors may occur during use. 
+It is recommended to wait for version 1.
+
+---
+
 ![Screenshot](docs/Screenshots/screen01.png)
 
 ## Requirements

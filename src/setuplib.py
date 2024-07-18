@@ -82,6 +82,10 @@ def main(zipped=True):
         # Install the localization files.
         output('Copying locale ...')
         copy_tree('locale', applicationDir)
+        # Install the icon files.
+        output('Copying icons ...')
+        copy_tree('icons', applicationDir)
+
         output(f'Sucessfully installed "{PLUGIN}" at "{os.path.normpath(pluginDir)}"')
     else:
         output(f'ERROR: Cannot find a novelibre installation at "{applicationDir}"')
