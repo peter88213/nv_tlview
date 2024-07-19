@@ -33,10 +33,7 @@ class TlViewer(tk.Toplevel):
         if platform.system() != 'Windows':
             self.bind(self._KEY_QUIT_PROGRAM[0], self.on_quit)
 
-        #--- Register the view.
-        self._ui.views.append(self)
-
-        #--- Initialize the view update mechanism.
+        self._ui.register_view(self)
         self._skipUpdate = False
 
         #--- Main window.
@@ -79,10 +76,8 @@ class TlViewer(tk.Toplevel):
         self._plugin.kwargs['window_geometry'] = self.winfo_geometry()
         self.mainWindow.destroy()
         # this is necessary for deleting the event bindings
+        self._ui.unregister_view(self)
         self.destroy()
-
-        #--- Unregister the view.
-        self._ui.views.remove(self)
 
     def refresh(self):
         """Refresh the view after changes have been made "outsides"."""

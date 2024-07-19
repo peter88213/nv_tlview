@@ -15,7 +15,7 @@ It is recommended to wait for version 1.
 
 ## Requirements
 
-- [novelibre](https://github.com/peter88213/novelibre/) version 4.4+
+- [novelibre](https://github.com/peter88213/novelibre/) version 4.5+
 
 ## Download and install
 
