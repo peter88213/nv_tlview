@@ -95,9 +95,6 @@ class TlCanvas(tk.Canvas):
 
         #--- Draw the major scale.
 
-        # Get the start date.
-        startDt = from_timestamp(self.startTimestamp)
-
         # Calculate the resolution.
         resolution = self.HOUR
         self.majorWidth = resolution / self.scale
@@ -113,22 +110,11 @@ class TlCanvas(tk.Canvas):
             self.majorWidth = resolution / self.scale
 
         # Calculate the position of the first scale line.
-        if startDt.second > 0 or startDt.minute > 0:
-            startDt = startDt.replace(second=0)
-            startDt = startDt.replace(minute=0)
-            startDt += timedelta(hours=1)
-        if units > 0:
-            if startDt.hour > 0:
-                startDt = startDt.replace(hour=0)
-                startDt += timedelta(days=1)
-        if units > 1:
-            if startDt.day > 1 or startDt.month > 1:
-                startDt = startDt.replace(day=1)
-                startDt = startDt.replace(month=1)
-                nextYear = startDt.year + 1
-                startDt.replace(year=nextYear)
-        timestamp = get_timestamp(startDt)
-        xPos = (timestamp - self.startTimestamp) / self.scale
+        tsOffset = resolution - self.startTimestamp % resolution
+        if tsOffset == resolution:
+            tsOffset = 0
+        xPos = tsOffset / self.scale
+        timestamp = self.startTimestamp + tsOffset
 
         # Draw the scale lines.
         xMax = self.winfo_width()
@@ -142,7 +128,7 @@ class TlCanvas(tk.Canvas):
                 dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
             elif units == 1:
                 # dtStr = f"{dt.strftime('%x')}"
-                dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+                dtStr = f"{dt.strftime('%x')}"
             elif units == 2:
                 # dtStr = f"{dt.year}"
                 dtStr = f"{dt.strftime('%x')}"
