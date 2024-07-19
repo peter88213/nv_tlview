@@ -204,7 +204,7 @@ class TlCanvas(tk.Canvas):
         self.sort_events()
         width = self._get_window_width() - 2 * self.PAD_X
         self._scale = (self.lastTimestamp - self.firstTimestamp) / width
-        self.startTimestamp = self.firstTimestamp - self.PAD_X * self.scale
+        self.go_to_first()
 
     def go_to_first(self, event=None):
         self.startTimestamp = self.firstTimestamp - self.PAD_X * self.scale
