@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.4.1\n"
-"POT-Creation-Date: 2024-07-19 09:07:46\n"
+"Project-Id-Version: 0.5.0\n"
+"POT-Creation-Date: 2024-07-19 15:40:18\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -14,6 +14,9 @@ msgstr ""
 "Generated-By: novxlib pgettext.py 0.3\n"
 
 
+msgid "Cascading"
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
@@ -21,6 +24,9 @@ msgid "Days"
 msgstr ""
 
 msgid "First event"
+msgstr ""
+
+msgid "Fit to window"
 msgstr ""
 
 msgid "Go to"
@@ -32,7 +38,16 @@ msgstr ""
 msgid "Last event"
 msgstr ""
 
+msgid "Relaxed"
+msgstr ""
+
 msgid "Scale"
+msgstr ""
+
+msgid "Standard"
+msgstr ""
+
+msgid "Tight"
 msgstr ""
 
 msgid "Timeline view"

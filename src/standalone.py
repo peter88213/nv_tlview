@@ -20,14 +20,13 @@ def show_timeline(events=None, startTimestamp=None):
 
     if events is None:
         events = {}
-    if startTimestamp is None:
-        startTimestamp = get_timestamp(datetime.now())
 
     root = tk.Tk()
     mainWindow = TlFrame(root)
     mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
     mainWindow.eventCanvas.events = events
-    mainWindow.eventCanvas.startTimestamp = startTimestamp
+    if startTimestamp is not None:
+        mainWindow.eventCanvas.startTimestamp = startTimestamp
     tk.mainloop()
 
 
@@ -70,7 +69,4 @@ if __name__ == '__main__':
             lastsMinutes=30,
             ),
     )
-    show_timeline(
-        events=testEvents,
-        startTimestamp=get_timestamp(datetime.fromisoformat('2024-07-14 18:00'))
-        )
+    show_timeline(events=testEvents)

@@ -5,7 +5,6 @@ For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
-from datetime import timedelta
 import platform
 
 import tkinter as tk
@@ -24,7 +23,12 @@ class TlCanvas(tk.Canvas):
     # vertical distance between event marks
     LABEL_DIST_X = 10
     # horizontal distance between event mark and label
+    DISTANCE_MIN = -50
+    DISTANCE_MAX = 200
+    # minimum distance for cascading event marks
     MARK_HALF = 5
+    PAD_X = 100
+    # used e.g. when going to an event
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
@@ -49,13 +53,19 @@ class TlCanvas(tk.Canvas):
             self.bind("<Control-Button-5>", self.on_control_mouse_wheel)
             self.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
             self.bind("<Shift-Button-5>", self.on_shift_mouse_wheel)
+            self.bind("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
+            self.bind("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
         else:
             self.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
             self.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
+            self.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
         self.bind('<Configure>', self.draw_timeline)
 
         self._scale = self.SCALE_MIN
-        self._startTimestamp = get_timestamp(datetime.now()) - self.HOUR
+        self._startTimestamp = None
+        self._minDist = 0
+        self.srtEvents = []
+        # list of tuples: (timestamp, duration in s, title)
 
     @property
     def startTimestamp(self):
@@ -67,7 +77,6 @@ class TlCanvas(tk.Canvas):
             self._startTimestamp = self.MIN_TIMESTAMP
         elif newVal > self.MAX_TIMESTAMP:
             self._startTimestamp = self.MAX_TIMESTAMP
-            # Todo: calculate the upper limit so that the whole scale fits
         else:
             self._startTimestamp = newVal
         self.draw_timeline()
@@ -86,12 +95,59 @@ class TlCanvas(tk.Canvas):
             self._scale = newVal
         self.draw_timeline()
 
-    def draw_timeline(self, event=None):
-        self.delete("all")
-        self.draw_scale()
-        self.draw_events()
+    @property
+    def minDist(self):
+        return self._minDist
+
+    @minDist.setter
+    def minDist(self, newVal):
+        if newVal < self.DISTANCE_MIN:
+            self._minDist = self.DISTANCE_MIN
+        elif newVal > self.DISTANCE_MAX:
+            self._minDist = self.DISTANCE_MAX
+        else:
+            self._minDist = newVal
+        self.draw_timeline()
+
+    def draw_events(self):
+        yStart = self.EVENT_DIST_Y * 2
+        xEnd = 0
+        yPos = yStart
+        labelEnd = 0
+        for event in self.srtEvents:
+            timestamp, duration, title = event
+            xStart = (timestamp - self.startTimestamp) / self.scale
+            dt = from_timestamp(timestamp)
+            timeStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+
+            # Cascade events.
+            if xStart > labelEnd + self.minDist:
+                yPos = yStart
+                labelEnd = 0
+
+            # Draw event mark.
+            xEnd = (timestamp - self.startTimestamp + duration) / self.scale
+            self.create_polygon(
+                    (xStart, yPos - self.MARK_HALF),
+                    (xStart - self.MARK_HALF, yPos),
+                    (xStart, yPos + self.MARK_HALF),
+                    (xEnd, yPos + self.MARK_HALF),
+                    (xEnd + self.MARK_HALF, yPos),
+                    (xEnd, yPos - self.MARK_HALF),
+                    fill=self.eventMarkColor
+                )
+            xLabel = xEnd + self.LABEL_DIST_X
+            titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
+            titleBounds = self.bbox(titleLabel)
+            # returns a tuple like (x1, y1, x2, y2)
+            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
+            timeBounds = self.bbox(timeLabel)
+            labelEnd = max(titleBounds[2], timeBounds[2])
+            yPos += self.EVENT_DIST_Y
 
     def draw_scale(self):
+        if self.startTimestamp is None:
+            self.startTimestamp = self.firstTimestamp
 
         #--- Draw the major scale.
 
@@ -138,6 +194,24 @@ class TlCanvas(tk.Canvas):
             xPos += self.majorWidth
             timestamp += resolution
 
+    def draw_timeline(self, event=None):
+        self.delete("all")
+        self.sort_events()
+        self.draw_scale()
+        self.draw_events()
+
+    def fit_window(self):
+        self.sort_events()
+        width = self._get_window_width() - 2 * self.PAD_X
+        self._scale = (self.lastTimestamp - self.firstTimestamp) / width
+        self.startTimestamp = self.firstTimestamp - self.PAD_X * self.scale
+
+    def go_to_first(self, event=None):
+        self.startTimestamp = self.firstTimestamp - self.PAD_X * self.scale
+
+    def go_to_last(self, event=None):
+        self.startTimestamp = self.lastTimestamp - (self._get_window_width() - self.PAD_X) * self.scale
+
     def on_control_mouse_wheel(self, event):
         """Stretch the time scale using the mouse wheel."""
         deltaScale = 1.5
@@ -145,6 +219,14 @@ class TlCanvas(tk.Canvas):
             self.scale *= deltaScale
         if event.num == 4 or event.delta == 120:
             self.scale /= deltaScale
+
+    def on_control_shift_mouse_wheel(self, event):
+        """Change the distance for cascading events using the mouse wheel."""
+        deltaDist = 10
+        if event.num == 5 or event.delta == -120:
+            self.minDist += deltaDist
+        if event.num == 4 or event.delta == 120:
+            self.minDist -= deltaDist
 
     def on_shift_mouse_wheel(self, event):
         """Move the time scale horizontally using the mouse wheel."""
@@ -154,7 +236,25 @@ class TlCanvas(tk.Canvas):
         if event.num == 4 or event.delta == 120:
             self.startTimestamp -= deltaOffset
 
-    def draw_events(self):
+    def reset_casc(self, event=None):
+        self.minDist = 0
+
+    def set_casc_relaxed(self, event=None):
+        self.minDist = self.DISTANCE_MAX
+
+    def set_casc_tight(self, event=None):
+        self.minDist = self.DISTANCE_MIN
+
+    def set_day_scale(self, event=None):
+        self.scale = (self.DAY * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
+
+    def set_hour_scale(self, event=None):
+        self.scale = (self.HOUR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
+
+    def set_year_scale(self, event=None):
+        self.scale = (self.YEAR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
+
+    def sort_events(self):
         yMax = (len(self.events) + 2) * self.EVENT_DIST_Y
         self.configure(scrollregion=(0, 0, 0, yMax))
         srtEvents = []
@@ -174,52 +274,16 @@ class TlCanvas(tk.Canvas):
                     )
             except:
                 pass
-        xEnd = 0
-        yPos = self.EVENT_DIST_Y * 2
-        labelEnd = 0
-        for event in sorted(srtEvents):
-            timestamp, duration, title = event
-            xStart = (timestamp - self.startTimestamp) / self.scale
-            dt = from_timestamp(timestamp)
-            timeStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+        self.srtEvents = sorted(srtEvents)
+        if len(self.srtEvents) > 1:
+            self.firstTimestamp = self.srtEvents[0][0]
+            self.lastTimestamp = self.srtEvents[-1][0] + self.srtEvents[-1][1]
+        else:
+            self.firstTimestamp = self.MIN_TIMESTAMP
+            self.lastTimestamp = self.MAX_TIMESTAMP
 
-            # Cascade events.
-            if xStart > labelEnd:
-                yPos = self.EVENT_DIST_Y * 2
+    def _get_window_width(self):
+        self.update()
+        return self.winfo_width()
+        # in pixels
 
-            # Draw event mark.
-            xEnd = (timestamp - self.startTimestamp + duration) / self.scale
-            self.create_polygon(
-                    (xStart, yPos - self.MARK_HALF),
-                    (xStart - self.MARK_HALF, yPos),
-                    (xStart, yPos + self.MARK_HALF),
-                    (xEnd, yPos + self.MARK_HALF),
-                    (xEnd + self.MARK_HALF, yPos),
-                    (xEnd, yPos - self.MARK_HALF),
-                    fill=self.eventMarkColor
-                )
-            xLabel = xEnd + self.LABEL_DIST_X
-            titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
-            titleBounds = self.bbox(titleLabel)
-            # returns a tuple like (x1, y1, x2, y2)
-            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
-            timeBounds = self.bbox(timeLabel)
-            labelEnd = max(titleBounds[2], timeBounds[2])
-            yPos += self.EVENT_DIST_Y
-
-    def go_to_first(self, event=None):
-        startTimestamp = get_timestamp(datetime.now())
-        self.startTimestamp = startTimestamp
-
-    def go_to_last(self, event=None):
-        startTimestamp = get_timestamp(datetime.now())
-        self.startTimestamp = startTimestamp
-
-    def set_hour_scale(self, event=None):
-        self.scale = (self.HOUR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
-
-    def set_day_scale(self, event=None):
-        self.scale = (self.DAY * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
-
-    def set_year_scale(self, event=None):
-        self.scale = (self.YEAR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)

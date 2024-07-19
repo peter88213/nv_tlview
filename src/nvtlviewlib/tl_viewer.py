@@ -36,21 +36,17 @@ class TlViewer(tk.Toplevel):
         self._ui.register_view(self)
         self._skipUpdate = False
 
-        #--- Main window.
         self.mainWindow = TlFrame(self)
+        self._build_menu()
+        self.isOpen = True
 
         #--- The timeline canvas.
+        self.mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
         if self._mdl.novel is not None:
             self.mainWindow.eventCanvas.events = self._mdl.novel.sections
-            if self._mdl.novel.referenceDate:
-                startTimestamp = get_timestamp(datetime.fromisoformat(self._mdl.novel.referenceDate))
-            else:
-                startTimestamp = get_timestamp(datetime.now())
-            self.mainWindow.eventCanvas.startTimestamp = startTimestamp
-        self.isOpen = True
-        self.mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
+            self.mainWindow.eventCanvas.fit_window()
 
-        #--- Main menu.
+    def _build_menu(self):
         self.mainMenu = tk.Menu(self)
         self.config(menu=self.mainMenu)
 
@@ -67,6 +63,14 @@ class TlViewer(tk.Toplevel):
         self.scaleMenu.add_command(label=_('Hours'), command=self.mainWindow.eventCanvas.set_hour_scale)
         self.scaleMenu.add_command(label=_('Days'), command=self.mainWindow.eventCanvas.set_day_scale)
         self.scaleMenu.add_command(label=_('Years'), command=self.mainWindow.eventCanvas.set_year_scale)
+        self.scaleMenu.add_command(label=_('Fit to window'), command=self.mainWindow.eventCanvas.fit_window)
+
+        # Cascade menu.
+        self.cascadeMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Cascading'), menu=self.cascadeMenu)
+        self.cascadeMenu.add_command(label=_('Tight'), command=self.mainWindow.eventCanvas.set_casc_tight)
+        self.cascadeMenu.add_command(label=_('Relaxed'), command=self.mainWindow.eventCanvas.set_casc_relaxed)
+        self.cascadeMenu.add_command(label=_('Standard'), command=self.mainWindow.eventCanvas.reset_casc)
 
         # "Close" entry.
         self.mainMenu.add_command(label=_('Close'), command=self.on_quit)
