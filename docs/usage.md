@@ -6,41 +6,21 @@
 
 ---
 
-## Download and install
+# Installation
 
-### Default: Executable Python zip archive
+- Unzip the downloaded zipfile into a new folder.
+- Move into this new folder and launch **setup.pyw**. This installs the plugin.
 
-Download the latest release [nv_tlview_v0.99.0.pyzw](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.99.0.pyzw)
+*Note: If you install novelibre at a later time, you can always install the plugin afterwards by running the nv_tlview setup script again.*
 
-- Launch *nv_tlview_v0.99.0.pyzw* by double-clicking (Windows/Linux desktop),
-- or execute `python nv_tlview_v0.99.0.pyzw` (Windows), resp. `python3 nv_tlview_v0.99.0.pyzw` (Linux) on the command line.
-
-#### Important
-
-Many web browsers recognize the download as an executable file and offer to open it immediately. 
-This starts the installation.
-
-However, depending on your security settings, your browser may 
-initially  refuse  to download the executable file. 
-In this case, your confirmation or an additional action is required. 
-If this is not possible, you have the option of downloading 
-the zip file. 
-
-
-### Alternative: Zip file
-
-The package is also available in zip format: [nv_tlview_v0.99.0.zip](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.99.0.zip)
-
-- Extract the *nv_tlview_v0.99.0* folder from the downloaded zipfile "nv_tlview_v0.99.0.zip".
-- Move into this new folder and launch *setup.pyw* by double-clicking (Windows/Linux desktop), 
-- or execute `python setup.pyw` (Windows), resp. `python3 setup.pyw` (Linux) on the command line.
+The plugin adds a **Timeline view** entry to the *novelibre* **Tools** menu,
+and a **Timeline view Online help** entry to the **Help** menu.
 
 ---
 
 # Operation
 
-- Compress or expand the time scale with ``Ctrl``-``Mousewheel``.
-- Move the time scale with ``Shift``-``Mousewheel``.
+See the [online help](https://github.com/peter88213/nv_tlview/docs/nv_tlview/).
 
 ---
 
