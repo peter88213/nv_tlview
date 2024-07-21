@@ -110,12 +110,14 @@ class TlCanvas(tk.Canvas):
         self.draw_timeline()
 
     def draw_events(self):
+        yMax = (len(self.events) + 2) * self.EVENT_DIST_Y
+        self.configure(scrollregion=(0, 0, 0, yMax))
         yStart = self.EVENT_DIST_Y * 2
         xEnd = 0
         yPos = yStart
         labelEnd = 0
         for event in self.srtEvents:
-            timestamp, duration, title = event
+            timestamp, duration, title, eventId = event
             xStart = (timestamp - self.startTimestamp) / self.scale
             dt = from_timestamp(timestamp)
             timeStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
@@ -127,14 +129,15 @@ class TlCanvas(tk.Canvas):
 
             # Draw event mark.
             xEnd = (timestamp - self.startTimestamp + duration) / self.scale
-            self.create_polygon(
+            eventMark = self.create_polygon(
                     (xStart, yPos - self.MARK_HALF),
                     (xStart - self.MARK_HALF, yPos),
                     (xStart, yPos + self.MARK_HALF),
                     (xEnd, yPos + self.MARK_HALF),
                     (xEnd + self.MARK_HALF, yPos),
                     (xEnd, yPos - self.MARK_HALF),
-                    fill=self.eventMarkColor
+                    fill=self.eventMarkColor,
+                    tags=eventId
                 )
             xLabel = xEnd + self.LABEL_DIST_X
             titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
@@ -144,6 +147,15 @@ class TlCanvas(tk.Canvas):
             timeBounds = self.bbox(timeLabel)
             labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
+
+            self.tag_bind(eventMark, '<ButtonPress-1>', self._on_mark_click)
+
+    def _on_mark_click(self, event):
+        scId = self._get_event_id(event)
+        print(scId)
+
+    def _get_event_id(self, event):
+        return event.widget.itemcget('current', 'tag').split(' ')[0]
 
     def draw_scale(self):
         if self.startTimestamp is None:
@@ -255,8 +267,6 @@ class TlCanvas(tk.Canvas):
         self.scale = (self.YEAR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
 
     def sort_events(self):
-        yMax = (len(self.events) + 2) * self.EVENT_DIST_Y
-        self.configure(scrollregion=(0, 0, 0, yMax))
         srtEvents = []
         # list of tuples to sort by timestamp
         for eventId in self.events:
@@ -269,7 +279,8 @@ class TlCanvas(tk.Canvas):
                         (
                         get_timestamp(datetime.fromisoformat(f'{event.date} {event.time}')),
                         get_seconds(event.lastsDays, event.lastsHours, event.lastsMinutes),
-                        event.title
+                        event.title,
+                        eventId
                         )
                     )
             except:
