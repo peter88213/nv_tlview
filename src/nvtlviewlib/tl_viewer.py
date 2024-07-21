@@ -9,7 +9,7 @@ import platform
 
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.dt_helper import get_timestamp
-from nvtlviewlib.tl_frame import TlFrame
+from nvtlviewlib.tl_frame import Timeline
 import tkinter as tk
 
 
@@ -36,14 +36,14 @@ class TlViewer(tk.Toplevel):
         self._ui.register_view(self)
         self._skipUpdate = False
 
-        self.mainWindow = TlFrame(self)
+        self.mainWindow = Timeline(self)
         self._build_menu()
         self.isOpen = True
 
         #--- The timeline canvas.
         self.mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
         if self._mdl.novel is not None:
-            self.mainWindow.eventCanvas.events = self._mdl.novel.sections
+            self.mainWindow.eventCanvas.sections = self._mdl.novel.sections
             self.mainWindow.eventCanvas.fit_window()
 
     def _build_menu(self):

@@ -10,7 +10,7 @@ import locale
 
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.event import Event
-from nvtlviewlib.tl_frame import TlFrame
+from nvtlviewlib.tl_frame import Timeline
 import tkinter as tk
 
 
@@ -22,9 +22,9 @@ def show_timeline(events=None, startTimestamp=None):
         events = {}
 
     root = tk.Tk()
-    mainWindow = TlFrame(root)
+    mainWindow = Timeline(root)
     mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
-    mainWindow.eventCanvas.events = events
+    mainWindow.eventCanvas.sections = events
     if startTimestamp is not None:
         mainWindow.eventCanvas.startTimestamp = startTimestamp
     tk.mainloop()
