@@ -20,7 +20,7 @@ and a **Timeline view Online help** entry to the **Help** menu.
 
 # Operation
 
-See the [online help](https://github.com/peter88213/nv_tlview/docs/nv_tlview/).
+See the [online help](https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview).
 
 ---
 
