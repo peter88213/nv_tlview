@@ -1,7 +1,7 @@
 [![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.5.1.pyzw)
 [![Changelog](docs/img/changelog-button.png)](docs/changelog.md)
 [![News](docs/img/news-button.png)](https://github.com/peter88213/novelibre/discussions/1)
-[![Online help](docs/img/help-button.png)](docs/usage.md)
+[![Online help](docs/img/help-button.png)](docs/nv_tlview/)
 
 
 # ![Y](icons/tLogo32.png) nv_tlview
@@ -58,7 +58,7 @@ The package is also available in zip format: [nv_tlview_v0.5.1.zip](https://gith
 
 ## Usage
 
-See the [online manual](docs/usage.md)
+See the [online manual](docs/nv_tlview/)
 
 ---
 
