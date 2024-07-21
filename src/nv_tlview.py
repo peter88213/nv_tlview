@@ -41,7 +41,7 @@ class Plugin(PluginBase):
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
     # _HELP_URL = f'https://peter88213.github.io/{_("nvhelp-en")}/nv_tlview/'
-    _HELP_URL = f'https://github.com/peter88213/nv_tlview/blob/main/docs/usage.md'
+    _HELP_URL = f'https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview'
 
     def install(self, model, view, controller, prefs=None):
         """Install the plugin.
