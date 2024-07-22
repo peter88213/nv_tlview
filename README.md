@@ -4,7 +4,7 @@
 [![Online help](docs/img/help-button.png)](docs/nv_tlview/)
 
 
-# ![Y](icons/tLogo32.png) nv_tlview
+# ![T](icons/tLogo32.png) nv_tlview
 
 The [novelibre](https://github.com/peter88213/novelibre/) Python program helps authors organize novels.  
 

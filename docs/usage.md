@@ -2,7 +2,7 @@
 
 --- 
 
-*nv_tlview* is a plugin providing a timeline view. 
+*nv_tlview* is a plugin providing a timeline view for [novelibre](https://github.com/peter88213/novelibre/). 
 
 ---
 
