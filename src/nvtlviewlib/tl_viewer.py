@@ -10,6 +10,7 @@ import platform
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.tl_frame import Timeline
+from nvtlviewlib.nvtlview_globals import open_help
 import tkinter as tk
 
 
@@ -29,6 +30,9 @@ class TlViewer(tk.Toplevel):
         self.geometry(kwargs['window_geometry'])
         self.lift()
         self.focus()
+
+        # Event bindings.
+        self.bind('<F1>', open_help)
         self.protocol("WM_DELETE_WINDOW", self.on_quit)
         if platform.system() != 'Windows':
             self.bind(self._KEY_QUIT_PROGRAM[0], self.on_quit)
@@ -74,6 +78,11 @@ class TlViewer(tk.Toplevel):
 
         # "Close" entry.
         self.mainMenu.add_command(label=_('Close'), command=self.on_quit)
+
+        # Help
+        self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
+        self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
 
     def on_quit(self, event=None):
         self.isOpen = False

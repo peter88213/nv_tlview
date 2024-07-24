@@ -54,7 +54,7 @@ class TlCanvas:
         self.srtSections = []
         # list of tuples: (timestamp, duration in s, title)
 
-        self.bind_events(self.canvas)
+        # self.bind_events(self.canvas)
 
     @property
     def startTimestamp(self):

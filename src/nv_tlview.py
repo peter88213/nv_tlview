@@ -21,6 +21,7 @@ import webbrowser
 from novxlib.ui.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
 from nvtlviewlib.nvtlview_globals import _
+from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tl_button import TlButton
 from nvtlviewlib.tl_viewer import TlViewer
 import tkinter as tk
@@ -40,8 +41,6 @@ class Plugin(PluginBase):
     API_VERSION = '4.5'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
-    # _HELP_URL = f'https://peter88213.github.io/{_("nvhelp-en")}/nv_tlview/'
-    _HELP_URL = f'https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview'
 
     def install(self, model, view, controller, prefs=None):
         """Install the plugin.
@@ -82,7 +81,7 @@ class Plugin(PluginBase):
         self._ui.toolsMenu.entryconfig(APPLICATION, state='disabled')
 
         # Add an entry to the Help menu.
-        self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=lambda: webbrowser.open(self._HELP_URL))
+        self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=open_help)
 
         #--- Configure the toolbar.
 
