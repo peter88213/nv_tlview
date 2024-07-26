@@ -8,9 +8,11 @@ import platform
 from tkinter import ttk
 from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
+from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
 
 
 class TlFrame(ttk.Frame):
+    SCALE_HEIGHT = MAJOR_HEIGHT + 5
 
     def __init__(self, parent, *args, **kw):
 
@@ -21,17 +23,29 @@ class TlFrame(ttk.Frame):
         scrollY.pack(fill='y', side='right', expand=False)
 
         # Fixed scale.
-        scaleWindow = ttk.Frame(self)
-        scaleWindow.pack(anchor='w', fill='x', expand=True)
-        self.scaleCanvas = ScaleCanvas(scaleWindow)
-        self.scaleCanvas.pack(side='left', fill='both', expand=True)
+        self.scaleCanvas = ScaleCanvas(
+            self,
+            height=self.SCALE_HEIGHT,
+            borderwidth=0,
+            highlightthickness=0
+            )
+        self.scaleCanvas.pack(
+            anchor='n',
+            fill='x',
+            )
 
         #--- Vertically scrollable event area.
-        eventWindow = ttk.Frame(self)
-        eventWindow.pack(fill='both', expand=True)
-        self.eventCanvas = SectionCanvas(eventWindow)
+        self.eventCanvas = SectionCanvas(
+            self,
+            borderwidth=0,
+            highlightthickness=0
+            )
         self.eventCanvas.configure(yscrollcommand=scrollY.set)
-        self.eventCanvas.pack(side='left', fill='both', expand=True)
+        self.eventCanvas.pack(
+            anchor='n',
+            fill='both',
+            expand=True
+            )
         self.eventCanvas.xview_moveto(0)
         self.eventCanvas.yview_moveto(0)
 
@@ -70,10 +84,6 @@ class TlFrame(ttk.Frame):
             # Vertical scrolling
             self.eventCanvas.unbind_all("<Button-4>")
             self.eventCanvas.unbind_all("<Button-5>")
-
-            # Horizontal scrolling
-            self.eventCanvas.unbind_all("<Shift-Button-4>")
-            self.eventCanvas.unbind_all("<Shift-Button-5>")
         else:
             # Vertical scrolling
             self.eventCanvas.unbind_all("<MouseWheel>")

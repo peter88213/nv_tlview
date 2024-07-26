@@ -25,9 +25,20 @@ except:
     def _(message):
         return message
 
+# Constants in pixels.
+MAJOR_HEIGHT = 15
+MAJOR_WIDTH_MIN = 120
+MAJOR_WIDTH_MAX = 360
+
+# Constants in seconds per pixel.
+HOUR = 3600
+DAY = HOUR * 24
+YEAR = DAY * 365
+
 HELP_URL = 'https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview'
 
 
 def open_help(event=None):
     """Show the online help page specified by HELP_URL."""
     webbrowser.open(HELP_URL)
+

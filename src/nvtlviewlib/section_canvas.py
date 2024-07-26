@@ -9,28 +9,34 @@ from nvtlviewlib.tl_canvas import TlCanvas
 
 
 class SectionCanvas(TlCanvas):
+    # Constants in pixels.
+    EVENT_DIST_Y = 35
+    # vertical distance between event marks
+    LABEL_DIST_X = 10
+    # horizontal distance between event mark and label
+    MARK_HALF = 5
 
-    def draw(self):
+    def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
-        yMax = (len(self.sections) + 2) * self.EVENT_DIST_Y
+        yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
         self.configure(scrollregion=(0, 0, 0, yMax))
-        yStart = self.EVENT_DIST_Y * 2
+        yStart = self.EVENT_DIST_Y
         xEnd = 0
         yPos = yStart
         labelEnd = 0
-        for section in self.srtSections:
+        for section in srtSections:
             timestamp, duration, title, eventId = section
-            xStart = (timestamp - self.startTimestamp) / self.scale
+            xStart = (timestamp - startTimestamp) / scale
             dt = from_timestamp(timestamp)
             timeStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
 
             # Cascade sections.
-            if xStart > labelEnd + self.minDist:
+            if xStart > labelEnd + minDist:
                 yPos = yStart
                 labelEnd = 0
 
             # Draw section mark.
-            xEnd = (timestamp - self.startTimestamp + duration) / self.scale
+            xEnd = (timestamp - startTimestamp + duration) / scale
             sectionMark = self.create_polygon(
                     (xStart, yPos - self.MARK_HALF),
                     (xStart - self.MARK_HALF, yPos),
