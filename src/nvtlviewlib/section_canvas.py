@@ -5,10 +5,10 @@ For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from nvtlviewlib.dt_helper import from_timestamp
-from nvtlviewlib.tl_canvas import TlCanvas
+import tkinter as tk
 
 
-class SectionCanvas(TlCanvas):
+class SectionCanvas(tk.Canvas):
     # Constants in pixels.
     EVENT_DIST_Y = 35
     # vertical distance between event marks
@@ -16,6 +16,16 @@ class SectionCanvas(TlCanvas):
     # horizontal distance between event mark and label
     MARK_HALF = 5
 
+    def __init__(self, master=None, **kw):
+        super().__init__(master, cnf={}, **kw)
+        self['background'] = 'black'
+        self.eventMarkColor = 'red'
+        self.eventTitleColor = 'white'
+        self.eventDateColor = 'darkgray'
+
+        self.srtSections = []
+
+        # list of tuples: (timestamp, duration in s, title)
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
         yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
@@ -57,4 +67,11 @@ class SectionCanvas(TlCanvas):
             yPos += self.EVENT_DIST_Y
 
             self.tag_bind(sectionMark, '<ButtonPress-1>', self._on_mark_click)
+
+    def _get_section_id(self, event):
+        return event.widget.itemcget('current', 'tag').split(' ')[0]
+
+    def _on_mark_click(self, event):
+        scId = self._get_section_id(event)
+        print(scId)
 

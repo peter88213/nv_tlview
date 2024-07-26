@@ -10,7 +10,7 @@ import locale
 
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.event import Event
-from nvtlviewlib.tl_frame import TlFrame
+from nvtlviewlib.tl_view import TlView
 import tkinter as tk
 
 

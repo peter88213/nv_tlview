@@ -10,10 +10,15 @@ from nvtlviewlib.nvtlview_globals import HOUR
 from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
 from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MIN
 from nvtlviewlib.nvtlview_globals import YEAR
-from nvtlviewlib.tl_canvas import TlCanvas
+import tkinter as tk
 
 
-class ScaleCanvas(TlCanvas):
+class ScaleCanvas(tk.Canvas):
+
+    def __init__(self, master=None, **kw):
+        super().__init__(master, cnf={}, **kw)
+        self['background'] = 'dimgray'
+        self._majorScaleColor = 'white'
 
     def draw(self, startTimestamp, scale):
         self.delete("all")
@@ -58,8 +63,12 @@ class ScaleCanvas(TlCanvas):
                 # dtStr = f"{dt.year}"
                 dtStr = f"{dt.strftime('%x')}"
 
-            self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill='white')
+            self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill=self._majorScaleColor)
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
             xPos += self.majorWidth
             timestamp += resolution
 
+    def _get_window_width(self):
+        self.update()
+        return self.winfo_width()
+        # in pixels

@@ -35,36 +35,36 @@ class TlFrame(ttk.Frame):
             )
 
         #--- Vertically scrollable event area.
-        self.eventCanvas = SectionCanvas(
+        self.sectionCanvas = SectionCanvas(
             self,
             borderwidth=0,
             highlightthickness=0
             )
-        self.eventCanvas.configure(yscrollcommand=scrollY.set)
-        self.eventCanvas.pack(
+        self.sectionCanvas.configure(yscrollcommand=scrollY.set)
+        self.sectionCanvas.pack(
             anchor='n',
             fill='both',
             expand=True
             )
-        self.eventCanvas.xview_moveto(0)
-        self.eventCanvas.yview_moveto(0)
+        self.sectionCanvas.xview_moveto(0)
+        self.sectionCanvas.yview_moveto(0)
 
         if platform.system() == 'Linux':
             # Vertical scrolling
-            self.eventCanvas.bind("<Button-4>", self.on_mouse_wheel)
-            self.eventCanvas.bind("<Button-5>", self.on_mouse_wheel)
+            self.sectionCanvas.bind("<Button-4>", self.on_mouse_wheel)
+            self.sectionCanvas.bind("<Button-5>", self.on_mouse_wheel)
         else:
             # Vertical scrolling
-            self.eventCanvas.bind("<MouseWheel>", self.on_mouse_wheel)
+            self.sectionCanvas.bind("<MouseWheel>", self.on_mouse_wheel)
 
     def yview(self, *args):
-        self.eventCanvas.yview(*args)
+        self.sectionCanvas.yview(*args)
 
     def xview(self, *args):
-        self.eventCanvas.xview(*args)
+        self.sectionCanvas.xview(*args)
 
     def yview_scroll(self, *args):
-        self.eventCanvas.yview_scroll(*args)
+        self.sectionCanvas.yview_scroll(*args)
 
     def on_mouse_wheel(self, event):
         """Event handler for vertical scrolling."""
@@ -82,19 +82,19 @@ class TlFrame(ttk.Frame):
         """Destructor for deleting event bindings."""
         if platform.system() == 'Linux':
             # Vertical scrolling
-            self.eventCanvas.unbind_all("<Button-4>")
-            self.eventCanvas.unbind_all("<Button-5>")
-            self.eventCanvas.unbind_all("<Control-Button-4>")
-            self.eventCanvas.unbind_all("<Control-Button-5>")
-            self.eventCanvas.unbind_all("<Shift-Button-4>")
-            self.eventCanvas.unbind_all("<Shift-Button-5>")
-            self.eventCanvas.unbind_all("<Control-Shift-Button-4>")
-            self.eventCanvas.unbind_all("<Control-Shift-Button-5>")
+            self.sectionCanvas.unbind_all("<Button-4>")
+            self.sectionCanvas.unbind_all("<Button-5>")
+            self.sectionCanvas.unbind_all("<Control-Button-4>")
+            self.sectionCanvas.unbind_all("<Control-Button-5>")
+            self.sectionCanvas.unbind_all("<Shift-Button-4>")
+            self.sectionCanvas.unbind_all("<Shift-Button-5>")
+            self.sectionCanvas.unbind_all("<Control-Shift-Button-4>")
+            self.sectionCanvas.unbind_all("<Control-Shift-Button-5>")
         else:
             # Vertical scrolling
-            self.eventCanvas.unbind_all("<MouseWheel>")
-            self.eventCanvas.unbind_all("<Control-MouseWheel>")
-            self.eventCanvas.unbind_all("<Shift-MouseWheel>")
-            self.eventCanvas.unbind_all("<Control-Shift-MouseWheel>")
+            self.sectionCanvas.unbind_all("<MouseWheel>")
+            self.sectionCanvas.unbind_all("<Control-MouseWheel>")
+            self.sectionCanvas.unbind_all("<Shift-MouseWheel>")
+            self.sectionCanvas.unbind_all("<Control-Shift-MouseWheel>")
         super().destroy()
 
