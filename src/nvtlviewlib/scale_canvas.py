@@ -4,20 +4,14 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-from nvtlviewlib.tl_canvas import TlCanvas
-from datetime import datetime
-import platform
-
-import tkinter as tk
 from nvtlviewlib.dt_helper import from_timestamp
-from nvtlviewlib.dt_helper import get_seconds
-from nvtlviewlib.dt_helper import get_timestamp
+from nvtlviewlib.tl_canvas import TlCanvas
 
 
 class ScaleCanvas(TlCanvas):
 
     def draw(self):
-        self.canvas.delete("all")
+        self.delete("all")
         if self.startTimestamp is None:
             self.startTimestamp = self.firstTimestamp
 
@@ -45,7 +39,7 @@ class ScaleCanvas(TlCanvas):
         timestamp = self.startTimestamp + tsOffset
 
         # Draw the scale lines.
-        xMax = self.canvas.winfo_width()
+        xMax = self.winfo_width()
         while xPos < xMax:
             try:
                 dt = from_timestamp(timestamp)
@@ -61,8 +55,8 @@ class ScaleCanvas(TlCanvas):
                 # dtStr = f"{dt.year}"
                 dtStr = f"{dt.strftime('%x')}"
 
-            self.canvas.create_line((xPos, 0), (xPos, self.MAJOR_HEIGHT), width=1, fill='white')
-            self.canvas.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
+            self.create_line((xPos, 0), (xPos, self.MAJOR_HEIGHT), width=1, fill='white')
+            self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
             xPos += self.majorWidth
             timestamp += resolution
 

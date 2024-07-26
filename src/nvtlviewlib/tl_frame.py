@@ -10,7 +10,7 @@ from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
 
 
-class Timeline(ttk.Frame):
+class TlFrame(ttk.Frame):
 
     def __init__(self, parent, *args, **kw):
 
@@ -24,59 +24,33 @@ class Timeline(ttk.Frame):
         scaleWindow = ttk.Frame(self)
         scaleWindow.pack(anchor='w', fill='x', expand=True)
         self.scaleCanvas = ScaleCanvas(scaleWindow)
-        self.scaleCanvas.canvas.pack(side='left', fill='both', expand=True)
+        self.scaleCanvas.pack(side='left', fill='both', expand=True)
 
         #--- Vertically scrollable event area.
         eventWindow = ttk.Frame(self)
         eventWindow.pack(fill='both', expand=True)
         self.eventCanvas = SectionCanvas(eventWindow)
-        self.eventCanvas.canvas.configure(yscrollcommand=scrollY.set)
-        self.eventCanvas.canvas.pack(side='left', fill='both', expand=True)
-        self.eventCanvas.canvas.xview_moveto(0)
-        self.eventCanvas.canvas.yview_moveto(0)
+        self.eventCanvas.configure(yscrollcommand=scrollY.set)
+        self.eventCanvas.pack(side='left', fill='both', expand=True)
+        self.eventCanvas.xview_moveto(0)
+        self.eventCanvas.yview_moveto(0)
 
         if platform.system() == 'Linux':
             # Vertical scrolling
-            self.eventCanvas.canvas.bind("<Button-4>", self.on_mouse_wheel)
-            self.eventCanvas.canvas.bind("<Button-5>", self.on_mouse_wheel)
-            self.bind("<Control-Button-4>", self.on_control_mouse_wheel)
-            self.bind("<Control-Button-5>", self.on_control_mouse_wheel)
-            self.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
-            self.bind("<Shift-Button-5>", self.on_shift_mouse_wheel)
-            self.bind("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
-            self.bind("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
+            self.eventCanvas.bind("<Button-4>", self.on_mouse_wheel)
+            self.eventCanvas.bind("<Button-5>", self.on_mouse_wheel)
         else:
             # Vertical scrolling
-            self.eventCanvas.canvas.bind("<MouseWheel>", self.on_mouse_wheel)
-            self.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
-            self.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
-            self.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
-            self.bind('<Configure>', self.draw_timeline)
+            self.eventCanvas.bind("<MouseWheel>", self.on_mouse_wheel)
 
     def yview(self, *args):
-        self.eventCanvas.canvas.yview(*args)
+        self.eventCanvas.yview(*args)
 
     def xview(self, *args):
-        self.eventCanvas.canvas.xview(*args)
+        self.eventCanvas.xview(*args)
 
     def yview_scroll(self, *args):
-        self.eventCanvas.canvas.yview_scroll(*args)
-
-    def on_control_mouse_wheel(self, event):
-        """Stretch the time scale using the mouse wheel."""
-        deltaScale = 1.5
-        if event.num == 5 or event.delta == -120:
-            self.scale *= deltaScale
-        if event.num == 4 or event.delta == 120:
-            self.scale /= deltaScale
-
-    def on_control_shift_mouse_wheel(self, event):
-        """Change the distance for cascading events using the mouse wheel."""
-        deltaDist = 10
-        if event.num == 5 or event.delta == -120:
-            self.minDist += deltaDist
-        if event.num == 4 or event.delta == 120:
-            self.minDist -= deltaDist
+        self.eventCanvas.yview_scroll(*args)
 
     def on_mouse_wheel(self, event):
         """Event handler for vertical scrolling."""
@@ -90,31 +64,18 @@ class Timeline(ttk.Frame):
             elif event.num == 5:
                 self.yview_scroll(1, "units")
 
-    def on_shift_mouse_wheel(self, event):
-        """Move the time scale horizontally using the mouse wheel."""
-        deltaOffset = self.scale / self.SCALE_MIN * self.majorWidth
-        if event.num == 5 or event.delta == -120:
-            self.startTimestamp += deltaOffset
-        if event.num == 4 or event.delta == 120:
-            self.startTimestamp -= deltaOffset
-
     def destroy(self):
         """Destructor for deleting event bindings."""
         if platform.system() == 'Linux':
             # Vertical scrolling
-            self.eventCanvas.canvas.unbind_all("<Button-4>")
-            self.eventCanvas.canvas.unbind_all("<Button-5>")
+            self.eventCanvas.unbind_all("<Button-4>")
+            self.eventCanvas.unbind_all("<Button-5>")
 
             # Horizontal scrolling
-            self.eventCanvas.canvas.unbind_all("<Shift-Button-4>")
-            self.eventCanvas.canvas.unbind_all("<Shift-Button-5>")
+            self.eventCanvas.unbind_all("<Shift-Button-4>")
+            self.eventCanvas.unbind_all("<Shift-Button-5>")
         else:
             # Vertical scrolling
-            self.eventCanvas.canvas.unbind_all("<MouseWheel>")
+            self.eventCanvas.unbind_all("<MouseWheel>")
         super().destroy()
-
-    def draw_timeline(self, event=None):
-        self.eventCanvas.sort_sections()
-        self.scaleCanvas.draw()
-        self.eventCanvas.draw()
 

@@ -4,16 +4,10 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-from datetime import datetime
-import platform
-
 import tkinter as tk
-from nvtlviewlib.dt_helper import from_timestamp
-from nvtlviewlib.dt_helper import get_seconds
-from nvtlviewlib.dt_helper import get_timestamp
 
 
-class TlCanvas:
+class TlCanvas(tk.Canvas):
     # Constants in pixels.
     MAJOR_HEIGHT = 15
     MAJOR_WIDTH_MIN = 120
@@ -37,13 +31,10 @@ class TlCanvas:
     YEAR = DAY * 365
     SCALE_MAX = YEAR * 5
 
-    MIN_TIMESTAMP = get_timestamp(datetime.min)
-    MAX_TIMESTAMP = get_timestamp(datetime.max)
-
-    def __init__(self, master=None, cnf={}, **kw):
-        self.canvas = tk.Canvas(master, cnf, **kw)
+    def __init__(self, master=None):
+        super().__init__(master, cnf={})
         self.sections = {}
-        self.canvas['background'] = 'black'
+        self['background'] = 'black'
         self.eventMarkColor = 'red'
         self.eventTitleColor = 'white'
         self.eventDateColor = 'gray'
@@ -54,7 +45,7 @@ class TlCanvas:
         self.srtSections = []
         # list of tuples: (timestamp, duration in s, title)
 
-        # self.bind_events(self.canvas)
+        # self.bind_events(self)
 
     @property
     def startTimestamp(self):
@@ -135,35 +126,8 @@ class TlCanvas:
     def set_year_scale(self, event=None):
         self.scale = (self.YEAR * 2) / (self.MAJOR_WIDTH_MAX - self.MAJOR_WIDTH_MIN)
 
-    def sort_sections(self):
-        srtEvents = []
-        # list of tuples to sort by timestamp
-        for scId in self.sections:
-            event = self.sections[scId]
-            if event.scType != 0:
-                continue
-
-            try:
-                srtEvents.append(
-                        (
-                        get_timestamp(datetime.fromisoformat(f'{event.date} {event.time}')),
-                        get_seconds(event.lastsDays, event.lastsHours, event.lastsMinutes),
-                        event.title,
-                        scId
-                        )
-                    )
-            except:
-                pass
-        self.srtSections = sorted(srtEvents)
-        if len(self.srtSections) > 1:
-            self.firstTimestamp = self.srtSections[0][0]
-            self.lastTimestamp = self.srtSections[-1][0] + self.srtSections[-1][1]
-        else:
-            self.firstTimestamp = self.MIN_TIMESTAMP
-            self.lastTimestamp = self.MAX_TIMESTAMP
-
     def _get_window_width(self):
-        self.canvas.update()
-        return self.canvas.winfo_width()
+        self.update()
+        return self.winfo_width()
         # in pixels
 

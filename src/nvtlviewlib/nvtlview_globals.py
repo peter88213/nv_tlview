@@ -25,7 +25,7 @@ except:
     def _(message):
         return message
 
-HELP_URL = f'https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview'
+HELP_URL = 'https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview'
 
 
 def open_help(event=None):

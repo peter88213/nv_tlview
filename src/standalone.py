@@ -1,4 +1,4 @@
-"""A standalone tkinter timeline viewer.
+"""A standalone tkinter tlFrame viewer.
 
 Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
@@ -10,7 +10,7 @@ import locale
 
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.event import Event
-from nvtlviewlib.tl_frame import Timeline
+from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 
 
@@ -22,11 +22,11 @@ def show_timeline(events=None, startTimestamp=None):
         events = {}
 
     root = tk.Tk()
-    mainWindow = Timeline(root)
+    mainWindow = TlFrame(root)
     mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
-    mainWindow.eventCanvas.sections = events
+    tlFrame.eventCanvas.sections = events
     if startTimestamp is not None:
-        mainWindow.eventCanvas.startTimestamp = startTimestamp
+        tlFrame.eventCanvas.startTimestamp = startTimestamp
     tk.mainloop()
 
 
