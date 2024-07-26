@@ -230,16 +230,16 @@ class TlView(tk.Toplevel):
 
     def _bind_tl_scroll(self):
         if platform.system() == 'Linux':
-            self.bind("<Control-Button-4>", self.on_control_mouse_wheel)
-            self.bind("<Control-Button-5>", self.on_control_mouse_wheel)
-            self.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
-            self.bind("<Shift-Button-5>", self.on_shift_mouse_wheel)
-            self.bind("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
-            self.bind("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Control-Button-4>", self.on_control_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Control-Button-5>", self.on_control_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Shift-Button-5>", self.on_shift_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
         else:
-            self.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
-            self.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
-            self.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
+            self.tlFrame.eventCanvas.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
 
     def _build_menu(self):
         self.mainMenu = tk.Menu(self)
