@@ -84,8 +84,17 @@ class TlFrame(ttk.Frame):
             # Vertical scrolling
             self.eventCanvas.unbind_all("<Button-4>")
             self.eventCanvas.unbind_all("<Button-5>")
+            self.eventCanvas.unbind_all("<Control-Button-4>")
+            self.eventCanvas.unbind_all("<Control-Button-5>")
+            self.eventCanvas.unbind_all("<Shift-Button-4>")
+            self.eventCanvas.unbind_all("<Shift-Button-5>")
+            self.eventCanvas.unbind_all("<Control-Shift-Button-4>")
+            self.eventCanvas.unbind_all("<Control-Shift-Button-5>")
         else:
             # Vertical scrolling
             self.eventCanvas.unbind_all("<MouseWheel>")
+            self.eventCanvas.unbind_all("<Control-MouseWheel>")
+            self.eventCanvas.unbind_all("<Shift-MouseWheel>")
+            self.eventCanvas.unbind_all("<Control-Shift-MouseWheel>")
         super().destroy()
 

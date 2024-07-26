@@ -111,16 +111,13 @@ class Plugin(PluginBase):
         if not self._mdl.prjFile:
             return
 
-        if self._tlCtrl is not None:
-            if self._tlCtrl.isOpen:
-                self._tlCtrl.open_viewer()
-                return
+        if self._tlCtrl is not None and self._tlCtrl.isOpen:
+            self._tlCtrl.open_viewer()
+            return
 
-        self._tlCtrl = TlController(self._mdl, self._ctrl, self.kwargs)
-        self._tlUi = self._tlCtrl.get_ui()
-        self._tlUi.title(f'{self._mdl.novel.title} - {PLUGIN}')
-        set_icon(self._tlUi, icon='tLogo32', default=False)
-        self._ui.register_view(self._tlUi)
+        self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.kwargs)
+        self._tlCtrl.view.title(f'{self._mdl.novel.title} - {PLUGIN}')
+        set_icon(self._tlCtrl.view, icon='tLogo32', default=False)
 
     def disable_menu(self):
         """Disable menu entries when no project is open.
@@ -143,7 +140,10 @@ class Plugin(PluginBase):
         
         Overrides the superclass method.
         """
-        self.on_quit()
+        if self._tlCtrl is None:
+            return
+
+        self._tlCtrl.on_quit()
 
     def on_quit(self):
         """Actions to be performed when novelibre is closed.
@@ -155,7 +155,6 @@ class Plugin(PluginBase):
 
         self._tlCtrl.on_quit()
         self._tlCtrl = None
-        self._ui.unregister_view(self._tlUi)
 
         #--- Save configuration
         for keyword in self.kwargs:

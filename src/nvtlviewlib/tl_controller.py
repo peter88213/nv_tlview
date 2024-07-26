@@ -9,33 +9,30 @@ from nvtlviewlib.tl_view import TlView
 
 class TlController:
 
-    def __init__(self, model, controller, kwargs):
+    def __init__(self, model, view, controller, kwargs):
         self._mdl = model
-        self._ui = TlView(self._mdl, self, kwargs)
+        self._ui = view
         self._ctrl = controller
+        self.view = TlView(self._mdl, self, kwargs)
+        self._ui.register_view(self.view)
         self.isOpen = True
 
         self.firstTimestamp = None
         self.lastTimestamp = None
-
-        self.open_viewer()
-
-    def get_ui(self):
-        """Return a reference to the main view object."""
-        return self._ui
 
     def on_quit(self):
         """Actions to be performed when the viewer is closed."""
         if not self.isOpen:
             return
 
-        self._ui.on_quit()
-        del(self._ui)
+        self.view.on_quit()
+        self._ui.unregister_view(self.view)
+        del(self.view)
         self.isOpen = False
 
     def open_viewer(self):
-        if self._ui.state() == 'iconic':
-            self._ui.state('normal')
-        self._ui.lift()
-        self._ui.focus()
+        if self.view.state() == 'iconic':
+            self.view.state('normal')
+        self.view.lift()
+        self.view.focus()
 
