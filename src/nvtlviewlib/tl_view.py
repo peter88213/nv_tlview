@@ -63,16 +63,16 @@ class TlView(tk.Toplevel):
         self._minDist = 0
 
         #--- The Timeline frame.
-        self.tlFrame = TlFrame(self)
+        self.tlFrame = TlFrame(self, self._ctrl)
         self.tlFrame.pack(fill='both', expand=True, padx=2, pady=2)
         self._bind_tl_scroll()
 
         #--- Event bindings.
+        self.bind('<Configure>', self.draw_timeline)
         self.bind('<F1>', open_help)
         self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
         if platform.system() != 'Windows':
             self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
-            self.bind('<Configure>', self.draw_timeline)
 
         #--- Settings and options.
         self._substituteMissingTime = self._kwargs['substitute_missing_time']

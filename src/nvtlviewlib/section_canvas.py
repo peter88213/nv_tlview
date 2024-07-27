@@ -16,8 +16,9 @@ class SectionCanvas(tk.Canvas):
     # horizontal distance between event mark and label
     MARK_HALF = 5
 
-    def __init__(self, master=None, **kw):
+    def __init__(self, controller, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
+        self._ctrl = controller
         self['background'] = 'black'
         self.eventMarkColor = 'red'
         self.eventTitleColor = 'white'
@@ -68,12 +69,12 @@ class SectionCanvas(tk.Canvas):
                 labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
 
-            self.tag_bind(sectionMark, '<ButtonPress-1>', self._on_mark_click)
+            self.tag_bind(sectionMark, '<Shift-ButtonPress-1>', self._on_mark_click)
 
     def _get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
 
     def _on_mark_click(self, event):
         scId = self._get_section_id(event)
-        print(scId)
+        self._ctrl.go_to_section(scId)
 

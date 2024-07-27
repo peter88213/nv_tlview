@@ -14,7 +14,7 @@ from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
 class TlFrame(ttk.Frame):
     SCALE_HEIGHT = MAJOR_HEIGHT + 5
 
-    def __init__(self, parent, *args, **kw):
+    def __init__(self, parent, controller, *args, **kw):
 
         ttk.Frame.__init__(self, parent, *args, **kw)
 
@@ -36,6 +36,7 @@ class TlFrame(ttk.Frame):
 
         #--- Vertically scrollable event area.
         self.sectionCanvas = SectionCanvas(
+            controller,
             self,
             borderwidth=0,
             highlightthickness=0

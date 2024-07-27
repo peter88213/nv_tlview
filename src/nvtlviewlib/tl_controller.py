@@ -36,3 +36,5 @@ class TlController:
         self.view.lift()
         self.view.focus()
 
+    def go_to_section(self, scId):
+        self._ui.tv.go_to_node(scId)

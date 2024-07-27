@@ -1,4 +1,4 @@
-"""A standalone tkinter tlFrame viewer.
+"""A standalone tkinter timeline viewer.
 
 Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
@@ -7,7 +7,7 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 import locale
 import sys
 
-from nvtlviewlib.event import Event
+from mockup.event import Event
 from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
@@ -21,20 +21,10 @@ OPTIONS = dict(
 )
 
 
-class NovelMock:
+class NvViewMock:
 
-    def __init__(self, sections, referenceDate):
-        self.sections = sections
-        self.referenceDate = referenceDate
-
-
-class ModelMock:
-
-    def __init__(self, sections, referenceDate):
-        self.novel = NovelMock(sections, referenceDate)
-
-
-class MainViewMock:
+    def __init__(self):
+        self.tv = TreeViewerMock()
 
     def register_view(self, view):
         pass
@@ -43,14 +33,33 @@ class MainViewMock:
         pass
 
 
+class NvModelMock:
+
+    def __init__(self, sections, referenceDate):
+        self.novel = NovelMock(sections, referenceDate)
+
+
+class NovelMock:
+
+    def __init__(self, sections, referenceDate):
+        self.sections = sections
+        self.referenceDate = referenceDate
+
+
+class TreeViewerMock:
+
+    def go_to_node(self, scId):
+        print(scId)
+
+
 def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
 
     if sections is None:
         sections = {}
-    mdl = ModelMock(sections, referenceDate)
-    ui = MainViewMock()
+    mdl = NvModelMock(sections, referenceDate)
+    ui = NvViewMock()
 
     kwargs = SETTINGS
     kwargs.update(OPTIONS)
