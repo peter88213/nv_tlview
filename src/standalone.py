@@ -14,6 +14,11 @@ import tkinter as tk
 SETTINGS = dict(
         window_geometry='600x800',
 )
+OPTIONS = dict(
+    complete_missing_time=True,
+    convert_days=True,
+    substitute_date=True,
+)
 
 
 class NovelMock:
@@ -48,6 +53,8 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     ui = MainViewMock()
 
     kwargs = SETTINGS
+    kwargs.update(OPTIONS)
+    print(kwargs)
     tlCtrl = TlController(mdl, ui, None, kwargs)
     tlCtrl.view.bind("<Destroy>", sys.exit)
     tlCtrl.open_viewer()
@@ -112,6 +119,9 @@ if __name__ == '__main__':
             scTime='18:16',
             lastsHours=1,
             lastsMinutes=30,
+            ),
+        sc10=Event(
+            title='Event Ten (no data)',
             ),
     )
     show_timeline(sections=testSections, referenceDate=testReferenceDate)

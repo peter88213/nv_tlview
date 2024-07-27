@@ -7,6 +7,8 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from datetime import datetime
 import platform
 
+from novxlib.model.date_time_tools import get_specific_date
+from novxlib.model.date_time_tools import get_unspecific_date
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
@@ -74,6 +76,14 @@ class TlView(tk.Toplevel):
             self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
             self.bind('<Configure>', self.draw_timeline)
 
+        #--- Settings and options.
+        self._completeMissingTime = self._kwargs['complete_missing_time']
+        # if True, use 00:00 if no time is given
+        self._convertDays = self._kwargs['convert_days']
+        # if True, convert days to dates if a reference date is given
+        self._substituteDate = self._kwargs['substitute_date']
+        # if True, use the reference date if neither date nor day is given
+
         self.fit_window()
 
     @property
@@ -136,11 +146,13 @@ class TlView(tk.Toplevel):
     def fit_window(self):
         self.sort_sections()
         width = self.tlFrame.scaleCanvas._get_window_width() - 2 * self.PAD_X
-        self._scale = (self.lastTimestamp - self.firstTimestamp) / width
+        self.scale = (self.lastTimestamp - self.firstTimestamp) / width
         self.go_to_first()
 
     def go_to_first(self, event=None):
         self.startTimestamp = self.firstTimestamp - self.PAD_X * self.scale
+        if self.startTimestamp < self.firstTimestamp:
+            self.startTimestamp = self.firstTimestamp
 
     def go_to_last(self, event=None):
         self.startTimestamp = self.lastTimestamp - (self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X) * self.scale
@@ -210,9 +222,36 @@ class TlView(tk.Toplevel):
                 continue
 
             try:
+                refIso = self._mdl.novel.referenceDate
+                if section.time is None:
+                    if not self._completeMissingTime:
+                        continue
+
+                    scTime = '00:00'
+                else:
+                    scTime = section.time
+
+                if section.date is not None:
+                    scDate = section.date
+                elif section.day is not None:
+                    if not self._convertDays:
+                        continue
+
+                    if refIso is None:
+                        continue
+
+                    scDate = get_specific_date(section.day, refIso)
+                elif refIso is not None:
+                    if not self._substituteDate:
+                        continue
+
+                    scDate = refIso
+                else:
+                    continue
+
                 srtSections.append(
                         (
-                        get_timestamp(datetime.fromisoformat(f'{section.date} {section.time}')),
+                        get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}')),
                         get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
                         section.title,
                         scId

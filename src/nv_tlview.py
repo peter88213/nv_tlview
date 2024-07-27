@@ -26,9 +26,13 @@ from nvtlviewlib.tl_button import TlButton
 import tkinter as tk
 
 SETTINGS = dict(
-        window_geometry='600x800',
+    window_geometry='600x800',
 )
-OPTIONS = {}
+OPTIONS = dict(
+    complete_missing_time=False,
+    convert_days=False,
+    substitute_date=False,
+)
 
 APPLICATION = _('Timeline view')
 PLUGIN = f'{APPLICATION} plugin v@release'
