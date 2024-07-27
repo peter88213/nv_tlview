@@ -136,13 +136,10 @@ class Plugin(PluginBase):
         self._tlButton.enable()
 
     def on_close(self):
-        """Apply changes and close the window.
+        """Actions to be performed when a project is closed.
         
         Overrides the superclass method.
         """
-        if self._tlCtrl is None:
-            return
-
         self._tlCtrl.on_quit()
 
     def on_quit(self):
@@ -156,7 +153,7 @@ class Plugin(PluginBase):
         self._tlCtrl.on_quit()
         self._tlCtrl = None
 
-        #--- Save configuration
+        #--- Save configuration.
         for keyword in self.kwargs:
             if keyword in self.configuration.options:
                 self.configuration.options[keyword] = self.kwargs[keyword]

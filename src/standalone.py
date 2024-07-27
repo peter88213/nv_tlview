@@ -4,34 +4,57 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-
-from datetime import datetime
 import locale
+import sys
 
-from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.event import Event
-from nvtlviewlib.tl_view import TlView
+from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
+SETTINGS = dict(
+        window_geometry='600x800',
+)
 
-def show_timeline(events=None, startTimestamp=None):
+
+class NovelMock:
+
+    def __init__(self, sections):
+        self.sections = sections
+
+
+class ModelMock:
+
+    def __init__(self, sections):
+        self.novel = NovelMock(sections)
+
+
+class MainViewMock:
+
+    def register_view(self, view):
+        pass
+
+    def unregister_view(self, view):
+        pass
+
+
+def show_timeline(sections=None, startTimestamp=None):
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
 
-    if events is None:
-        events = {}
+    if sections is None:
+        sections = {}
+    mdl = ModelMock(sections)
+    ui = MainViewMock()
 
-    root = tk.Tk()
-    mainWindow = TlFrame(root)
-    mainWindow.pack(fill='both', expand=True, padx=2, pady=2)
-    tlFrame.eventCanvas.sections = events
-    if startTimestamp is not None:
-        tlFrame.eventCanvas.startTimestamp = startTimestamp
+    kwargs = SETTINGS
+    tlCtrl = TlController(mdl, ui, None, kwargs)
+    tlCtrl.view.bind("<Destroy>", sys.exit)
+    tlCtrl.open_viewer()
     tk.mainloop()
 
 
 if __name__ == '__main__':
-    testEvents = dict(
+    testSections = dict(
         sc1=Event(
             title='Event 5',
             scDate='2024-07-14',
@@ -69,4 +92,4 @@ if __name__ == '__main__':
             lastsMinutes=30,
             ),
     )
-    show_timeline(events=testEvents)
+    show_timeline(sections=testSections)
