@@ -61,9 +61,11 @@ class SectionCanvas(tk.Canvas):
             titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
             titleBounds = self.bbox(titleLabel)
             # returns a tuple like (x1, y1, x2, y2)
-            timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
-            timeBounds = self.bbox(timeLabel)
-            labelEnd = max(titleBounds[2], timeBounds[2])
+            if titleBounds is not None:
+                # this is a workaround because bbox() sometimes returns None for no known reason
+                timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
+                timeBounds = self.bbox(timeLabel)
+                labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
 
             self.tag_bind(sectionMark, '<ButtonPress-1>', self._on_mark_click)

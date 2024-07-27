@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.6.1\n"
-"POT-Creation-Date: 2024-07-26 22:29:29\n"
-"PO-Revision-Date: 2024-07-26 22:29:30\n"
+"Project-Id-Version: 0.7.0\n"
+"POT-Creation-Date: 2024-07-27 17:16:33\n"
+"PO-Revision-Date: 2024-07-27 17:16:33\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,9 @@ msgstr "Kaskadieren"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Convert days to dates"
+msgstr "Tage in Datum umwandeln"
 
 msgid "Days"
 msgstr "Tage"
@@ -52,6 +55,9 @@ msgstr "Maßstab"
 msgid "Standard"
 msgstr "Normal"
 
+msgid "Substitutions"
+msgstr "Ersetzungen"
+
 msgid "Tight"
 msgstr "Dicht"
 
@@ -60,6 +66,12 @@ msgstr "Zeitleistenansicht"
 
 msgid "Timeline view Online help"
 msgstr "Zeitleistenansicht Online-Hilfe"
+
+msgid "Use 00:00 for missing times"
+msgstr "Benutze 00:00 für fehlende Zeiten"
+
+msgid "Use reference for missing dates"
+msgstr "Benutze Bezugsdatum für fehlende Datumsangaben"
 
 msgid "Years"
 msgstr "Jahre"

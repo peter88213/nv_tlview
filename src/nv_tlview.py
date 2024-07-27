@@ -29,9 +29,9 @@ SETTINGS = dict(
     window_geometry='600x800',
 )
 OPTIONS = dict(
-    complete_missing_time=False,
+    substitute_missing_time=False,
     convert_days=False,
-    substitute_date=False,
+    substitute_missing_date=False,
 )
 
 APPLICATION = _('Timeline view')

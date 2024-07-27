@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.6.1\n"
-"POT-Creation-Date: 2024-07-26 22:29:29\n"
+"Project-Id-Version: 0.7.0\n"
+"POT-Creation-Date: 2024-07-27 17:16:33\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -18,6 +18,9 @@ msgid "Cascading"
 msgstr ""
 
 msgid "Close"
+msgstr ""
+
+msgid "Convert days to dates"
 msgstr ""
 
 msgid "Days"
@@ -53,6 +56,9 @@ msgstr ""
 msgid "Standard"
 msgstr ""
 
+msgid "Substitutions"
+msgstr ""
+
 msgid "Tight"
 msgstr ""
 
@@ -60,6 +66,12 @@ msgid "Timeline view"
 msgstr ""
 
 msgid "Timeline view Online help"
+msgstr ""
+
+msgid "Use 00:00 for missing times"
+msgstr ""
+
+msgid "Use reference for missing dates"
 msgstr ""
 
 msgid "Years"

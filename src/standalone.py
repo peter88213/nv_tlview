@@ -15,9 +15,9 @@ SETTINGS = dict(
         window_geometry='600x800',
 )
 OPTIONS = dict(
-    complete_missing_time=True,
+    substitute_missing_time=True,
     convert_days=True,
-    substitute_date=True,
+    substitute_missing_date=True,
 )
 
 
@@ -54,7 +54,6 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
 
     kwargs = SETTINGS
     kwargs.update(OPTIONS)
-    print(kwargs)
     tlCtrl = TlController(mdl, ui, None, kwargs)
     tlCtrl.view.bind("<Destroy>", sys.exit)
     tlCtrl.open_viewer()
