@@ -23,10 +23,9 @@ class SectionCanvas(tk.Canvas):
         self.eventMarkColor = 'red'
         self.eventTitleColor = 'white'
         self.eventDateColor = 'darkgray'
-
         self.srtSections = []
-
         # list of tuples: (timestamp, duration in s, title)
+
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
         yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
@@ -49,15 +48,18 @@ class SectionCanvas(tk.Canvas):
             # Draw section mark.
             xEnd = (timestamp - startTimestamp + duration) / scale
             sectionMark = self.create_polygon(
-                    (xStart, yPos - self.MARK_HALF),
-                    (xStart - self.MARK_HALF, yPos),
-                    (xStart, yPos + self.MARK_HALF),
-                    (xEnd, yPos + self.MARK_HALF),
-                    (xEnd + self.MARK_HALF, yPos),
-                    (xEnd, yPos - self.MARK_HALF),
-                    fill=self.eventMarkColor,
-                    tags=eventId
+                (xStart, yPos - self.MARK_HALF),
+                (xStart - self.MARK_HALF, yPos),
+                (xStart, yPos + self.MARK_HALF),
+                (xEnd, yPos + self.MARK_HALF),
+                (xEnd + self.MARK_HALF, yPos),
+                (xEnd, yPos - self.MARK_HALF),
+                fill=self.eventMarkColor,
+                tags=eventId
                 )
+            self.tag_bind(sectionMark, '<Shift-ButtonPress-1>', self._on_mark_click)
+
+            # Draw title and date/time.
             xLabel = xEnd + self.LABEL_DIST_X
             titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
             titleBounds = self.bbox(titleLabel)
@@ -68,8 +70,6 @@ class SectionCanvas(tk.Canvas):
                 timeBounds = self.bbox(timeLabel)
                 labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
-
-            self.tag_bind(sectionMark, '<Shift-ButtonPress-1>', self._on_mark_click)
 
     def _get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
