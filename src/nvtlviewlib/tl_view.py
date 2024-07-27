@@ -57,8 +57,6 @@ class TlView(tk.Toplevel):
         self._skipUpdate = False
         self.isOpen = True
 
-        self._build_menu()
-
         #--- Timeline variables.
         self._scale = self.SCALE_MIN
         self._startTimestamp = None
@@ -84,6 +82,7 @@ class TlView(tk.Toplevel):
         self._substituteDate = self._kwargs['substitute_date']
         # if True, use the reference date if neither date nor day is given
 
+        self._build_menu()
         self.fit_window()
 
     @property
@@ -290,6 +289,29 @@ class TlView(tk.Toplevel):
         self.goMenu.add_command(label=_('First event'), command=self.go_to_first)
         self.goMenu.add_command(label=_('Last event'), command=self.go_to_last)
 
+        self._complMissTime = tk.BooleanVar(value=self._completeMissingTime)
+        self._convDays = tk.BooleanVar(value=self._convertDays)
+        self._substDate = tk.BooleanVar(value=self._substituteDate)
+
+        # View menu.
+        self.viewMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('View'), menu=self.viewMenu)
+        self.viewMenu.add_checkbutton(
+            label=_('Complete missing time with 00:00'),
+            variable=self._complMissTime,
+            command=self._set_complete_missing_time
+            )
+        self.viewMenu.add_checkbutton(
+            label=_('Convert days to dates'),
+            variable=self._convDays,
+            command=self._set_convert_days
+            )
+        self.viewMenu.add_checkbutton(
+            label=_('Substitute missing date with reference'),
+            variable=self._substDate,
+            command=self._set_substitute_date
+            )
+
         # Scale menu.
         self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Scale'), menu=self.scaleMenu)
@@ -312,4 +334,19 @@ class TlView(tk.Toplevel):
         self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
         self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
+
+    def _set_complete_missing_time(self):
+        self._completeMissingTime = self._complMissTime.get()
+        self._kwargs['complete_missing_time'] = self._completeMissingTime
+        self.draw_timeline()
+
+    def _set_convert_days(self):
+        self._convertDays = self._convDays.get()
+        self._kwargs['convert_days'] = self._convertDays
+        self.draw_timeline()
+
+    def _set_substitute_date(self):
+        self._substituteDate = self._substDate.get()
+        self._kwargs['substitute_date'] = self._substituteDate
+        self.draw_timeline()
 
