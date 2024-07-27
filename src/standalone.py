@@ -18,14 +18,15 @@ SETTINGS = dict(
 
 class NovelMock:
 
-    def __init__(self, sections):
+    def __init__(self, sections, referenceDate):
         self.sections = sections
+        self.referenceDate = referenceDate
 
 
 class ModelMock:
 
-    def __init__(self, sections):
-        self.novel = NovelMock(sections)
+    def __init__(self, sections, referenceDate):
+        self.novel = NovelMock(sections, referenceDate)
 
 
 class MainViewMock:
@@ -37,13 +38,13 @@ class MainViewMock:
         pass
 
 
-def show_timeline(sections=None, startTimestamp=None):
+def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
 
     if sections is None:
         sections = {}
-    mdl = ModelMock(sections)
+    mdl = ModelMock(sections, referenceDate)
     ui = MainViewMock()
 
     kwargs = SETTINGS
@@ -54,6 +55,9 @@ def show_timeline(sections=None, startTimestamp=None):
 
 
 if __name__ == '__main__':
+
+    # Test data for debugging.
+    testReferenceDate = '2024-07-13'
     testSections = dict(
         sc1=Event(
             title='Event 5',
@@ -74,9 +78,8 @@ if __name__ == '__main__':
             lastsMinutes=2
             ),
         sc4=Event(
-            title='Event six',
+            title='Event six (no time)',
             scDate='2024-07-14',
-            scTime='17:45',
             ),
         sc5=Event(
             title='Event 4',
@@ -91,5 +94,24 @@ if __name__ == '__main__':
             lastsHours=1,
             lastsMinutes=30,
             ),
+        sc7=Event(
+            title='Event Seven (second day)',
+            day='2',
+            scTime='13:00',
+            lastsHours=1,
+            lastsMinutes=30,
+            ),
+        sc8=Event(
+            title='Event Eight (second day, no time)',
+            day='2',
+            lastsHours=1,
+            lastsMinutes=30,
+            ),
+        sc9=Event(
+            title='Event Nine (time only)',
+            scTime='18:16',
+            lastsHours=1,
+            lastsMinutes=30,
+            ),
     )
-    show_timeline(sections=testSections)
+    show_timeline(sections=testSections, referenceDate=testReferenceDate)
