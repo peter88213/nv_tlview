@@ -8,7 +8,6 @@ from datetime import datetime
 import platform
 
 from novxlib.model.date_time_tools import get_specific_date
-from novxlib.model.date_time_tools import get_unspecific_date
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
@@ -283,7 +282,7 @@ class TlView(tk.Toplevel):
         self.mainMenu = tk.Menu(self)
         self.config(menu=self.mainMenu)
 
-        # Go menu.
+        # "Go to" menu.
         self.goMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Go to'), menu=self.goMenu)
         self.goMenu.add_command(label=_('First event'), command=self.go_to_first)
@@ -293,7 +292,7 @@ class TlView(tk.Toplevel):
         self._convDays = tk.BooleanVar(value=self._convertDays)
         self._substDate = tk.BooleanVar(value=self._substituteMissingDate)
 
-        # Substitutions menu.
+        # "Substitutions" menu.
         self.substMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Substitutions'), menu=self.substMenu)
         self.substMenu.add_checkbutton(
@@ -312,7 +311,7 @@ class TlView(tk.Toplevel):
             command=self._set_substitute_missing_date
             )
 
-        # Scale menu.
+        # "Scale" menu.
         self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Scale'), menu=self.scaleMenu)
         self.scaleMenu.add_command(label=_('Hours'), command=self.set_hour_scale)
@@ -320,7 +319,7 @@ class TlView(tk.Toplevel):
         self.scaleMenu.add_command(label=_('Years'), command=self.set_year_scale)
         self.scaleMenu.add_command(label=_('Fit to window'), command=self.fit_window)
 
-        # Cascade menu.
+        # "Cascading" menu.
         self.cascadeMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Cascading'), menu=self.cascadeMenu)
         self.cascadeMenu.add_command(label=_('Tight'), command=self.set_casc_tight)
@@ -330,7 +329,7 @@ class TlView(tk.Toplevel):
         # "Close" entry.
         self.mainMenu.add_command(label=_('Close'), command=self._ctrl.on_quit)
 
-        # Help
+        # "Help" menu.
         self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
         self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
