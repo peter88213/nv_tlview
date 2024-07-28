@@ -4,6 +4,7 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
+from calendar import day_abbr
 from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
@@ -54,11 +55,12 @@ class ScaleCanvas(tk.Canvas):
             except OverflowError:
                 break
 
+            weekDay = day_abbr[dt.weekday()]
             if units == 0:
-                dtStr = f"{dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+                dtStr = f"{weekDay} {dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
             elif units == 1:
                 # dtStr = f"{dt.strftime('%x')}"
-                dtStr = f"{dt.strftime('%x')}"
+                dtStr = f"{weekDay} {dt.strftime('%x')}"
             elif units == 2:
                 # dtStr = f"{dt.year}"
                 dtStr = f"{dt.strftime('%x')}"
