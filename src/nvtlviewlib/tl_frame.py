@@ -24,6 +24,7 @@ class TlFrame(ttk.Frame):
 
         # Fixed scale.
         self.scaleCanvas = ScaleCanvas(
+            controller,
             self,
             height=self.SCALE_HEIGHT,
             borderwidth=0,

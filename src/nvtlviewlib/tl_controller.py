@@ -22,8 +22,8 @@ class TlController:
         self._ctrl = controller
 
         # Prepare the view's toolbar icons.
-        prefs = self._ctrl.get_preferences()
-        if prefs.get('large_icons', False):
+        self.prefs = self._ctrl.get_preferences()
+        if self.prefs.get('large_icons', False):
             size = 24
         else:
             size = 16
@@ -61,6 +61,16 @@ class TlController:
         # if True, convert days to dates if a reference date is given
         self._substituteMissingDate = kwargs['substitute_missing_date']
         # if True, use the reference date if neither date nor day is given
+
+    def datestr(self, dt):
+        """Return a localized date string, if the localize_date option is set.
+        
+        Otherwise return the ISO date string.
+        """
+        if self.prefs.get('localize_date', True):
+            return dt.strftime("%x")
+        else:
+            return dt.isoformat().split('T')[0]
 
     def get_toolbar_icons(self):
         return self._toolbarIcons

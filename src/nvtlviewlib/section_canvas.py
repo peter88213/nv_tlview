@@ -42,7 +42,7 @@ class SectionCanvas(tk.Canvas):
             xStart = (timestamp - startTimestamp) / scale
             dt = from_timestamp(timestamp)
             weekDay = day_abbr[dt.weekday()]
-            timeStr = f"{weekDay} {dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+            timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}"
 
             # Cascade sections.
             if xStart > labelEnd + minDist:

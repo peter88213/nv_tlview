@@ -16,8 +16,9 @@ import tkinter as tk
 
 class ScaleCanvas(tk.Canvas):
 
-    def __init__(self, master=None, **kw):
+    def __init__(self, controller, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
+        self._ctrl = controller
         self['background'] = 'dimgray'
         self._majorScaleColor = 'white'
 
@@ -57,13 +58,11 @@ class ScaleCanvas(tk.Canvas):
 
             weekDay = day_abbr[dt.weekday()]
             if units == 0:
-                dtStr = f"{weekDay} {dt.strftime('%x')} {dt.hour:02}:{dt.minute:02}"
+                dtStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}"
             elif units == 1:
-                # dtStr = f"{dt.strftime('%x')}"
-                dtStr = f"{weekDay} {dt.strftime('%x')}"
+                dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
             elif units == 2:
-                # dtStr = f"{dt.year}"
-                dtStr = f"{dt.strftime('%x')}"
+                dtStr = f"{self._ctrl.datestr(dt)}"
 
             self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill=self._majorScaleColor)
             self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
