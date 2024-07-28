@@ -346,11 +346,49 @@ class TlView(tk.Toplevel):
     def _build_toolbar(self):
         self.toolbar = ttk.Frame(self)
         self.toolbar.pack(fill='x', padx=5, pady=2)
-        ttk.Button(self.toolbar, text=_('First event'), command=self.go_to_first).pack(side='left')
-        ttk.Button(self.toolbar, text=_('Last event'), command=self.go_to_last).pack(side='left')
-        ttk.Button(self.toolbar, text=_('Selected section'), command=self.go_to_selected).pack(side='left')
-        ttk.Button(self.toolbar, text=_('Fit to window'), command=self.fit_window).pack(side='left')
-        ttk.Button(self.toolbar, text=_('Close'), command=self._ctrl.on_quit).pack(side='right')
+
+        toolbarIcons = self._ctrl.get_toolbar_icons()
+        goToFirst = ttk.Button(
+            self.toolbar,
+            text=_('First event'),
+            image=toolbarIcons['goToFirst'],
+            command=self.go_to_first
+            )
+        goToFirst.pack(side='left')
+        goToFirst.image = toolbarIcons['goToFirst']
+
+        goToLast = ttk.Button(
+            self.toolbar,
+            text=_('Last event'),
+            image=toolbarIcons['goToLast'],
+            command=self.go_to_last
+            )
+        goToLast.pack(side='left')
+        goToLast.image = toolbarIcons['goToLast']
+
+        goToSelected = ttk.Button(
+            self.toolbar,
+            text=_('Selected section'),
+            image=toolbarIcons['goToSelected'],
+            command=self.go_to_selected
+            )
+        goToSelected.pack(side='left')
+        goToSelected.image = toolbarIcons['goToSelected']
+
+        fitToWindow = ttk.Button(
+            self.toolbar,
+            text=_('Fit to window'),
+            image=toolbarIcons['fitToWindow'],
+            command=self.fit_window
+            )
+        fitToWindow.pack(side='left')
+        fitToWindow.image = toolbarIcons['fitToWindow']
+
+        ttk.Button(
+            self.toolbar,
+            text=_('Close'),
+            command=self._ctrl.on_quit
+            ).pack(side='right')
 
     def _set_first_event(self):
         xPos = self.PAD_X

@@ -61,6 +61,12 @@ class TreeViewerMock:
         print(scId)
 
 
+class NvControllerMock:
+
+    def get_preferences(self):
+        return {}
+
+
 def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
@@ -72,7 +78,8 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
 
     kwargs = SETTINGS
     kwargs.update(OPTIONS)
-    tlCtrl = TlController(mdl, ui, None, kwargs)
+    nvCtrl = NvControllerMock()
+    tlCtrl = TlController(mdl, ui, nvCtrl, kwargs)
     tlCtrl.view.bind("<Destroy>", sys.exit)
     tlCtrl.open_viewer()
     tk.mainloop()

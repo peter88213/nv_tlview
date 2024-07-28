@@ -5,11 +5,13 @@ For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
+from pathlib import Path
 
 from novxlib.model.date_time_tools import get_specific_date
 from novxlib.novx_globals import SECTION_PREFIX
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.tl_view import TlView
+import tkinter as tk
 
 
 class TlController:
@@ -18,6 +20,33 @@ class TlController:
         self._mdl = model
         self._ui = view
         self._ctrl = controller
+
+        # Prepare the view's toolbar icons.
+        prefs = self._ctrl.get_preferences()
+        if prefs.get('large_icons', False):
+            size = 24
+        else:
+            size = 16
+        try:
+            homeDir = str(Path.home()).replace('\\', '/')
+            iconPath = f'{homeDir}/.novx/icons/{size}'
+        except:
+            iconPath = None
+
+        self._toolbarIcons = {}
+        icons = [
+            'goToFirst',
+            'goToLast',
+            'goToSelected',
+            'fitToWindow'
+            ]
+        for icon in icons:
+            try:
+                self._toolbarIcons[icon] = tk.PhotoImage(file=f'{iconPath}/{icon}.png')
+            except:
+                self._toolbarIcons[icon] = None
+
+        # Create the view.
         self.view = TlView(self._mdl, self, kwargs)
         self._ui.register_view(self.view)
         self.isOpen = True
@@ -32,6 +61,9 @@ class TlController:
         # if True, convert days to dates if a reference date is given
         self._substituteMissingDate = kwargs['substitute_missing_date']
         # if True, use the reference date if neither date nor day is given
+
+    def get_toolbar_icons(self):
+        return self._toolbarIcons
 
     def on_quit(self):
         """Actions to be performed when the viewer is closed."""
