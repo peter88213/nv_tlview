@@ -35,6 +35,8 @@ class TlView(tk.Toplevel):
     # minimum distance for cascading event marks
     PAD_X = 100
     # used e.g. when going to an event
+    SCALER_WIDTH = 200
+    # length of the scale slider
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
@@ -427,6 +429,15 @@ class TlView(tk.Toplevel):
             command=self._ctrl.on_quit
             ).pack(side='right')
 
+        self._scaler = ttk.Scale(
+            self.toolbar,
+            from_=self.SCALE_MIN,
+            to=self.SCALE_MAX,
+            orient='horizontal',
+            command=self._set_scale,
+            )
+        self._scaler.pack(padx=10, side='right')
+
     def scroll_back(self, event=None):
         xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
         self.startTimestamp -= xDelta
@@ -454,6 +465,10 @@ class TlView(tk.Toplevel):
         xPos = self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos
+
+    def _set_scale(self, event=None):
+        pos = self._scaler.get()
+        print(pos)
 
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()

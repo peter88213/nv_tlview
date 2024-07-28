@@ -12,7 +12,7 @@ from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
 SETTINGS = dict(
-        window_geometry='600x800',
+        window_geometry='1200x800',
 )
 OPTIONS = dict(
     substitute_missing_time=True,
