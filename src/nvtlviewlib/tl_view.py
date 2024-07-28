@@ -6,6 +6,7 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
 import platform
+from tkinter import ttk
 
 from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_seconds
@@ -82,6 +83,7 @@ class TlView(tk.Toplevel):
         # if True, use the reference date if neither date nor day is given
 
         self._build_menu()
+        self._build_toolbar()
         self.fit_window()
 
     @property
@@ -160,7 +162,7 @@ class TlView(tk.Toplevel):
         self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
-        xPos = self.PAD_X
+        xPos = self.tlFrame.scaleCanvas._get_window_width() / 2
         selectedTimestamp = self._ctrl.get_selected_section_timestamp()
         if selectedTimestamp is None:
             return
@@ -306,6 +308,14 @@ class TlView(tk.Toplevel):
         self._convDays = tk.BooleanVar(value=self._convertDays)
         self._substDate = tk.BooleanVar(value=self._substituteMissingDate)
 
+        # "Scale" menu.
+        self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Scale'), menu=self.scaleMenu)
+        self.scaleMenu.add_command(label=_('Hours'), command=self.set_hour_scale)
+        self.scaleMenu.add_command(label=_('Days'), command=self.set_day_scale)
+        self.scaleMenu.add_command(label=_('Years'), command=self.set_year_scale)
+        self.scaleMenu.add_command(label=_('Fit to window'), command=self.fit_window)
+
         # "Substitutions" menu.
         self.substMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Substitutions'), menu=self.substMenu)
@@ -325,14 +335,6 @@ class TlView(tk.Toplevel):
             command=self._set_substitute_missing_date
             )
 
-        # "Scale" menu.
-        self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Scale'), menu=self.scaleMenu)
-        self.scaleMenu.add_command(label=_('Hours'), command=self.set_hour_scale)
-        self.scaleMenu.add_command(label=_('Days'), command=self.set_day_scale)
-        self.scaleMenu.add_command(label=_('Years'), command=self.set_year_scale)
-        self.scaleMenu.add_command(label=_('Fit to window'), command=self.fit_window)
-
         # "Cascading" menu.
         self.cascadeMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Cascading'), menu=self.cascadeMenu)
@@ -340,13 +342,19 @@ class TlView(tk.Toplevel):
         self.cascadeMenu.add_command(label=_('Relaxed'), command=self.set_casc_relaxed)
         self.cascadeMenu.add_command(label=_('Standard'), command=self.reset_casc)
 
-        # "Close" entry.
-        self.mainMenu.add_command(label=_('Close'), command=self._ctrl.on_quit)
-
         # "Help" menu.
         self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
         self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
+
+    def _build_toolbar(self):
+        self.toolbar = ttk.Frame(self)
+        self.toolbar.pack(fill='x', padx=5, pady=2)
+        ttk.Button(self.toolbar, text=_('First event'), command=self.go_to_first).pack(side='left')
+        ttk.Button(self.toolbar, text=_('Last event'), command=self.go_to_last).pack(side='left')
+        ttk.Button(self.toolbar, text=_('Selected section'), command=self.go_to_selected).pack(side='left')
+        ttk.Button(self.toolbar, text=_('Fit to window'), command=self.fit_window).pack(side='left')
+        ttk.Button(self.toolbar, text=_('Close'), command=self._ctrl.on_quit).pack(side='right')
 
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()

@@ -19,7 +19,7 @@ class TlFrame(ttk.Frame):
         ttk.Frame.__init__(self, parent, *args, **kw)
 
         # Scrollbar.
-        scrollY = ttk.Scrollbar(parent, orient='vertical', command=self.yview)
+        scrollY = ttk.Scrollbar(self, orient='vertical', command=self.yview)
         scrollY.pack(fill='y', side='right', expand=False)
 
         # Fixed scale.

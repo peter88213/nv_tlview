@@ -74,14 +74,33 @@ Command reference
 ~~~~~~~~~~~~
 
 First event
-   Shift the timeline so that the earliest event is visible at the left side.
+   Shift the timeline so that the earliest event
+   is positioned near the left edge of the window.
 
 Last event
-   Shift the timeline so that the whole latest event is visible at the right side.
+   Shift the timeline so that the latest event
+   is positioned near the right edge of the window.
 
 Selected section
    Shift the timeline so that the section selected in the *novelibre* project tree
-   is visible at the left side.
+   is positioned in the center of the window.
+
+
+"Scale" menu
+~~~~~~~~~~~~
+
+Hours
+   This sets the scale to one hour per line.
+
+Days
+   This sets the scale to one day per line.
+
+Years
+   This sets the scale to one year per line.
+
+Fit to window
+   This sets the scale and moves the timeline, so that all sections with
+   valid or substituted date/time information fit into the window.
 
 
 "Substitutions" menu
@@ -107,23 +126,6 @@ Use reference for missing dates
    - If unticked, sections without date or day information are not displayed.
 
 
-"Scale" menu
-~~~~~~~~~~~~
-
-Hours
-   This sets the scale to one hour per line.
-
-Days
-   This sets the scale to one day per line.
-
-Years
-   This sets the scale to one year per line.
-
-Fit to window
-   This sets the scale and moves the timeline, so that all sections with
-   valid or substituted date/time information fit into the window.
-
-
 "Cascading" menu
 ~~~~~~~~~~~~~~~~
 
@@ -145,13 +147,6 @@ Standard
    You can fine-tune the stacking limits with ``Shift``-``Ctrl``-``Mousewheel``.
 
 
-Close
-~~~~~
-
-Close the timeline viewer window.
-Same as ``Ctrl``-``Q`` (Linux)
-or ``Alt``-``F4`` (Windows).
-
 
 "Help" menu
 ~~~~~~~~~~~
@@ -159,3 +154,36 @@ or ``Alt``-``F4`` (Windows).
 Online help
    Open this help page in a web browser.
    Same as ``F1``.
+
+
+Buttons in the footer toolbar
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+|goToFirst| Go to the first event
+   Shift the timeline so that the earliest event
+   is positioned near the left edge of the window.
+
+|goToLast| Go to the last event
+   Shift the timeline so that the latest event
+   is positioned near the right edge of the window.
+
+|goToSelected| Go to the selected section
+   Shift the timeline so that the section selected in the *novelibre* project tree
+   is positioned in the center of the window.
+
+
+|fitToWindow| Fit to window
+   This sets the scale and moves the timeline, so that all sections with
+   valid or substituted date/time information fit into the window.
+
+Close
+   Close the timeline viewer window.
+   Same as ``Ctrl``-``Q`` (Linux)
+   or ``Alt``-``F4`` (Windows).
+
+
+.. |goToFirst| image:: _images/goToFirst.png
+.. |goToLast| image:: _images/goToLast.png
+.. |goToSelected| image:: _images/goToSelected.png
+.. |fitToWindow| image:: _images/fitToWindow.png
+
