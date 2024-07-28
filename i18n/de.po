@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.8.0\n"
-"POT-Creation-Date: 2024-07-27 18:32:19\n"
-"PO-Revision-Date: 2024-07-27 18:32:19\n"
+"Project-Id-Version: 0.9.0\n"
+"POT-Creation-Date: 2024-07-28 10:08:52\n"
+"PO-Revision-Date: 2024-07-28 10:08:52\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -51,6 +51,9 @@ msgstr "Aufgelockert"
 
 msgid "Scale"
 msgstr "Maßstab"
+
+msgid "Selected section"
+msgstr "Ausgewählter Abschnitt"
 
 msgid "Standard"
 msgstr "Normal"

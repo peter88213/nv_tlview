@@ -24,13 +24,15 @@ class SectionCanvas(tk.Canvas):
         self.eventMarkColor = 'red'
         self.eventTitleColor = 'white'
         self.eventDateColor = 'darkgray'
+        self.indicatorColor = 'lightblue'
         self.srtSections = []
         # list of tuples: (timestamp, duration in s, title)
+        self.yMax = 0
 
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
-        yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
-        self.configure(scrollregion=(0, 0, 0, yMax))
+        self.yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
+        self.configure(scrollregion=(0, 0, 0, self.yMax))
         yStart = self.EVENT_DIST_Y
         xEnd = 0
         yPos = yStart
@@ -59,7 +61,7 @@ class SectionCanvas(tk.Canvas):
                 fill=self.eventMarkColor,
                 tags=eventId
                 )
-            self.tag_bind(sectionMark, '<Shift-ButtonPress-1>', self._on_mark_click)
+            self.tag_bind(sectionMark, '<Double-Button-1>', self._on_double_click)
 
             # Draw title and date/time.
             xLabel = xEnd + self.LABEL_DIST_X
@@ -76,7 +78,15 @@ class SectionCanvas(tk.Canvas):
     def _get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
 
-    def _on_mark_click(self, event):
+    def _on_double_click(self, event):
         scId = self._get_section_id(event)
         self._ctrl.go_to_section(scId)
 
+    def draw_indicator(self, xPos):
+        self.create_line(
+            (xPos, 0),
+            (xPos, self.yMax),
+            width=1,
+            dash=(2, 2),
+            fill=self.indicatorColor,
+            )

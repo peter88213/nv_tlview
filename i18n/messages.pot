@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.8.0\n"
-"POT-Creation-Date: 2024-07-27 18:32:19\n"
+"Project-Id-Version: 0.9.0\n"
+"POT-Creation-Date: 2024-07-28 10:08:52\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -51,6 +51,9 @@ msgid "Relaxed"
 msgstr ""
 
 msgid "Scale"
+msgstr ""
+
+msgid "Selected section"
 msgstr ""
 
 msgid "Standard"

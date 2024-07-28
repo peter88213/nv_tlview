@@ -148,12 +148,25 @@ class TlView(tk.Toplevel):
         self.go_to_first()
 
     def go_to_first(self, event=None):
-        self.startTimestamp = self.firstTimestamp - self.PAD_X * self.scale
-        if self.startTimestamp < self.firstTimestamp:
-            self.startTimestamp = self.firstTimestamp
+        xPos = self.PAD_X
+        self.startTimestamp = self.firstTimestamp - xPos * self.scale
+        if self.startTimestamp < self.MIN_TIMESTAMP:
+            self.startTimestamp = self.MIN_TIMESTAMP
+        self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def go_to_last(self, event=None):
-        self.startTimestamp = self.lastTimestamp - (self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X) * self.scale
+        xPos = self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X
+        self.startTimestamp = self.lastTimestamp - xPos * self.scale
+        self.tlFrame.sectionCanvas.draw_indicator(xPos)
+
+    def go_to_selected(self, event=None):
+        xPos = self.PAD_X
+        selectedTimestamp = self._ctrl.get_selected_section_timestamp()
+        if selectedTimestamp is None:
+            return
+
+        self.startTimestamp = selectedTimestamp - xPos * self.scale
+        self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def on_control_mouse_wheel(self, event):
         """Stretch the time scale using the mouse wheel."""
@@ -287,6 +300,7 @@ class TlView(tk.Toplevel):
         self.mainMenu.add_cascade(label=_('Go to'), menu=self.goMenu)
         self.goMenu.add_command(label=_('First event'), command=self.go_to_first)
         self.goMenu.add_command(label=_('Last event'), command=self.go_to_last)
+        self.goMenu.add_command(label=_('Selected section'), command=self.go_to_selected)
 
         self._substTime = tk.BooleanVar(value=self._substituteMissingTime)
         self._convDays = tk.BooleanVar(value=self._convertDays)

@@ -62,8 +62,7 @@ Mouse wheel scrolling
 Selecting a section in the *novelibre* project tree
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Select a section by klicking on a timeline marker
-  with the ``Alt`` key pressed.
+- Select a section by double klicking on a timeline marker.
   This will bring the *novelibre* application window in the foreground.
 
 
@@ -78,7 +77,11 @@ First event
    Shift the timeline so that the earliest event is visible at the left side.
 
 Last event
-   Shift the timeline so that the latest event is visible at the right side.
+   Shift the timeline so that the whole latest event is visible at the right side.
+
+Selected section
+   Shift the timeline so that the section selected in the *novelibre* project tree
+   is visible at the left side.
 
 
 "Substitutions" menu

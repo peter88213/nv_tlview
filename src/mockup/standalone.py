@@ -46,7 +46,16 @@ class NovelMock:
         self.referenceDate = referenceDate
 
 
+class TreeMock:
+
+    def selection(self):
+        return ['']
+
+
 class TreeViewerMock:
+
+    def __init__(self):
+        self.tree = TreeMock()
 
     def go_to_node(self, scId):
         print(scId)
