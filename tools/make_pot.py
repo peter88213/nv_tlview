@@ -10,10 +10,13 @@ sys.path.insert(0, f'{os.getcwd()}/../../novxlib/src')
 import pgettext
 
 APP = 'nv_tlview'
-POT_FILE = '../i18n/messages.pot'
+POT_DIR = '../i18n'
+POT_FILE = f'{POT_DIR}/messages.pot'
 
 
 def make_pot(version='unknown'):
+    os.makedirs(POT_DIR, exist_ok=True)
+
     # Generate a complete plugin.
     build_plugin.main()
 

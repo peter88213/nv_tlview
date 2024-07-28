@@ -21,8 +21,8 @@ from novxlib.ui.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
-from nvtlviewlib.tl_controller import TlController
 from nvtlviewlib.tl_button import TlButton
+from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
 SETTINGS = dict(

@@ -39,11 +39,13 @@ import msgfmt
 
 APP_NAME = 'nv_tlview'
 PO_PATH = '../i18n/de.po'
-MO_PATH = f'../i18n/locale/de/LC_MESSAGES/{APP_NAME}.mo'
+MESSAGES_DIR = '../i18n/locale/de/LC_MESSAGES'
+MO_PATH = f'{MESSAGES_DIR}/{APP_NAME}.mo'
 MO_COPY = f'../../novelibre/src/locale/de/LC_MESSAGES/{APP_NAME}.mo'
 
 
 def main(version='unknown'):
+    os.makedirs(MESSAGES_DIR, exist_ok=True)
     if translations.main('de', app=APP_NAME, appVersion=version, json=True):
         print(f'Writing "{MO_PATH}" ...')
         msgfmt.make(PO_PATH, MO_PATH)
