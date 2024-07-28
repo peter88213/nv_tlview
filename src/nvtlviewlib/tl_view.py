@@ -147,18 +147,14 @@ class TlView(tk.Toplevel):
         self.sort_sections()
         width = self.tlFrame.scaleCanvas._get_window_width() - 2 * self.PAD_X
         self.scale = (self.lastTimestamp - self.firstTimestamp) / width
-        self.go_to_first()
+        self._set_first_event()
 
     def go_to_first(self, event=None):
-        xPos = self.PAD_X
-        self.startTimestamp = self.firstTimestamp - xPos * self.scale
-        if self.startTimestamp < self.MIN_TIMESTAMP:
-            self.startTimestamp = self.MIN_TIMESTAMP
+        xPos = self._set_first_event()
         self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def go_to_last(self, event=None):
-        xPos = self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X
-        self.startTimestamp = self.lastTimestamp - xPos * self.scale
+        xPos = self._set_last_event()
         self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
@@ -355,6 +351,18 @@ class TlView(tk.Toplevel):
         ttk.Button(self.toolbar, text=_('Selected section'), command=self.go_to_selected).pack(side='left')
         ttk.Button(self.toolbar, text=_('Fit to window'), command=self.fit_window).pack(side='left')
         ttk.Button(self.toolbar, text=_('Close'), command=self._ctrl.on_quit).pack(side='right')
+
+    def _set_first_event(self):
+        xPos = self.PAD_X
+        self.startTimestamp = self.firstTimestamp - xPos * self.scale
+        if self.startTimestamp < self.MIN_TIMESTAMP:
+            self.startTimestamp = self.MIN_TIMESTAMP
+        return xPos
+
+    def _set_last_event(self):
+        xPos = self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X
+        self.startTimestamp = self.lastTimestamp - xPos * self.scale
+        return xPos
 
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()
