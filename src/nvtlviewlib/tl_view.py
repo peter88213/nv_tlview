@@ -35,12 +35,36 @@ class TlView(tk.Toplevel):
     # minimum distance for cascading event marks
     PAD_X = 100
     # used e.g. when going to an event
-    SCALER_WIDTH = 200
-    # length of the scale slider
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
+
+    SCALES = [
+        SCALE_MIN,
+        SCALE_MIN * 3,
+        HOUR / 60,
+        HOUR / 30,
+        HOUR / 12,
+        HOUR / 4,
+        HOUR / 2,
+        HOUR,
+        HOUR * 3,
+        HOUR * 6,
+        HOUR * 12,
+        DAY,
+        DAY * 2,
+        DAY * 4,
+        DAY * 6,
+        DAY * 12,
+        DAY * 24,
+        DAY * 48,
+        DAY * 96,
+        DAY * 192,
+        YEAR,
+        YEAR * 2,
+        SCALE_MAX,
+        ]
 
     def __init__(self, model, controller, kwargs):
         self._mdl = model
@@ -387,15 +411,6 @@ class TlView(tk.Toplevel):
         goToSelected.pack(side='left')
         goToSelected.image = toolbarIcons['goToSelected']
 
-        fitToWindow = ttk.Button(
-            self.toolbar,
-            text=_('Fit to window'),
-            image=toolbarIcons['fitToWindow'],
-            command=self.fit_window
-            )
-        fitToWindow.pack(side='left')
-        fitToWindow.image = toolbarIcons['fitToWindow']
-
         goToLast = ttk.Button(
             self.toolbar,
             text=_('Last event'),
@@ -423,20 +438,41 @@ class TlView(tk.Toplevel):
         rewindRight.pack(side='left')
         rewindRight.image = toolbarIcons['rewindRight']
 
+        # Separator.
+        tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
+
+        arrowDown = ttk.Button(
+            self.toolbar,
+            text=_('Reduce scale'),
+            image=toolbarIcons['arrowDown'],
+            command=self._reduce_scale
+            )
+        arrowDown.pack(side='left')
+        arrowDown.image = toolbarIcons['arrowDown']
+
+        fitToWindow = ttk.Button(
+            self.toolbar,
+            text=_('Fit to window'),
+            image=toolbarIcons['fitToWindow'],
+            command=self.fit_window
+            )
+        fitToWindow.pack(side='left')
+        fitToWindow.image = toolbarIcons['fitToWindow']
+
+        arrowUp = ttk.Button(
+            self.toolbar,
+            text=_('Increase scale'),
+            image=toolbarIcons['arrowUp'],
+            command=self._increase_scale
+            )
+        arrowUp.pack(side='left')
+        arrowUp.image = toolbarIcons['arrowUp']
+
         ttk.Button(
             self.toolbar,
             text=_('Close'),
             command=self._ctrl.on_quit
             ).pack(side='right')
-
-        self._scaler = ttk.Scale(
-            self.toolbar,
-            from_=self.SCALE_MIN,
-            to=self.SCALE_MAX,
-            orient='horizontal',
-            command=self._set_scale,
-            )
-        self._scaler.pack(padx=10, side='right')
 
     def scroll_back(self, event=None):
         xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
@@ -466,9 +502,19 @@ class TlView(tk.Toplevel):
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos
 
-    def _set_scale(self, event=None):
-        pos = self._scaler.get()
-        print(pos)
+    def _reduce_scale(self):
+        for newScale in reversed(self.SCALES):
+            if newScale < self._scale:
+                break
+
+        self.scale = newScale
+
+    def _increase_scale(self):
+        for newScale in self.SCALES:
+            if newScale > self._scale:
+                break
+
+        self.scale = newScale
 
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()

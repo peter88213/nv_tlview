@@ -43,6 +43,8 @@ class TlController:
             'rewindRight',
             'goToSelected',
             'fitToWindow',
+            'arrowUp',
+            'arrowDown',
             ]
         for icon in icons:
             try:
