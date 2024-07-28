@@ -35,10 +35,14 @@ class TlController:
 
         self._toolbarIcons = {}
         icons = [
+            'rewindLeft',
+            'arrowLeft',
             'goToFirst',
             'goToLast',
+            'arrowRight',
+            'rewindRight',
             'goToSelected',
-            'fitToWindow'
+            'fitToWindow',
             ]
         for icon in icons:
             try:

@@ -348,6 +348,25 @@ class TlView(tk.Toplevel):
         self.toolbar.pack(fill='x', padx=5, pady=2)
 
         toolbarIcons = self._ctrl.get_toolbar_icons()
+
+        rewindLeft = ttk.Button(
+            self.toolbar,
+            text=_('Page back'),
+            image=toolbarIcons['rewindLeft'],
+            command=self.page_back
+            )
+        rewindLeft.pack(side='left')
+        rewindLeft.image = toolbarIcons['rewindLeft']
+
+        arrowLeft = ttk.Button(
+            self.toolbar,
+            text=_('Scroll back'),
+            image=toolbarIcons['arrowLeft'],
+            command=self.scroll_back
+            )
+        arrowLeft.pack(side='left')
+        arrowLeft.image = toolbarIcons['arrowLeft']
+
         goToFirst = ttk.Button(
             self.toolbar,
             text=_('First event'),
@@ -356,15 +375,6 @@ class TlView(tk.Toplevel):
             )
         goToFirst.pack(side='left')
         goToFirst.image = toolbarIcons['goToFirst']
-
-        goToLast = ttk.Button(
-            self.toolbar,
-            text=_('Last event'),
-            image=toolbarIcons['goToLast'],
-            command=self.go_to_last
-            )
-        goToLast.pack(side='left')
-        goToLast.image = toolbarIcons['goToLast']
 
         goToSelected = ttk.Button(
             self.toolbar,
@@ -384,11 +394,54 @@ class TlView(tk.Toplevel):
         fitToWindow.pack(side='left')
         fitToWindow.image = toolbarIcons['fitToWindow']
 
+        goToLast = ttk.Button(
+            self.toolbar,
+            text=_('Last event'),
+            image=toolbarIcons['goToLast'],
+            command=self.go_to_last
+            )
+        goToLast.pack(side='left')
+        goToLast.image = toolbarIcons['goToLast']
+
+        arrowRight = ttk.Button(
+            self.toolbar,
+            text=_('Scroll forward'),
+            image=toolbarIcons['arrowRight'],
+            command=self.scroll_forward
+            )
+        arrowRight.pack(side='left')
+        arrowRight.image = toolbarIcons['arrowRight']
+
+        rewindRight = ttk.Button(
+            self.toolbar,
+            text=_('Page forward'),
+            image=toolbarIcons['rewindRight'],
+            command=self.page_forward
+            )
+        rewindRight.pack(side='left')
+        rewindRight.image = toolbarIcons['rewindRight']
+
         ttk.Button(
             self.toolbar,
             text=_('Close'),
             command=self._ctrl.on_quit
             ).pack(side='right')
+
+    def scroll_back(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
+        self.startTimestamp -= xDelta
+
+    def scroll_forward(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
+        self.startTimestamp += xDelta
+
+    def page_back(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
+        self.startTimestamp -= xDelta
+
+    def page_forward(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
+        self.startTimestamp += xDelta
 
     def _set_first_event(self):
         xPos = self.PAD_X

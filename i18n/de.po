@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.11.0\n"
-"POT-Creation-Date: 2024-07-28 15:51:44\n"
-"PO-Revision-Date: 2024-07-28 15:51:44\n"
+"Project-Id-Version: 0.12.0\n"
+"POT-Creation-Date: 2024-07-28 20:01:39\n"
+"PO-Revision-Date: 2024-07-28 20:01:39\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -46,11 +46,23 @@ msgstr "Letztes Ereignis"
 msgid "Online help"
 msgstr "Online-Hilfe"
 
+msgid "Page back"
+msgstr "Seite zurück"
+
+msgid "Page forward"
+msgstr "Seite vor"
+
 msgid "Relaxed"
 msgstr "Aufgelockert"
 
 msgid "Scale"
 msgstr "Maßstab"
+
+msgid "Scroll back"
+msgstr "Zurückscrollen"
+
+msgid "Scroll forward"
+msgstr "Vorscrollen"
 
 msgid "Selected section"
 msgstr "Ausgewählter Abschnitt"

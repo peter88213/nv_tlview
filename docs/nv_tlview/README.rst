@@ -159,22 +159,35 @@ Online help
 Buttons in the footer toolbar
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+|rewindLeft| Go one page back
+   Shift the timeline to go about one screen width back in time.
+
+|arrowLeft| Scroll back
+   Shift the timeline to go 1/5 screen width back in time.
+
 |goToFirst| Go to the first event
    Shift the timeline so that the earliest event
    is positioned near the left edge of the window.
-
-|goToLast| Go to the last event
-   Shift the timeline so that the latest event
-   is positioned near the right edge of the window.
 
 |goToSelected| Go to the selected section
    Shift the timeline so that the section selected in the *novelibre* project tree
    is positioned in the center of the window.
 
-
 |fitToWindow| Fit to window
    This sets the scale and moves the timeline, so that all sections with
    valid or substituted date/time information fit into the window.
+
+|goToLast| Go to the last event
+   Shift the timeline so that the latest event
+   is positioned near the right edge of the window.
+
+|arrowRight| Scroll forward
+   Shift the timeline to go 1/5 screen width forward in time.
+
+|rewindRight| Go one pge forward
+   Shift the timeline to go about one screen width forward in time.
+
+
 
 Close
    Close the timeline viewer window.
@@ -182,8 +195,12 @@ Close
    or ``Alt``-``F4`` (Windows).
 
 
+.. |rewindLeft| image:: _images/rewindLeft.png
+.. |arrowLeft| image:: _images/arrowLeft.png
 .. |goToFirst| image:: _images/goToFirst.png
 .. |goToLast| image:: _images/goToLast.png
+.. |arrowRight| image:: _images/arrowRight.png
+.. |rewindRight| image:: _images/rewindRight.png
 .. |goToSelected| image:: _images/goToSelected.png
 .. |fitToWindow| image:: _images/fitToWindow.png
 
