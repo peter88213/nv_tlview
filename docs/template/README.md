@@ -1,7 +1,7 @@
 [![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.99.0.pyzw)
 [![Changelog](docs/img/changelog-button.png)](docs/changelog.md)
 [![News](docs/img/news-button.png)](https://github.com/peter88213/novelibre/discussions/1)
-[![Online help](docs/img/help-button.png)](docs/nv_tlview/)
+[![Online help](docs/img/help-button.png)](https://peter88213.github.io/nvhelp-en/nv_tlview/)
 
 
 # ![T](icons/tLogo32.png) nv_tlview
@@ -10,11 +10,6 @@ The [novelibre](https://github.com/peter88213/novelibre/) Python program helps a
 
 *nv_tlview* is a plugin providing a timeline view with sections 
 that are given a narrative date/day and time. 
-
----
-
-**Note:** This plugin is still under development. Not all features have been implemented yet, and errors may occur during use. 
-It is recommended to wait for version 1.
 
 ---
 
@@ -59,7 +54,7 @@ The package is also available in zip format: [nv_tlview_v0.99.0.zip](https://git
 
 ## Usage
 
-See the [online manual](docs/nv_tlview/)
+See the [online manual](https://peter88213.github.io/nvhelp-en/nv_tlview/)
 
 ---
 
