@@ -8,11 +8,17 @@ This page refers to the latest `nv_tlview
 <https://github.com/peter88213/nv_tlview/>`__ release.
 You can open it with **Help > Timeline view Online help**.
 
+*nv_tlview* is a plugin providing a timeline view with sections
+that are given a narrative date/day and time.
+
 The plugin adds a **Timeline view** entry to the *novelibre* **Tools** menu,
 and a **Timeline view Online help** entry to the **Help** menu.
 The Toolbar gets a |Timeline| button.
 
 .. |Timeline| image:: _images/tlview.png
+
+.. figure:: _images/screen01.png
+   :alt: novelibre Screenshot
 
 
 Installing the plugin
@@ -55,7 +61,7 @@ Mouse wheel scrolling
 
 - Scroll the timeline horizontally with ``Shift``-``Mousewheel``.
 - Scroll the timeline vertically with the mousewheel.
-- Compress or expand the time scale with ``Ctrl``-``Mousewheel``.
+- Increase or reduce the time scale with ``Ctrl``-``Mousewheel``.
 - Change the distance limits for stacking with ``Shift``-``Ctrl``-``Mousewheel``.
 
 
@@ -164,6 +170,7 @@ Buttons in the footer toolbar
 
 |arrowLeft| Scroll back
    Shift the timeline to go 1/5 screen width back in time.
+   You can move it more precisely with the mouse wheel.
 
 |goToFirst| Go to the first event
    Shift the timeline so that the earliest event
@@ -173,21 +180,28 @@ Buttons in the footer toolbar
    Shift the timeline so that the section selected in the *novelibre* project tree
    is positioned in the center of the window.
 
-|fitToWindow| Fit to window
-   This sets the scale and moves the timeline, so that all sections with
-   valid or substituted date/time information fit into the window.
-
 |goToLast| Go to the last event
    Shift the timeline so that the latest event
    is positioned near the right edge of the window.
 
 |arrowRight| Scroll forward
    Shift the timeline to go 1/5 screen width forward in time.
+   You can move it more precisely with the mouse wheel.
 
 |rewindRight| Go one pge forward
    Shift the timeline to go about one screen width forward in time.
 
+|arrowDown| Reduce the time scale
+   Reduce the time scale in major steps.
+   Fine scaling is meant to be done with the mouse wheel.
 
+|fitToWindow| Fit to window
+   This sets the scale and moves the timeline, so that all sections with
+   valid or substituted date/time information fit into the window.
+
+|arrowUp| Increase the time scale
+   Increase the time scale in major steps.
+   Fine scaling is meant to be done with the mouse wheel.
 
 Close
    Close the timeline viewer window.
@@ -202,5 +216,7 @@ Close
 .. |arrowRight| image:: _images/arrowRight.png
 .. |rewindRight| image:: _images/rewindRight.png
 .. |goToSelected| image:: _images/goToSelected.png
+.. |arrowDown| image:: _images/arrowDown.png
 .. |fitToWindow| image:: _images/fitToWindow.png
+.. |arrowUp| image:: _images/arrowUp.png
 

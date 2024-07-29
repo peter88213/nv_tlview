@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.12.0\n"
-"POT-Creation-Date: 2024-07-28 20:01:39\n"
-"PO-Revision-Date: 2024-07-28 20:01:39\n"
+"Project-Id-Version: 1.0.0\n"
+"POT-Creation-Date: 2024-07-29 10:11:47\n"
+"PO-Revision-Date: 2024-07-29 10:11:47\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,9 @@ msgstr "Hilfe"
 msgid "Hours"
 msgstr "Stunden"
 
+msgid "Increase scale"
+msgstr "Maßstab vergrößern"
+
 msgid "Last event"
 msgstr "Letztes Ereignis"
 
@@ -51,6 +54,9 @@ msgstr "Seite zurück"
 
 msgid "Page forward"
 msgstr "Seite vor"
+
+msgid "Reduce scale"
+msgstr "Maßstab verkleinern"
 
 msgid "Relaxed"
 msgstr "Aufgelockert"
@@ -90,4 +96,7 @@ msgstr "Benutze Bezugsdatum für fehlende Datumsangaben"
 
 msgid "Years"
 msgstr "Jahre"
+
+msgid "nvhelp-en"
+msgstr "nvhelp-de"
 

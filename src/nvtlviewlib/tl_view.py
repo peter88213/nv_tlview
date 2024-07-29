@@ -40,32 +40,6 @@ class TlView(tk.Toplevel):
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
 
-    SCALES = [
-        SCALE_MIN,
-        SCALE_MIN * 3,
-        HOUR / 60,
-        HOUR / 30,
-        HOUR / 12,
-        HOUR / 4,
-        HOUR / 2,
-        HOUR,
-        HOUR * 3,
-        HOUR * 6,
-        HOUR * 12,
-        DAY,
-        DAY * 2,
-        DAY * 4,
-        DAY * 6,
-        DAY * 12,
-        DAY * 24,
-        DAY * 48,
-        DAY * 96,
-        DAY * 192,
-        YEAR,
-        YEAR * 2,
-        SCALE_MAX,
-        ]
-
     def __init__(self, model, controller, kwargs):
         self._mdl = model
         self._ctrl = controller
@@ -194,7 +168,7 @@ class TlView(tk.Toplevel):
 
     def on_control_mouse_wheel(self, event):
         """Stretch the time scale using the mouse wheel."""
-        deltaScale = 1.5
+        deltaScale = 1.1
         if event.num == 5 or event.delta == -120:
             self.scale *= deltaScale
         if event.num == 4 or event.delta == 120:
@@ -375,11 +349,12 @@ class TlView(tk.Toplevel):
 
         toolbarIcons = self._ctrl.get_toolbar_icons()
 
+        # Moving the x position.
         rewindLeft = ttk.Button(
             self.toolbar,
             text=_('Page back'),
             image=toolbarIcons['rewindLeft'],
-            command=self.page_back
+            command=self._page_back
             )
         rewindLeft.pack(side='left')
         rewindLeft.image = toolbarIcons['rewindLeft']
@@ -388,7 +363,7 @@ class TlView(tk.Toplevel):
             self.toolbar,
             text=_('Scroll back'),
             image=toolbarIcons['arrowLeft'],
-            command=self.scroll_back
+            command=self._scroll_back
             )
         arrowLeft.pack(side='left')
         arrowLeft.image = toolbarIcons['arrowLeft']
@@ -424,7 +399,7 @@ class TlView(tk.Toplevel):
             self.toolbar,
             text=_('Scroll forward'),
             image=toolbarIcons['arrowRight'],
-            command=self.scroll_forward
+            command=self._scroll_forward
             )
         arrowRight.pack(side='left')
         arrowRight.image = toolbarIcons['arrowRight']
@@ -433,7 +408,7 @@ class TlView(tk.Toplevel):
             self.toolbar,
             text=_('Page forward'),
             image=toolbarIcons['rewindRight'],
-            command=self.page_forward
+            command=self._page_forward
             )
         rewindRight.pack(side='left')
         rewindRight.image = toolbarIcons['rewindRight']
@@ -441,6 +416,7 @@ class TlView(tk.Toplevel):
         # Separator.
         tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
 
+        # Changing the scale.
         arrowDown = ttk.Button(
             self.toolbar,
             text=_('Reduce scale'),
@@ -468,26 +444,33 @@ class TlView(tk.Toplevel):
         arrowUp.pack(side='left')
         arrowUp.image = toolbarIcons['arrowUp']
 
+        # "Close" button.
         ttk.Button(
             self.toolbar,
             text=_('Close'),
             command=self._ctrl.on_quit
             ).pack(side='right')
 
-    def scroll_back(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
+    def _increase_scale(self):
+        self.scale /= 2
+
+    def _page_back(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
         self.startTimestamp -= xDelta
 
-    def scroll_forward(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
+    def _page_forward(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
         self.startTimestamp += xDelta
 
-    def page_back(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
+    def _reduce_scale(self):
+        self.scale *= 2
+
+    def _scroll_back(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
         self.startTimestamp -= xDelta
 
-    def page_forward(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
+    def _scroll_forward(self, event=None):
+        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
         self.startTimestamp += xDelta
 
     def _set_first_event(self):
@@ -501,20 +484,6 @@ class TlView(tk.Toplevel):
         xPos = self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos
-
-    def _reduce_scale(self):
-        for newScale in reversed(self.SCALES):
-            if newScale < self._scale:
-                break
-
-        self.scale = newScale
-
-    def _increase_scale(self):
-        for newScale in self.SCALES:
-            if newScale > self._scale:
-                break
-
-        self.scale = newScale
 
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()

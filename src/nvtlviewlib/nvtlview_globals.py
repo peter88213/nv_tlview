@@ -35,7 +35,7 @@ HOUR = 3600
 DAY = HOUR * 24
 YEAR = DAY * 365
 
-HELP_URL = 'https://github.com/peter88213/nv_tlview/tree/main/docs/nv_tlview'
+HELP_URL = f'https://peter88213.github.io/{_("nvhelp-en")}/nv_tlview/'
 
 
 def open_help(event=None):

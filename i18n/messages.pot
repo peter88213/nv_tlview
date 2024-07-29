@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 0.12.0\n"
-"POT-Creation-Date: 2024-07-28 20:01:39\n"
+"Project-Id-Version: 1.0.0\n"
+"POT-Creation-Date: 2024-07-29 10:11:47\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -41,6 +41,9 @@ msgstr ""
 msgid "Hours"
 msgstr ""
 
+msgid "Increase scale"
+msgstr ""
+
 msgid "Last event"
 msgstr ""
 
@@ -51,6 +54,9 @@ msgid "Page back"
 msgstr ""
 
 msgid "Page forward"
+msgstr ""
+
+msgid "Reduce scale"
 msgstr ""
 
 msgid "Relaxed"
@@ -90,4 +96,7 @@ msgid "Use reference for missing dates"
 msgstr ""
 
 msgid "Years"
+msgstr ""
+
+msgid "nvhelp-en"
 msgstr ""

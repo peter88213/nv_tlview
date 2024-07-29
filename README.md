@@ -1,4 +1,4 @@
-[![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.12.0.pyzw)
+[![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v1.0.0.pyzw)
 [![Changelog](docs/img/changelog-button.png)](docs/changelog.md)
 [![News](docs/img/news-button.png)](https://github.com/peter88213/novelibre/discussions/1)
 [![Online help](docs/img/help-button.png)](docs/nv_tlview/)
@@ -8,7 +8,8 @@
 
 The [novelibre](https://github.com/peter88213/novelibre/) Python program helps authors organize novels.  
 
-*nv_tlview* is a plugin providing a timeline view. 
+*nv_tlview* is a plugin providing a timeline view with sections 
+that are given a narrative date/day and time. 
 
 ---
 
@@ -27,10 +28,10 @@ It is recommended to wait for version 1.
 
 ### Default: Executable Python zip archive
 
-Download the latest release [nv_tlview_v0.12.0.pyzw](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.12.0.pyzw)
+Download the latest release [nv_tlview_v1.0.0.pyzw](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v1.0.0.pyzw)
 
-- Launch *nv_tlview_v0.12.0.pyzw* by double-clicking (Windows/Linux desktop),
-- or execute `python nv_tlview_v0.12.0.pyzw` (Windows), resp. `python3 nv_tlview_v0.12.0.pyzw` (Linux) on the command line.
+- Launch *nv_tlview_v1.0.0.pyzw* by double-clicking (Windows/Linux desktop),
+- or execute `python nv_tlview_v1.0.0.pyzw` (Windows), resp. `python3 nv_tlview_v1.0.0.pyzw` (Linux) on the command line.
 
 #### Important
 
@@ -46,9 +47,9 @@ the zip file.
 
 ### Alternative: Zip file
 
-The package is also available in zip format: [nv_tlview_v0.12.0.zip](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.12.0.zip)
+The package is also available in zip format: [nv_tlview_v1.0.0.zip](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v1.0.0.zip)
 
-- Extract the *nv_tlview_v0.12.0* folder from the downloaded zipfile "nv_tlview_v0.12.0.zip".
+- Extract the *nv_tlview_v1.0.0* folder from the downloaded zipfile "nv_tlview_v1.0.0.zip".
 - Move into this new folder and launch *setup.pyw* by double-clicking (Windows/Linux desktop), 
 - or execute `python setup.pyw` (Windows), resp. `python3 setup.pyw` (Linux) on the command line.
 

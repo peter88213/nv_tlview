@@ -8,7 +8,8 @@
 
 The [novelibre](https://github.com/peter88213/novelibre/) Python program helps authors organize novels.  
 
-*nv_tlview* is a plugin providing a timeline view. 
+*nv_tlview* is a plugin providing a timeline view with sections 
+that are given a narrative date/day and time. 
 
 ---
 
