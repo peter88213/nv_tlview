@@ -58,6 +58,13 @@ See the [online manual](https://peter88213.github.io/nvhelp-en/nv_tlview/)
 
 ---
 
+## Credits
+
+- The logo is made using the free *Pusab* font by Ryoichi Tsunekawa, [Flat-it](http://flat-it.com/).
+- The toolbar icons are based on the [Eva Icons](https://akveo.github.io/eva-icons/#/), published under the [MIT License](http://www.opensource.org/licenses/mit-license.php). The original black and white icons were adapted for this application by the maintainer. 
+
+---
+
 ## License
 
 This is Open Source software, and the *nv_tlview* plugin is licensed under GPLv3. See the
