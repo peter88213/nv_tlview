@@ -78,28 +78,6 @@ class TlController:
         else:
             return dt.isoformat().split('T')[0]
 
-    def get_toolbar_icons(self):
-        return self._toolbarIcons
-
-    def on_quit(self):
-        """Actions to be performed when the viewer is closed."""
-        if not self.isOpen:
-            return
-
-        self.view.on_quit()
-        self._ui.unregister_view(self.view)
-        del(self.view)
-        self.isOpen = False
-
-    def open_viewer(self):
-        if self.view.state() == 'iconic':
-            self.view.state('normal')
-        self.view.lift()
-        self.view.focus()
-
-    def go_to_section(self, scId):
-        self._ui.tv.go_to_node(scId)
-
     def get_selected_section_timestamp(self):
         scId = self._ui.tv.tree.selection()[0]
         if not scId.startswith(SECTION_PREFIX):
@@ -141,4 +119,34 @@ class TlController:
 
         except:
             return
+
+    def get_toolbar_icons(self):
+        return self._toolbarIcons
+
+    def go_to_section(self, scId):
+        self._ui.tv.go_to_node(scId)
+
+    def on_quit(self):
+        """Actions to be performed when the viewer is closed."""
+        if not self.isOpen:
+            return
+
+        self.view.on_quit()
+        self._ui.unregister_view(self.view)
+        del(self.view)
+        self.isOpen = False
+
+    def open_viewer(self):
+        if self.view.state() == 'iconic':
+            self.view.state('normal')
+        self.view.lift()
+        self.view.focus()
+
+    def shift_event(self, scId, pixels):
+        seconds = int(pixels * self.view.scale)
+        print(f'Shifting the event by {seconds} seconds.')
+
+    def shift_event_end(self, scId, pixels):
+        seconds = int(pixels * self.view.scale)
+        print(f'Shifting the end by {seconds} seconds.')
 

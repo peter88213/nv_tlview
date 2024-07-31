@@ -29,6 +29,12 @@ class SectionCanvas(tk.Canvas):
         # list of tuples: (timestamp, duration in s, title)
         self.yMax = 0
 
+        # Variables for mouse drag operations.
+        self._xPos = None
+        self._xStart = None
+        self._active_object = None
+        self._indicator = None
+
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
         self.yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
@@ -62,6 +68,8 @@ class SectionCanvas(tk.Canvas):
                 tags=eventId
                 )
             self.tag_bind(sectionMark, '<Double-Button-1>', self._on_double_click)
+            self.tag_bind(sectionMark, '<Button-1>', self._on_click)
+            self.tag_bind(sectionMark, '<Alt-Button-1>', self._on_alt_click)
 
             # Draw title and date/time.
             xLabel = xEnd + self.LABEL_DIST_X
@@ -75,18 +83,75 @@ class SectionCanvas(tk.Canvas):
                 labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
 
-    def _get_section_id(self, event):
-        return event.widget.itemcget('current', 'tag').split(' ')[0]
-
-    def _on_double_click(self, event):
-        scId = self._get_section_id(event)
-        self._ctrl.go_to_section(scId)
-
     def draw_indicator(self, xPos):
-        self.create_line(
+        return self.create_line(
             (xPos, 0),
             (xPos, self.yMax),
             width=1,
             dash=(2, 2),
             fill=self.indicatorColor,
             )
+
+    def _get_section_id(self, event):
+        return event.widget.itemcget('current', 'tag').split(' ')[0]
+
+    def _on_alt_click(self, event):
+        """Begin increasing/decreasing the duration."""
+        self.bind_all('<Escape>', self._on_escape)
+        self._active_object = self._get_section_id(event)
+        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_alt_release)
+        self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
+        x1, y1, x2, y2 = self.bbox(self._active_object)
+        self._xStart = x2 - self.MARK_HALF
+        self._xPos = event.x
+        self._indicator = self.draw_indicator(self._xStart)
+        self._xStart = event.x
+
+    def _on_alt_release(self, event):
+        self.unbind_all('<Escape>')
+        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
+        self.tag_unbind(self._active_object, '<B1-Motion>')
+        self.delete(self._indicator)
+        deltaX = event.x - self._xStart
+        self._ctrl.shift_event_end(self._active_object, deltaX)
+        self._active_object = None
+
+    def _on_click(self, event):
+        """Begin moving the event in time."""
+        self.bind_all('<Escape>', self._on_escape)
+        self._active_object = self._get_section_id(event)
+        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_release)
+        self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
+        x1, y1, x2, y2 = self.bbox(self._active_object)
+        self._xStart = x1 + self.MARK_HALF
+        self._xPos = event.x
+        self._indicator = self.draw_indicator(self._xStart)
+        self._xStart = event.x
+
+    def _on_double_click(self, event):
+        """Select the double-clicked section in the project tree."""
+        scId = self._get_section_id(event)
+        self._ctrl.go_to_section(scId)
+
+    def _on_drag(self, event):
+        deltaX = event.x - self._xPos
+        self._xPos = event.x
+        self.move(self._indicator, deltaX, 0)
+
+    def _on_escape(self, event):
+        self.unbind_all('<Escape>')
+        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
+        self.tag_unbind(self._active_object, '<B1-Motion>')
+        self.delete(self._indicator)
+        print('Aborted')
+        self._active_object = None
+
+    def _on_release(self, event):
+        self.unbind_all('<Escape>')
+        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
+        self.tag_unbind(self._active_object, '<B1-Motion>')
+        self.delete(self._indicator)
+        deltaX = event.x - self._xStart
+        self._ctrl.shift_event(self._active_object, deltaX)
+        self._active_object = None
+
