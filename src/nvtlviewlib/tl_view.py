@@ -65,14 +65,6 @@ class TlView(tk.Toplevel):
         #--- The Timeline frame.
         self.tlFrame = TlFrame(self, self._ctrl)
         self.tlFrame.pack(fill='both', expand=True, padx=2, pady=2)
-        self._bind_tl_scroll()
-
-        #--- Event bindings.
-        self.bind('<Configure>', self.draw_timeline)
-        self.bind('<F1>', open_help)
-        self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
-        if platform.system() != 'Windows':
-            self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
 
         #--- Settings and options.
         self._substituteMissingTime = self._kwargs['substitute_missing_time']
@@ -82,6 +74,7 @@ class TlView(tk.Toplevel):
         self._substituteMissingDate = self._kwargs['substitute_missing_date']
         # if True, use the reference date if neither date nor day is given
 
+        self._bind_events()
         self._build_menu()
         self._build_toolbar()
         self.fit_window()
@@ -276,7 +269,15 @@ class TlView(tk.Toplevel):
             self.firstTimestamp = self.MIN_TIMESTAMP
             self.lastTimestamp = self.MAX_TIMESTAMP
 
-    def _bind_tl_scroll(self):
+    def _bind_events(self):
+        self.bind('<Configure>', self.draw_timeline)
+        self.bind('<F1>', open_help)
+        self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
+        if platform.system() == 'Windows':
+            self.tlFrame.sectionCanvas.bind('<4>', self._page_back)
+            self.tlFrame.sectionCanvas.bind('<5>', self._page_forward)
+        else:
+            self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
         if platform.system() == 'Linux':
             self.tlFrame.sectionCanvas.bind("<Control-Button-4>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Control-Button-5>", self.on_control_mouse_wheel)

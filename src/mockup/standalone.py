@@ -23,11 +23,12 @@ OPTIONS = dict(
 
 class NvViewMock:
 
-    def __init__(self):
+    def __init__(self, model):
+        self._mdl = model
         self.tv = TreeViewerMock()
 
     def register_view(self, view):
-        pass
+        self._mdl.register_client(view)
 
     def unregister_view(self, view):
         pass
@@ -37,6 +38,15 @@ class NvModelMock:
 
     def __init__(self, sections, referenceDate):
         self.novel = NovelMock(sections, referenceDate)
+        self.client = None
+        for scId in sections:
+            sections[scId].on_element_change = self.on_element_change
+
+    def on_element_change(self):
+        self.client.refresh()
+
+    def register_client(self, client):
+        self.client = client
 
 
 class NovelMock:
@@ -74,13 +84,14 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     if sections is None:
         sections = {}
     mdl = NvModelMock(sections, referenceDate)
-    ui = NvViewMock()
+    ui = NvViewMock(mdl)
 
     kwargs = SETTINGS
     kwargs.update(OPTIONS)
     nvCtrl = NvControllerMock()
     tlCtrl = TlController(mdl, ui, nvCtrl, kwargs)
     tlCtrl.view.bind("<Destroy>", sys.exit)
+
     tlCtrl.open_viewer()
     tk.mainloop()
 

@@ -68,7 +68,7 @@ class SectionCanvas(tk.Canvas):
                 tags=eventId
                 )
             self.tag_bind(sectionMark, '<Double-Button-1>', self._on_double_click)
-            self.tag_bind(sectionMark, '<Button-1>', self._on_click)
+            self.tag_bind(sectionMark, '<Shift-Button-1>', self._on_shift_click)
             self.tag_bind(sectionMark, '<Alt-Button-1>', self._on_alt_click)
 
             # Draw title and date/time.
@@ -116,11 +116,11 @@ class SectionCanvas(tk.Canvas):
         self._ctrl.shift_event_end(self._active_object, deltaX)
         self._active_object = None
 
-    def _on_click(self, event):
+    def _on_shift_click(self, event):
         """Begin moving the event in time."""
         self.bind_all('<Escape>', self._on_escape)
         self._active_object = self._get_section_id(event)
-        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_release)
+        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_shift_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
         x1, y1, x2, y2 = self.bbox(self._active_object)
         self._xStart = x1 + self.MARK_HALF
@@ -145,7 +145,7 @@ class SectionCanvas(tk.Canvas):
         self.delete(self._indicator)
         self._active_object = None
 
-    def _on_release(self, event):
+    def _on_shift_release(self, event):
         self.unbind_all('<Escape>')
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
