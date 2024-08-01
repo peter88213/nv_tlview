@@ -27,3 +27,10 @@ def get_seconds(days, hours, minutes):
         seconds += int(minutes) * 60
     return seconds
 
+
+def get_duration(seconds):
+    """Return a (days, hours, minutes) tuple calculated from seconds."""
+    minutes = seconds // 60
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    return days, hours, minutes

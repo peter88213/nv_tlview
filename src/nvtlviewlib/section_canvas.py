@@ -143,7 +143,6 @@ class SectionCanvas(tk.Canvas):
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
         self.delete(self._indicator)
-        print('Aborted')
         self._active_object = None
 
     def _on_release(self, event):

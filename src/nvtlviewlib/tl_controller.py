@@ -8,7 +8,11 @@ from datetime import datetime
 from pathlib import Path
 
 from novxlib.model.date_time_tools import get_specific_date
+from novxlib.model.date_time_tools import get_unspecific_date
 from novxlib.novx_globals import SECTION_PREFIX
+from nvtlviewlib.dt_helper import from_timestamp
+from nvtlviewlib.dt_helper import get_duration
+from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.tl_view import TlView
 import tkinter as tk
@@ -143,10 +147,43 @@ class TlController:
         self.view.focus()
 
     def shift_event(self, scId, pixels):
-        seconds = int(pixels * self.view.scale)
-        print(f'Shifting the event by {seconds} seconds.')
+        deltaSeconds = int(pixels * self.view.scale)
+        section = self._mdl.novel.sections[scId]
+        refIso = self._mdl.novel.referenceDate
+        if section.time is None:
+            scTime = '00:00'
+        else:
+            scTime = section.time
+        if section.date is not None:
+            scDate = section.date
+        elif section.day is not None:
+            scDate = get_specific_date(section.day, refIso)
+        else:
+            scDate = refIso
+
+        timestamp = get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}')) + deltaSeconds
+        dt = from_timestamp(timestamp)
+        dateStr, timeStr = datetime.isoformat(dt).split('T')
+        section.time = timeStr
+        if section.date is not None:
+            section.date = dateStr
+        else:
+            dayStr = get_unspecific_date(dateStr, refIso)
+            section.day = dayStr
 
     def shift_event_end(self, scId, pixels):
-        seconds = int(pixels * self.view.scale)
-        print(f'Shifting the end by {seconds} seconds.')
+        deltaSeconds = int(pixels * self.view.scale)
+        seconds = get_seconds(
+            self._mdl.novel.sections[scId].lastsDays,
+            self._mdl.novel.sections[scId].lastsHours,
+            self._mdl.novel.sections[scId].lastsMinutes
+            )
+        seconds += deltaSeconds
+        if seconds < 0:
+            seconds = 0
+
+        days, hours, minutes = get_duration(seconds)
+        self._mdl.novel.sections[scId].lastsDays = days
+        self._mdl.novel.sections[scId].lastsHours = hours
+        self._mdl.novel.sections[scId].lastsMinutes = minutes
 
