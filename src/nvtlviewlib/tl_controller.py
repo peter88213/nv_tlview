@@ -82,6 +82,9 @@ class TlController:
         else:
             return dt.isoformat().split('T')[0]
 
+    def get_minutes(self, pixels):
+        return pixels * self.view.scale // 60
+
     def get_selected_section_timestamp(self):
         scId = self._ui.tv.tree.selection()[0]
         if not scId.startswith(SECTION_PREFIX):

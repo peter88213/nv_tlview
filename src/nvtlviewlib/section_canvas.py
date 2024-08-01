@@ -34,6 +34,7 @@ class SectionCanvas(tk.Canvas):
         self._xStart = None
         self._active_object = None
         self._indicator = None
+        self._indicatorText = None
 
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
@@ -84,16 +85,28 @@ class SectionCanvas(tk.Canvas):
             yPos += self.EVENT_DIST_Y
 
     def draw_indicator(self, xPos):
-        return self.create_line(
+        self.delete(self._indicator)
+        self.delete(self._indicatorText)
+        self._indicator = self.create_line(
             (xPos, 0),
             (xPos, self.yMax),
             width=1,
             dash=(2, 2),
             fill=self.indicatorColor,
             )
+        self._indicatorText = self.create_text(
+            (xPos + 5, 0),
+            text='hello world',
+            fill=self.indicatorColor,
+            anchor='nw'
+            )
 
     def _get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
+
+    def _move_indicator(self, deltaX):
+        self.move(self._indicator, deltaX, 0)
+        self.move(self._indicatorText, deltaX, 0)
 
     def _on_alt_click(self, event):
         """Begin increasing/decreasing the duration."""
@@ -104,16 +117,32 @@ class SectionCanvas(tk.Canvas):
         x1, y1, x2, y2 = self.bbox(self._active_object)
         self._xStart = x2 - self.MARK_HALF
         self._xPos = event.x
-        self._indicator = self.draw_indicator(self._xStart)
+        self.draw_indicator(self._xStart)
         self._xStart = event.x
 
     def _on_alt_release(self, event):
         self.unbind_all('<Escape>')
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
-        self.delete(self._indicator)
         deltaX = event.x - self._xStart
         self._ctrl.shift_event_end(self._active_object, deltaX)
+        self._active_object = None
+
+    def _on_double_click(self, event):
+        """Select the double-clicked section in the project tree."""
+        scId = self._get_section_id(event)
+        self._ctrl.go_to_section(scId)
+
+    def _on_drag(self, event):
+        deltaX = event.x - self._xPos
+        self._xPos = event.x
+        self._move_indicator(deltaX)
+
+    def _on_escape(self, event):
+        self.unbind_all('<Escape>')
+        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
+        self.tag_unbind(self._active_object, '<B1-Motion>')
+        self.delete(self._indicator)
         self._active_object = None
 
     def _on_shift_click(self, event):
@@ -125,31 +154,13 @@ class SectionCanvas(tk.Canvas):
         x1, y1, x2, y2 = self.bbox(self._active_object)
         self._xStart = x1 + self.MARK_HALF
         self._xPos = event.x
-        self._indicator = self.draw_indicator(self._xStart)
+        self.draw_indicator(self._xStart)
         self._xStart = event.x
-
-    def _on_double_click(self, event):
-        """Select the double-clicked section in the project tree."""
-        scId = self._get_section_id(event)
-        self._ctrl.go_to_section(scId)
-
-    def _on_drag(self, event):
-        deltaX = event.x - self._xPos
-        self._xPos = event.x
-        self.move(self._indicator, deltaX, 0)
-
-    def _on_escape(self, event):
-        self.unbind_all('<Escape>')
-        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
-        self.tag_unbind(self._active_object, '<B1-Motion>')
-        self.delete(self._indicator)
-        self._active_object = None
 
     def _on_shift_release(self, event):
         self.unbind_all('<Escape>')
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
-        self.delete(self._indicator)
         deltaX = event.x - self._xStart
         self._ctrl.shift_event(self._active_object, deltaX)
         self._active_object = None
