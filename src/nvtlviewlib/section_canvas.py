@@ -34,7 +34,6 @@ class SectionCanvas(tk.Canvas):
         self._xStart = None
         self._active_object = None
         self._indicator = None
-        self._indicatorText = None
 
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
@@ -86,7 +85,6 @@ class SectionCanvas(tk.Canvas):
 
     def draw_indicator(self, xPos):
         self.delete(self._indicator)
-        self.delete(self._indicatorText)
         self._indicator = self.create_line(
             (xPos, 0),
             (xPos, self.yMax),
@@ -94,19 +92,12 @@ class SectionCanvas(tk.Canvas):
             dash=(2, 2),
             fill=self.indicatorColor,
             )
-        self._indicatorText = self.create_text(
-            (xPos + 5, 0),
-            text='hello world',
-            fill=self.indicatorColor,
-            anchor='nw'
-            )
 
     def _get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
 
     def _move_indicator(self, deltaX):
         self.move(self._indicator, deltaX, 0)
-        self.move(self._indicatorText, deltaX, 0)
 
     def _on_alt_click(self, event):
         """Begin increasing/decreasing the duration."""
