@@ -85,7 +85,14 @@ class TlController:
     def get_minutes(self, pixels):
         return pixels * self.view.scale // 60
 
-    def get_selected_section_timestamp(self):
+    def get_section_title(self, scId):
+        return self._mdl.novel.sections[scId].title
+
+    def get_selected_section(self):
+        """Return a tuple (ID, timestamp) of the currently selected section.
+        
+        If no section is selected, return None.
+        """
         scId = self._ui.tv.tree.selection()[0]
         if not scId.startswith(SECTION_PREFIX):
             return
@@ -122,7 +129,7 @@ class TlController:
             else:
                 return
 
-            return get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}'))
+            return scId, get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}'))
 
         except:
             return

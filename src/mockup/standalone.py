@@ -81,6 +81,7 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
 
+    root = tk.Tk()
     if sections is None:
         sections = {}
     mdl = NvModelMock(sections, referenceDate)
@@ -93,7 +94,7 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     tlCtrl.view.bind("<Destroy>", sys.exit)
 
     tlCtrl.open_viewer()
-    tk.mainloop()
+    root.mainloop()
 
 
 if __name__ == '__main__':

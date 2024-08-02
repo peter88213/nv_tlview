@@ -151,13 +151,17 @@ class TlView(tk.Toplevel):
         self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
-        xPos = self.tlFrame.scaleCanvas._get_window_width() / 2
-        selectedTimestamp = self._ctrl.get_selected_section_timestamp()
-        if selectedTimestamp is None:
+        sectionData = self._ctrl.get_selected_section()
+        if sectionData is None:
             return
 
+        scId, selectedTimestamp = sectionData
+        xPos = self.tlFrame.scaleCanvas._get_window_width() / 2
         self.startTimestamp = selectedTimestamp - xPos * self.scale
-        self.tlFrame.sectionCanvas.draw_indicator(xPos)
+        self.tlFrame.sectionCanvas.draw_indicator(
+            xPos,
+            text=self._ctrl.get_section_title(scId)
+            )
 
     def on_control_mouse_wheel(self, event):
         """Stretch the time scale using the mouse wheel."""

@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1.0\n"
-"POT-Creation-Date: 2024-08-02 13:00:06\n"
-"PO-Revision-Date: 2024-08-02 13:00:06\n"
+"Project-Id-Version: 1.1.1\n"
+"POT-Creation-Date: 2024-08-02 21:38:27\n"
+"PO-Revision-Date: 2024-08-02 21:38:27\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -72,6 +72,12 @@ msgstr "Vorscrollen"
 
 msgid "Selected section"
 msgstr "Ausgewählter Abschnitt"
+
+msgid "Shift end"
+msgstr "Verschiebe Ende"
+
+msgid "Shift start"
+msgstr "Verschiebe Anfang"
 
 msgid "Standard"
 msgstr "Normal"
