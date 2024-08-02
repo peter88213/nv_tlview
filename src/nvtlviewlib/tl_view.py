@@ -24,6 +24,7 @@ import tkinter as tk
 
 class TlView(tk.Toplevel):
     _KEY_QUIT_PROGRAM = ('<Control-q>', 'Ctrl-Q')
+    _KEY_UNDO = ('<Control-z>', 'Ctrl-Z')
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
@@ -276,6 +277,7 @@ class TlView(tk.Toplevel):
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
         self.bind('<F1>', open_help)
+        self.bind(self._KEY_UNDO[0], self._ctrl.pop_event)
         self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
         if platform.system() == 'Windows':
             self.tlFrame.sectionCanvas.bind('<4>', self._page_back)
@@ -448,6 +450,18 @@ class TlView(tk.Toplevel):
             )
         arrowUp.pack(side='left')
         arrowUp.image = toolbarIcons['arrowUp']
+
+        # Separator.
+        tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
+
+        undo = ttk.Button(
+            self.toolbar,
+            text=_('Undo'),
+            image=toolbarIcons['undo'],
+            command=self._ctrl.pop_event
+            )
+        undo.pack(side='left')
+        undo.image = toolbarIcons['undo']
 
         # "Close" button.
         ttk.Button(

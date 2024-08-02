@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1.1\n"
-"POT-Creation-Date: 2024-08-02 21:38:27\n"
-"PO-Revision-Date: 2024-08-02 21:38:27\n"
+"Project-Id-Version: 1.1.2\n"
+"POT-Creation-Date: 2024-08-02 22:20:57\n"
+"PO-Revision-Date: 2024-08-02 22:20:57\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -93,6 +93,9 @@ msgstr "Zeitleistenansicht"
 
 msgid "Timeline view Online help"
 msgstr "Zeitleistenansicht Online-Hilfe"
+
+msgid "Undo"
+msgstr "Rückgängig"
 
 msgid "Use 00:00 for missing times"
 msgstr "Benutze 00:00 für fehlende Zeiten"

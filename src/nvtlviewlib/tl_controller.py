@@ -49,6 +49,7 @@ class TlController:
             'fitToWindow',
             'arrowUp',
             'arrowDown',
+            'undo',
             ]
         for icon in icons:
             try:
@@ -71,6 +72,8 @@ class TlController:
         # if True, convert days to dates if a reference date is given
         self._substituteMissingDate = kwargs['substitute_missing_date']
         # if True, use the reference date if neither date nor day is given
+
+        self._controlBuffer = []
 
     def datestr(self, dt):
         """Return a localized date string, if the localize_date option is set.
@@ -157,6 +160,8 @@ class TlController:
         self.view.focus()
 
     def shift_event(self, scId, pixels):
+        self.push_event(scId)
+
         deltaSeconds = int(pixels * self.view.scale)
         section = self._mdl.novel.sections[scId]
         refIso = self._mdl.novel.referenceDate
@@ -182,6 +187,8 @@ class TlController:
             section.day = dayStr
 
     def shift_event_end(self, scId, pixels):
+        self.push_event(scId)
+
         deltaSeconds = int(pixels * self.view.scale)
         seconds = get_seconds(
             self._mdl.novel.sections[scId].lastsDays,
@@ -196,4 +203,31 @@ class TlController:
         self._mdl.novel.sections[scId].lastsDays = days
         self._mdl.novel.sections[scId].lastsHours = hours
         self._mdl.novel.sections[scId].lastsMinutes = minutes
+
+    def push_event(self, scId, event=None):
+        section = self._mdl.novel.sections[scId]
+        eventData = (
+            scId,
+            section.date,
+            section.time,
+            section.day,
+            section.lastsDays,
+            section.lastsHours,
+            section.lastsMinutes
+        )
+        self._controlBuffer.append(eventData)
+
+    def pop_event(self, event=None):
+        if not self._controlBuffer:
+            return
+
+        eventData = self._controlBuffer.pop()
+        scId, sectionDate, sectionTime, sectionDay, sectionLastsDays, sectionLastsHours, sectionLastsMinutes = eventData
+        section = self._mdl.novel.sections[scId]
+        section.date = sectionDate
+        section.time = sectionTime
+        section.day = sectionDay
+        section.lastsDays = sectionLastsDays
+        section.lastsHours = sectionLastsHours
+        section.lastsMinutes = sectionLastsMinutes
 

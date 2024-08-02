@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.1.1\n"
-"POT-Creation-Date: 2024-08-02 21:38:27\n"
+"Project-Id-Version: 1.1.2\n"
+"POT-Creation-Date: 2024-08-02 22:20:57\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -93,6 +93,9 @@ msgid "Timeline view"
 msgstr ""
 
 msgid "Timeline view Online help"
+msgstr ""
+
+msgid "Undo"
 msgstr ""
 
 msgid "Use 00:00 for missing times"
