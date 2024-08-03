@@ -152,13 +152,12 @@ class TlView(tk.Toplevel):
         self.tlFrame.sectionCanvas.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
-        sectionData = self._ctrl.get_selected_section()
-        if sectionData is None:
+        scId = self._ctrl.get_selected_section()
+        if scId is None:
             return
 
-        scId, selectedTimestamp = sectionData
         xPos = self.tlFrame.scaleCanvas._get_window_width() / 2
-        self.startTimestamp = selectedTimestamp - xPos * self.scale
+        self.startTimestamp = self._ctrl.get_section_timestamp(scId) - xPos * self.scale
         self.tlFrame.sectionCanvas.draw_indicator(
             xPos,
             text=self._ctrl.get_section_title(scId)
@@ -357,111 +356,112 @@ class TlView(tk.Toplevel):
         toolbarIcons = self._ctrl.get_toolbar_icons()
 
         # Moving the x position.
-        rewindLeft = ttk.Button(
+        rewindLeftButton = ttk.Button(
             self.toolbar,
             text=_('Page back'),
             image=toolbarIcons['rewindLeft'],
             command=self._page_back
             )
-        rewindLeft.pack(side='left')
-        rewindLeft.image = toolbarIcons['rewindLeft']
+        rewindLeftButton.pack(side='left')
+        rewindLeftButton.image = toolbarIcons['rewindLeft']
 
-        arrowLeft = ttk.Button(
+        arrowLeftButton = ttk.Button(
             self.toolbar,
             text=_('Scroll back'),
             image=toolbarIcons['arrowLeft'],
             command=self._scroll_back
             )
-        arrowLeft.pack(side='left')
-        arrowLeft.image = toolbarIcons['arrowLeft']
+        arrowLeftButton.pack(side='left')
+        arrowLeftButton.image = toolbarIcons['arrowLeft']
 
-        goToFirst = ttk.Button(
+        goToFirstButton = ttk.Button(
             self.toolbar,
             text=_('First event'),
             image=toolbarIcons['goToFirst'],
             command=self.go_to_first
             )
-        goToFirst.pack(side='left')
-        goToFirst.image = toolbarIcons['goToFirst']
+        goToFirstButton.pack(side='left')
+        goToFirstButton.image = toolbarIcons['goToFirst']
 
-        goToSelected = ttk.Button(
+        goToSelectedButton = ttk.Button(
             self.toolbar,
             text=_('Selected section'),
             image=toolbarIcons['goToSelected'],
             command=self.go_to_selected
             )
-        goToSelected.pack(side='left')
-        goToSelected.image = toolbarIcons['goToSelected']
+        goToSelectedButton.pack(side='left')
+        goToSelectedButton.image = toolbarIcons['goToSelected']
 
-        goToLast = ttk.Button(
+        goToLastButton = ttk.Button(
             self.toolbar,
             text=_('Last event'),
             image=toolbarIcons['goToLast'],
             command=self.go_to_last
             )
-        goToLast.pack(side='left')
-        goToLast.image = toolbarIcons['goToLast']
+        goToLastButton.pack(side='left')
+        goToLastButton.image = toolbarIcons['goToLast']
 
-        arrowRight = ttk.Button(
+        arrowRightButton = ttk.Button(
             self.toolbar,
             text=_('Scroll forward'),
             image=toolbarIcons['arrowRight'],
             command=self._scroll_forward
             )
-        arrowRight.pack(side='left')
-        arrowRight.image = toolbarIcons['arrowRight']
+        arrowRightButton.pack(side='left')
+        arrowRightButton.image = toolbarIcons['arrowRight']
 
-        rewindRight = ttk.Button(
+        rewindRightButton = ttk.Button(
             self.toolbar,
             text=_('Page forward'),
             image=toolbarIcons['rewindRight'],
             command=self._page_forward
             )
-        rewindRight.pack(side='left')
-        rewindRight.image = toolbarIcons['rewindRight']
+        rewindRightButton.pack(side='left')
+        rewindRightButton.image = toolbarIcons['rewindRight']
 
         # Separator.
         tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
 
         # Changing the scale.
-        arrowDown = ttk.Button(
+        arrowDownButton = ttk.Button(
             self.toolbar,
             text=_('Reduce scale'),
             image=toolbarIcons['arrowDown'],
             command=self._reduce_scale
             )
-        arrowDown.pack(side='left')
-        arrowDown.image = toolbarIcons['arrowDown']
+        arrowDownButton.pack(side='left')
+        arrowDownButton.image = toolbarIcons['arrowDown']
 
-        fitToWindow = ttk.Button(
+        fitToWindowButton = ttk.Button(
             self.toolbar,
             text=_('Fit to window'),
             image=toolbarIcons['fitToWindow'],
             command=self.fit_window
             )
-        fitToWindow.pack(side='left')
-        fitToWindow.image = toolbarIcons['fitToWindow']
+        fitToWindowButton.pack(side='left')
+        fitToWindowButton.image = toolbarIcons['fitToWindow']
 
-        arrowUp = ttk.Button(
+        arrowUpButton = ttk.Button(
             self.toolbar,
             text=_('Increase scale'),
             image=toolbarIcons['arrowUp'],
             command=self._increase_scale
             )
-        arrowUp.pack(side='left')
-        arrowUp.image = toolbarIcons['arrowUp']
+        arrowUpButton.pack(side='left')
+        arrowUpButton.image = toolbarIcons['arrowUp']
 
         # Separator.
         tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
 
-        undo = ttk.Button(
+        self.undoButton = ttk.Button(
             self.toolbar,
             text=_('Undo'),
             image=toolbarIcons['undo'],
-            command=self._ctrl.pop_event
+            command=self._ctrl.pop_event,
+            state='disabled',
             )
-        undo.pack(side='left')
-        undo.image = toolbarIcons['undo']
+        self.undoButton.pack(side='left')
+        self.undoButton.image = toolbarIcons['undo']
 
         # "Close" button.
         ttk.Button(

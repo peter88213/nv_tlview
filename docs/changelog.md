@@ -5,6 +5,13 @@
 ## Changelog
 
 
+### v1.1.4
+
+- Disable the "Undo" button when there has been no operation with the mouse.
+- Refactor.
+
+Compatibility: novelibre v4.7 API
+
 ### v1.1.3
 
 - Display sections' duration.

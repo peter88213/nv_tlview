@@ -88,18 +88,7 @@ class TlController:
     def get_minutes(self, pixels):
         return pixels * self.view.scale // 60
 
-    def get_section_title(self, scId):
-        return self._mdl.novel.sections[scId].title
-
-    def get_selected_section(self):
-        """Return a tuple (ID, timestamp) of the currently selected section.
-        
-        If no section is selected, return None.
-        """
-        scId = self._ui.tv.tree.selection()[0]
-        if not scId.startswith(SECTION_PREFIX):
-            return
-
+    def get_section_timestamp(self, scId):
         section = self._mdl.novel.sections[scId]
         if section.scType != 0:
             return
@@ -132,10 +121,22 @@ class TlController:
             else:
                 return
 
-            return scId, get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}'))
+            return get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}'))
 
         except:
             return
+
+    def get_section_title(self, scId):
+        return self._mdl.novel.sections[scId].title
+
+    def get_selected_section(self):
+        """Return the ID of the currently selected section.
+        
+        If no section is selected, return None.
+        """
+        scId = self._ui.tv.tree.selection()[0]
+        if scId.startswith(SECTION_PREFIX):
+            return scId
 
     def get_toolbar_icons(self):
         return self._toolbarIcons
@@ -216,6 +217,7 @@ class TlController:
             section.lastsMinutes
         )
         self._controlBuffer.append(eventData)
+        self.view.undoButton.config(state='normal')
 
     def pop_event(self, event=None):
         if not self._controlBuffer:
@@ -230,4 +232,6 @@ class TlController:
         section.lastsDays = sectionLastsDays
         section.lastsHours = sectionLastsHours
         section.lastsMinutes = sectionLastsMinutes
+        if not self._controlBuffer:
+            self.view.undoButton.config(state='disabled')
 

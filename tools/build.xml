@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="nv_tlview" basedir=".">
-	<property name="version" value="1.1.3" />
+	<property name="version" value="1.1.4" />
 	<property name="plugin" value="nv_tlview" />
 	
 	<property name="source-path" location="../src" />
