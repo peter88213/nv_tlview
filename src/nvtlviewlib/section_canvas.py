@@ -7,6 +7,8 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from calendar import day_abbr
 
 from nvtlviewlib.dt_helper import from_timestamp
+from nvtlviewlib.dt_helper import get_duration
+from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.nvtlview_globals import _
 import tkinter as tk
 
@@ -51,11 +53,12 @@ class SectionCanvas(tk.Canvas):
         yPos = yStart
         labelEnd = 0
         for section in srtSections:
-            timestamp, duration, title, eventId = section
+            timestamp, durationSeconds, title, eventId = section
             xStart = (timestamp - startTimestamp) / scale
             dt = from_timestamp(timestamp)
             weekDay = day_abbr[dt.weekday()]
-            timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}"
+            durationStr = get_duration_str(get_duration(durationSeconds))
+            timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
 
             # Cascade sections.
             if xStart > labelEnd + minDist:
@@ -63,7 +66,7 @@ class SectionCanvas(tk.Canvas):
                 labelEnd = 0
 
             # Draw section mark.
-            xEnd = (timestamp - startTimestamp + duration) / scale
+            xEnd = (timestamp - startTimestamp + durationSeconds) / scale
             sectionMark = self.create_polygon(
                 (xStart, yPos - self.MARK_HALF),
                 (xStart - self.MARK_HALF, yPos),
