@@ -5,6 +5,12 @@
 ## Changelog
 
 
+### v1.1.5
+
+- Refactor to speed up redrawing.
+
+Compatibility: novelibre v4.7 API
+
 ### v1.1.4
 
 - Disable the "Undo" button when there has been no operation with the mouse.

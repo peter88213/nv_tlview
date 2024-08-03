@@ -4,11 +4,6 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-from calendar import day_abbr
-
-from nvtlviewlib.dt_helper import from_timestamp
-from nvtlviewlib.dt_helper import get_duration
-from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.nvtlview_globals import _
 import tkinter as tk
 
@@ -53,12 +48,8 @@ class SectionCanvas(tk.Canvas):
         yPos = yStart
         labelEnd = 0
         for section in srtSections:
-            timestamp, durationSeconds, title, eventId = section
+            timestamp, durationSeconds, title, timeStr, eventId = section
             xStart = (timestamp - startTimestamp) / scale
-            dt = from_timestamp(timestamp)
-            weekDay = day_abbr[dt.weekday()]
-            durationStr = get_duration_str(get_duration(durationSeconds))
-            timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
 
             # Cascade sections.
             if xStart > labelEnd + minDist:

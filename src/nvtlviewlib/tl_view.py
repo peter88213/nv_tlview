@@ -4,11 +4,13 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
+from calendar import day_abbr
 from datetime import datetime
 import platform
 from tkinter import ttk
 
 from novxlib.model.date_time_tools import get_specific_date
+from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
@@ -123,7 +125,6 @@ class TlView(tk.Toplevel):
         self.draw_timeline()
 
     def draw_timeline(self, event=None):
-        self.sort_sections()
         if self.startTimestamp is None:
             self.startTimestamp = self.firstTimestamp
         self.tlFrame.scaleCanvas.draw(
@@ -190,6 +191,7 @@ class TlView(tk.Toplevel):
     def refresh(self):
         """Refresh the view after changes have been made "outsides"."""
         if not self._skipUpdate:
+            self.sort_sections()
             self.draw_timeline()
 
     def on_shift_mouse_wheel(self, event):
@@ -255,11 +257,16 @@ class TlView(tk.Toplevel):
                 else:
                     continue
 
+                dt = datetime.fromisoformat(f'{scDate} {scTime}')
+                weekDay = day_abbr[dt.weekday()]
+                durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
+
                 srtSections.append(
                         (
-                        get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}')),
+                        get_timestamp(dt),
                         get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
                         section.title,
+                        f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}",
                         scId
                         )
                     )
@@ -507,15 +514,18 @@ class TlView(tk.Toplevel):
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()
         self._kwargs['substitute_missing_time'] = self._substituteMissingTime
+        self.sort_sections()
         self.draw_timeline()
 
     def _set_convert_days(self):
         self._convertDays = self._convDays.get()
         self._kwargs['convert_days'] = self._convertDays
+        self.sort_sections()
         self.draw_timeline()
 
     def _set_substitute_missing_date(self):
         self._substituteMissingDate = self._substDate.get()
         self._kwargs['substitute_missing_date'] = self._substituteMissingDate
+        self.sort_sections()
         self.draw_timeline()
 

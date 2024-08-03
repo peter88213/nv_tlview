@@ -37,8 +37,7 @@ def get_duration(seconds):
     return days, hours, minutes
 
 
-def get_duration_str(duration):
-    days, hours, minutes = duration
+def get_duration_str(days, hours, minutes):
     durationStr = ''
     if days:
         durationStr = f' {days} {_("d")}'
