@@ -39,7 +39,7 @@ PLUGIN = f'{APPLICATION} plugin v@release'
 
 
 class Plugin(PluginBase):
-    """Template plugin class."""
+    """Plugin class for the timeline view."""
     VERSION = '@release'
     API_VERSION = '4.7'
     DESCRIPTION = 'A timeline view'
