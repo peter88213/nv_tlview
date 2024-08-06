@@ -27,8 +27,10 @@ except:
 
 # Constants in pixels.
 MAJOR_HEIGHT = 15
+MINOR_HEIGHT = 30
 MAJOR_WIDTH_MIN = 120
-MAJOR_WIDTH_MAX = 360
+MINOR_WIDTH_MIN = 40
+MAJOR_WIDTH_MAX = 480
 
 # Constants in seconds per pixel.
 HOUR = 3600

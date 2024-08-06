@@ -9,7 +9,9 @@ from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
 from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
+from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
 from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MIN
+from nvtlviewlib.nvtlview_globals import MINOR_WIDTH_MIN
 from nvtlviewlib.nvtlview_globals import YEAR
 import tkinter as tk
 
@@ -21,6 +23,9 @@ class ScaleCanvas(tk.Canvas):
         self._ctrl = controller
         self['background'] = 'dimgray'
         self._majorScaleColor = 'white'
+        self._minorScaleColor = 'black'
+        self.majorWidth = None
+        self.minorWidth = None
 
     def draw(self, startTimestamp, scale):
         self.delete("all")
@@ -58,15 +63,58 @@ class ScaleCanvas(tk.Canvas):
 
             weekDay = day_abbr[dt.weekday()]
             if units == 0:
-                dtStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}"
+                dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
             elif units == 1:
                 dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
             elif units == 2:
                 dtStr = f"{self._ctrl.datestr(dt)}"
 
             self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill=self._majorScaleColor)
-            self.create_text((xPos + 5, 2), text=dtStr, fill='white', anchor='nw')
+            self.create_text((xPos + 5, 2), text=dtStr, fill=self._majorScaleColor, anchor='nw')
             xPos += self.majorWidth
+            timestamp += resolution
+
+        #--- Draw the minor scale.
+
+        # Calculate the resolution.
+        resolution /= 4
+        self.minorWidth = resolution / scale
+        units = 0
+        while self.minorWidth < MINOR_WIDTH_MIN:
+            resolution *= 2
+            if units == 0 and resolution > DAY:
+                resolution = DAY
+                units = 1
+            elif units == 1 and resolution > YEAR:
+                resolution = YEAR
+                units = 2
+            self.minorWidth = resolution / scale
+
+        # Calculate the position of the first scale line.
+        tsOffset = resolution - startTimestamp % resolution
+        if tsOffset == resolution:
+            tsOffset = 0
+        xPos = tsOffset / scale
+        timestamp = startTimestamp + tsOffset
+
+        # Draw the scale lines.
+        xMax = self.winfo_width()
+        while xPos < xMax:
+            try:
+                dt = from_timestamp(timestamp)
+            except OverflowError:
+                break
+
+            if units == 0:
+                dtStr = f"{dt.hour:02}:{dt.minute:02}"
+            elif units == 1:
+                dtStr = f"{self._ctrl.datestr(dt)}"
+            elif units == 2:
+                dtStr = f"{self._ctrl.datestr(dt)}"
+
+            self.create_line((xPos, MAJOR_HEIGHT), (xPos, MINOR_HEIGHT), width=1, fill=self._minorScaleColor)
+            self.create_text((xPos + 5, MAJOR_HEIGHT + 1), text=dtStr, fill=self._minorScaleColor, anchor='nw')
+            xPos += self.minorWidth
             timestamp += resolution
 
     def _get_window_width(self):

@@ -8,11 +8,11 @@ import platform
 from tkinter import ttk
 from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
-from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
+from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
 
 
 class TlFrame(ttk.Frame):
-    SCALE_HEIGHT = MAJOR_HEIGHT + 5
+    SCALE_HEIGHT = MINOR_HEIGHT
 
     def __init__(self, parent, controller, *args, **kw):
 
