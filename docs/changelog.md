@@ -5,6 +5,12 @@
 ## Changelog
 
 
+### v1.1.6
+
+- Fix a bug where the Escape key is not working when double-clicking and dragging.
+
+Compatibility: novelibre v4.7 API
+
 ### v1.1.5
 
 - Refactor to speed up redrawing.

@@ -35,6 +35,8 @@ class SectionCanvas(tk.Canvas):
         self._indicator = None
         self._indicatorText = None
 
+        self.bind_all('<Escape>', self._on_escape)
+
     def delete_indicator(self):
         self.delete(self._indicator)
         self.delete(self._indicatorText)
@@ -109,7 +111,6 @@ class SectionCanvas(tk.Canvas):
 
     def _on_alt_click(self, event):
         """Begin increasing/decreasing the duration."""
-        self.bind_all('<Escape>', self._on_escape)
         self._active_object = self._get_section_id(event)
         self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_alt_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
@@ -123,7 +124,6 @@ class SectionCanvas(tk.Canvas):
         self._xStart = event.x
 
     def _on_alt_release(self, event):
-        self.unbind_all('<Escape>')
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
         deltaX = event.x - self._xStart
@@ -141,15 +141,13 @@ class SectionCanvas(tk.Canvas):
         self._move_indicator(deltaX)
 
     def _on_escape(self, event):
-        self.unbind_all('<Escape>')
-        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
-        self.tag_unbind(self._active_object, '<B1-Motion>')
+        self.unbind_all('<ButtonRelease-1>')
+        self.unbind_all('<B1-Motion>')
         self.delete_indicator()
         self._active_object = None
 
     def _on_shift_click(self, event):
         """Begin moving the event in time."""
-        self.bind_all('<Escape>', self._on_escape)
         self._active_object = self._get_section_id(event)
         self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_shift_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
@@ -163,7 +161,6 @@ class SectionCanvas(tk.Canvas):
         self._xStart = event.x
 
     def _on_shift_release(self, event):
-        self.unbind_all('<Escape>')
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
         deltaX = event.x - self._xStart
