@@ -126,7 +126,7 @@ class ScaleCanvas(tk.Canvas):
             xPos += self.minorWidth
             timestamp += resolution
 
-    def _get_window_width(self):
+    def get_window_width(self):
         self.update()
         return self.winfo_width()
         # in pixels

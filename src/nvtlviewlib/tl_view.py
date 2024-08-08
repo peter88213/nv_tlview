@@ -140,7 +140,7 @@ class TlView(tk.Toplevel):
 
     def fit_window(self):
         self.sort_sections()
-        width = self.tlFrame.scaleCanvas._get_window_width() - 2 * self.PAD_X
+        width = self.tlFrame.scaleCanvas.get_window_width() - 2 * self.PAD_X
         self.scale = (self.lastTimestamp - self.firstTimestamp) / width
         self._set_first_event()
 
@@ -157,7 +157,7 @@ class TlView(tk.Toplevel):
         if scId is None:
             return
 
-        xPos = self.tlFrame.scaleCanvas._get_window_width() / 2
+        xPos = self.tlFrame.scaleCanvas.get_window_width() / 2
         self.startTimestamp = self._ctrl.get_section_timestamp(scId) - xPos * self.scale
         self.tlFrame.sectionCanvas.draw_indicator(
             xPos,
@@ -481,22 +481,22 @@ class TlView(tk.Toplevel):
         self.scale /= 2
 
     def _page_back(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
+        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
         self.startTimestamp -= xDelta
 
     def _page_forward(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.9 * self.scale
+        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
         self.startTimestamp += xDelta
 
     def _reduce_scale(self):
         self.scale *= 2
 
     def _scroll_back(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
+        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
         self.startTimestamp -= xDelta
 
     def _scroll_forward(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas._get_window_width() * 0.2 * self.scale
+        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
         self.startTimestamp += xDelta
 
     def _set_first_event(self):
@@ -507,7 +507,7 @@ class TlView(tk.Toplevel):
         return xPos
 
     def _set_last_event(self):
-        xPos = self.tlFrame.scaleCanvas._get_window_width() - self.PAD_X
+        xPos = self.tlFrame.scaleCanvas.get_window_width() - self.PAD_X
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos
 
