@@ -5,6 +5,7 @@ For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from calendar import day_abbr
+from calendar import month_abbr
 from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
@@ -12,6 +13,7 @@ from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
 from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
 from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MIN
 from nvtlviewlib.nvtlview_globals import MINOR_WIDTH_MIN
+from nvtlviewlib.nvtlview_globals import MONTH
 from nvtlviewlib.nvtlview_globals import YEAR
 import tkinter as tk
 
@@ -38,12 +40,15 @@ class ScaleCanvas(tk.Canvas):
         units = 0
         while self.majorWidth < MAJOR_WIDTH_MIN:
             resolution *= 2
-            if units == 0 and resolution > DAY:
+            if units == 0 and resolution >= DAY:
                 resolution = DAY
                 units = 1
-            elif units == 1 and resolution > YEAR:
-                resolution = YEAR
+            elif units == 1 and resolution >= MONTH:
+                resolution = MONTH
                 units = 2
+            elif units == 2 and resolution >= YEAR:
+                resolution = YEAR
+                units = 3
             self.majorWidth = resolution / scale
 
         # Calculate the position of the first scale line.
@@ -62,12 +67,15 @@ class ScaleCanvas(tk.Canvas):
                 break
 
             weekDay = day_abbr[dt.weekday()]
+            month = month_abbr[dt.month]
             if units == 0:
                 dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
-            elif units == 1:
+            if units == 1:
                 dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
             elif units == 2:
-                dtStr = f"{self._ctrl.datestr(dt)}"
+                dtStr = f"{month} {dt.year}"
+            elif units == 3:
+                dtStr = f"{dt.year}"
 
             self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill=self._majorScaleColor)
             self.create_text((xPos + 5, 2), text=dtStr, fill=self._majorScaleColor, anchor='nw')
@@ -79,15 +87,12 @@ class ScaleCanvas(tk.Canvas):
         # Calculate the resolution.
         resolution /= 4
         self.minorWidth = resolution / scale
-        units = 0
         while self.minorWidth < MINOR_WIDTH_MIN:
             resolution *= 2
-            if units == 0 and resolution > DAY:
+            if units == 0 and resolution >= DAY:
                 resolution = DAY
-                units = 1
-            elif units == 1 and resolution > YEAR:
+            elif units == 1 and resolution >= YEAR:
                 resolution = YEAR
-                units = 2
             self.minorWidth = resolution / scale
 
         # Calculate the position of the first scale line.
@@ -105,12 +110,16 @@ class ScaleCanvas(tk.Canvas):
             except OverflowError:
                 break
 
+            weekDay = day_abbr[dt.weekday()]
+            month = month_abbr[dt.month]
             if units == 0:
                 dtStr = f"{dt.hour:02}:{dt.minute:02}"
             elif units == 1:
-                dtStr = f"{self._ctrl.datestr(dt)}"
+                dtStr = f"{weekDay} {dt.day}"
             elif units == 2:
-                dtStr = f"{self._ctrl.datestr(dt)}"
+                dtStr = f"{month}"
+            elif units == 3:
+                dtStr = f"{dt.year}"
 
             self.create_line((xPos, MAJOR_HEIGHT), (xPos, MINOR_HEIGHT), width=1, fill=self._minorScaleColor)
             self.create_text((xPos + 5, MAJOR_HEIGHT + 1), text=dtStr, fill=self._minorScaleColor, anchor='nw')

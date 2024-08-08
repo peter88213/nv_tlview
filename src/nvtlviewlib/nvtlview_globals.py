@@ -36,6 +36,7 @@ MAJOR_WIDTH_MAX = 480
 HOUR = 3600
 DAY = HOUR * 24
 YEAR = DAY * 365
+MONTH = DAY * 30
 
 HELP_URL = f'https://peter88213.github.io/{_("nvhelp-en")}/nv_tlview/'
 
