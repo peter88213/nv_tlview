@@ -22,7 +22,7 @@ class SectionCanvas(tk.Canvas):
         self['background'] = 'black'
         self.eventMarkColor = 'red'
         self.eventTitleColor = 'white'
-        self.eventDateColor = 'darkgray'
+        self.eventDateColor = 'gray60'
         self.indicatorColor = 'lightblue'
         self.srtSections = []
         # list of tuples: (timestamp, duration in s, title)

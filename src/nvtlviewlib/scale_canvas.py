@@ -21,9 +21,9 @@ class ScaleCanvas(tk.Canvas):
     def __init__(self, controller, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._ctrl = controller
-        self['background'] = 'dimgray'
+        self['background'] = 'gray25'
         self._majorScaleColor = 'white'
-        self._minorScaleColor = 'black'
+        self._minorScaleColor = 'gray60'
         self.majorWidth = None
         self.minorWidth = None
 
