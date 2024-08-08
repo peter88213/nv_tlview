@@ -5,6 +5,12 @@
 ## Changelog
 
 
+### v1.2.1
+
+- Fix a critical bug where the project data is corrupted when shifting a section end with the mouse. 
+
+Compatibility: novelibre v4.7 API
+
 ### v1.2.0
 
 - Provide a "minor" timescale with a higher resolution.
