@@ -73,10 +73,6 @@ class TlView(tk.Toplevel):
         #--- Settings and options.
         self._substituteMissingTime = self._kwargs['substitute_missing_time']
         # if True, use 00:00 if no time is given
-        self._convertDays = self._kwargs['convert_days']
-        # if True, convert days to dates if a reference date is given
-        self._substituteMissingDate = self._kwargs['substitute_missing_date']
-        # if True, use the reference date if neither date nor day is given
 
         self._bind_events()
         self._build_menu()
@@ -319,8 +315,6 @@ class TlView(tk.Toplevel):
         self.goMenu.add_command(label=_('Selected section'), command=self.go_to_selected)
 
         self._substTime = tk.BooleanVar(value=self._substituteMissingTime)
-        self._convDays = tk.BooleanVar(value=self._convertDays)
-        self._substDate = tk.BooleanVar(value=self._substituteMissingDate)
 
         # "Scale" menu.
         self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
@@ -337,16 +331,6 @@ class TlView(tk.Toplevel):
             label=_('Use 00:00 for missing times'),
             variable=self._substTime,
             command=self._set_substitute_missing_time
-            )
-        self.substMenu.add_checkbutton(
-            label=_('Convert days to dates'),
-            variable=self._convDays,
-            command=self._set_convert_days
-            )
-        self.substMenu.add_checkbutton(
-            label=_('Use reference for missing dates'),
-            variable=self._substDate,
-            command=self._set_substitute_missing_date
             )
 
         # "Cascading" menu.
@@ -519,18 +503,6 @@ class TlView(tk.Toplevel):
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()
         self._kwargs['substitute_missing_time'] = self._substituteMissingTime
-        self.sort_sections()
-        self.draw_timeline()
-
-    def _set_convert_days(self):
-        self._convertDays = self._convDays.get()
-        self._kwargs['convert_days'] = self._convertDays
-        self.sort_sections()
-        self.draw_timeline()
-
-    def _set_substitute_missing_date(self):
-        self._substituteMissingDate = self._substDate.get()
-        self._kwargs['substitute_missing_date'] = self._substituteMissingDate
         self.sort_sections()
         self.draw_timeline()
 

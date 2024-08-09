@@ -16,8 +16,6 @@ SETTINGS = dict(
 )
 OPTIONS = dict(
     substitute_missing_time=True,
-    convert_days=True,
-    substitute_missing_date=True,
 )
 
 

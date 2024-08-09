@@ -30,8 +30,6 @@ SETTINGS = dict(
 )
 OPTIONS = dict(
     substitute_missing_time=False,
-    convert_days=False,
-    substitute_missing_date=False,
 )
 
 APPLICATION = _('Timeline view')

@@ -68,10 +68,6 @@ class TlController:
         #--- Settings and options.
         self._substituteMissingTime = kwargs['substitute_missing_time']
         # if True, use 00:00 if no time is given
-        self._convertDays = kwargs['convert_days']
-        # if True, convert days to dates if a reference date is given
-        self._substituteMissingDate = kwargs['substitute_missing_date']
-        # if True, use the reference date if neither date nor day is given
 
         self._controlBuffer = []
 

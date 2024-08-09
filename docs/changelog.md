@@ -5,6 +5,15 @@
 ## Changelog
 
 
+### v1.3.0
+
+- Display a "Day" scale, if no specific date is given.
+- Each section date/day is displayed according to its properties.
+- Remove the "Convert days to dates" option.
+- Remove the "Use reference for missing dates" option.
+
+Compatibility: novelibre v4.7 API
+
 ### v1.2.1
 
 - Fix a critical bug where the project data is corrupted when shifting a section end with the mouse. 
