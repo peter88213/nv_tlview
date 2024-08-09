@@ -5,6 +5,12 @@
 ## Changelog
 
 
+### v1.3.1
+
+- Fix a regression from v1.3.0 where going to the selected section raises an exception if this section has no specific date.
+
+Compatibility: novelibre v4.7 API
+
 ### v1.3.0
 
 - Display a "Day" scale, if no specific date is given.

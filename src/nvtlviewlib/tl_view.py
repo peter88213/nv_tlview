@@ -156,8 +156,12 @@ class TlView(tk.Toplevel):
         if scId is None:
             return
 
+        sectionTimestamp = self._ctrl.get_section_timestamp(scId)
+        if sectionTimestamp is None:
+            return
+
         xPos = self.tlFrame.scaleCanvas.get_window_width() / 2
-        self.startTimestamp = self._ctrl.get_section_timestamp(scId) - xPos * self.scale
+        self.startTimestamp = sectionTimestamp - xPos * self.scale
         self.tlFrame.sectionCanvas.draw_indicator(
             xPos,
             text=self._ctrl.get_section_title(scId)

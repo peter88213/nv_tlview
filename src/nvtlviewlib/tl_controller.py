@@ -66,8 +66,7 @@ class TlController:
         self.lastTimestamp = None
 
         #--- Settings and options.
-        self._substituteMissingTime = kwargs['substitute_missing_time']
-        # if True, use 00:00 if no time is given
+        self._kwargs = kwargs
 
         self._controlBuffer = []
 
@@ -92,7 +91,7 @@ class TlController:
         try:
             refIso = self._mdl.novel.referenceDate
             if section.time is None:
-                if not self._substituteMissingTime:
+                if not self._kwargs['substitute_missing_time']:
                     return
 
                 scTime = '00:00'
@@ -102,18 +101,9 @@ class TlController:
             if section.date is not None:
                 scDate = section.date
             elif section.day is not None:
-                if not self._convertDays:
-                    return
-
                 if refIso is None:
-                    return
-
+                    refIso = '0001-01-01'
                 scDate = get_specific_date(section.day, refIso)
-            elif refIso is not None:
-                if not self._substituteMissingDate:
-                    return
-
-                scDate = refIso
             else:
                 return
 
