@@ -131,7 +131,8 @@ class TlView(tk.Toplevel):
         self.tlFrame.scaleCanvas.draw(
             self.startTimestamp,
             self.scale,
-            self._specificDate
+            self._specificDate,
+            self._mdl.novel.referenceDate
             )
         self.tlFrame.sectionCanvas.draw(
             self.startTimestamp,
@@ -269,7 +270,6 @@ class TlView(tk.Toplevel):
                         (
                         get_timestamp(dt),
                         get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
-                        section.day,
                         section.title,
                         timeStr,
                         scId
