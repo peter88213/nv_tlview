@@ -29,7 +29,7 @@ class ScaleCanvas(tk.Canvas):
         self.majorWidth = None
         self.minorWidth = None
 
-    def draw(self, startTimestamp, scale):
+    def draw(self, startTimestamp, scale, specificDate):
         self.delete("all")
 
         #--- Draw the major scale.

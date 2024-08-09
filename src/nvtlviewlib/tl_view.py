@@ -64,6 +64,7 @@ class TlView(tk.Toplevel):
         self._scale = self.SCALE_MIN
         self._startTimestamp = None
         self._minDist = 0
+        self._specificDate = None
 
         #--- The Timeline frame.
         self.tlFrame = TlFrame(self, self._ctrl)
@@ -129,7 +130,8 @@ class TlView(tk.Toplevel):
             self.startTimestamp = self.firstTimestamp
         self.tlFrame.scaleCanvas.draw(
             self.startTimestamp,
-            self.scale
+            self.scale,
+            self._specificDate
             )
         self.tlFrame.sectionCanvas.draw(
             self.startTimestamp,
@@ -188,12 +190,6 @@ class TlView(tk.Toplevel):
         # this is necessary for deleting the event bindings
         self.destroy()
 
-    def refresh(self):
-        """Refresh the view after changes have been made "outsides"."""
-        if not self._skipUpdate:
-            self.sort_sections()
-            self.draw_timeline()
-
     def on_shift_mouse_wheel(self, event):
         """Move the time scale horizontally using the mouse wheel."""
         deltaOffset = self.scale / self.SCALE_MIN * self.tlFrame.scaleCanvas.majorWidth
@@ -202,6 +198,12 @@ class TlView(tk.Toplevel):
         if event.num == 4 or event.delta == 120:
             self.startTimestamp -= deltaOffset
         return 'break'
+
+    def refresh(self):
+        """Refresh the view after changes have been made "outsides"."""
+        if not self._skipUpdate:
+            self.sort_sections()
+            self.draw_timeline()
 
     def reset_casc(self, event=None):
         self.minDist = 0
@@ -224,12 +226,14 @@ class TlView(tk.Toplevel):
     def sort_sections(self):
         srtSections = []
         # list of tuples to sort by timestamp
+        self._specificDate = False
         for scId in self._mdl.novel.sections:
             section = self._mdl.novel.sections[scId]
             if section.scType != 0:
                 continue
 
             try:
+                durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
                 refIso = self._mdl.novel.referenceDate
                 if section.time is None:
                     if not self._substituteMissingTime:
@@ -240,33 +244,34 @@ class TlView(tk.Toplevel):
                     scTime = section.time
 
                 if section.date is not None:
+                    self._specificDate = True
                     scDate = section.date
+                    dt = datetime.fromisoformat(f'{scDate} {scTime}')
+                    weekDay = day_abbr[dt.weekday()]
+                    timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
                 elif section.day is not None:
-                    if not self._convertDays:
-                        continue
-
                     if refIso is None:
-                        continue
-
+                        refIso = '0001-01-01'
+                        showWeekDay = False
+                    else:
+                        showWeekDay = True
                     scDate = get_specific_date(section.day, refIso)
-                elif refIso is not None:
-                    if not self._substituteMissingDate:
-                        continue
-
-                    scDate = refIso
+                    dt = datetime.fromisoformat(f'{scDate} {scTime}')
+                    if showWeekDay:
+                        weekDay = f'{day_abbr[dt.weekday()]} '
+                    else:
+                        weekDay = ''
+                    timeStr = f"{weekDay}{_('Day')} {section.day} {dt.hour:02}:{dt.minute:02}{durationStr}"
                 else:
                     continue
-
-                dt = datetime.fromisoformat(f'{scDate} {scTime}')
-                weekDay = day_abbr[dt.weekday()]
-                durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
 
                 srtSections.append(
                         (
                         get_timestamp(dt),
                         get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
+                        section.day,
                         section.title,
-                        f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}",
+                        timeStr,
                         scId
                         )
                     )

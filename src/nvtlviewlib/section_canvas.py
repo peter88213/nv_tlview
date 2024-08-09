@@ -50,7 +50,7 @@ class SectionCanvas(tk.Canvas):
         yPos = yStart
         labelEnd = 0
         for section in srtSections:
-            timestamp, durationSeconds, title, timeStr, eventId = section
+            timestamp, durationSeconds, day, title, timeStr, eventId = section
             xStart = (timestamp - startTimestamp) / scale
 
             # Cascade sections.
