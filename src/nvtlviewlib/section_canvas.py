@@ -35,6 +35,7 @@ class SectionCanvas(tk.Canvas):
         self._indicator = None
         self._indicatorText = None
 
+        # Bind events.
         self.bind_all('<Escape>', self._on_escape)
 
     def delete_indicator(self):

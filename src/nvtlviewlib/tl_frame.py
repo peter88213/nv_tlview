@@ -59,6 +59,8 @@ class TlFrame(ttk.Frame):
             # Vertical scrolling
             self.sectionCanvas.bind("<MouseWheel>", self.on_mouse_wheel)
 
+        self._yscrollincrement = self.sectionCanvas['yscrollincrement']
+
     def yview(self, *args):
         self.sectionCanvas.yview(*args)
 
@@ -99,4 +101,10 @@ class TlFrame(ttk.Frame):
             self.sectionCanvas.unbind_all("<Shift-MouseWheel>")
             self.sectionCanvas.unbind_all("<Control-Shift-MouseWheel>")
         super().destroy()
+
+    def set_drag_scrolling(self):
+        self.sectionCanvas.configure(yscrollincrement=1)
+
+    def set_normal_scrolling(self):
+        self.sectionCanvas.configure(yscrollincrement=self._yscrollincrement)
 

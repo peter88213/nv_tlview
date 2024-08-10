@@ -66,6 +66,10 @@ class TlView(tk.Toplevel):
         self._minDist = 0
         self._specificDate = None
 
+        #--- Canvas position.
+        self._xPos = None
+        self._yPos = None
+
         #--- The Timeline frame.
         self.tlFrame = TlFrame(self, self._ctrl)
         self.tlFrame.pack(fill='both', expand=True, padx=2, pady=2)
@@ -306,6 +310,7 @@ class TlView(tk.Toplevel):
             self.tlFrame.sectionCanvas.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
+        self.tlFrame.bind_all('<Button-3>', self._on_right_click)
 
     def _build_menu(self):
         self.mainMenu = tk.Menu(self)
@@ -473,24 +478,50 @@ class TlView(tk.Toplevel):
     def _increase_scale(self):
         self.scale /= 2
 
+    def _on_drag(self, event):
+        # Move the time scale.
+        deltaX = self._xPos - event.x
+        self._xPos = event.x
+        deltaSeconds = deltaX * self.scale
+        self.startTimestamp += deltaSeconds
+
+        # Scroll vertically.
+        deltaY = self._yPos - event.y
+        self._yPos = event.y
+        self.tlFrame.yview_scroll(int(deltaY), 'units')
+
+    def _on_right_click(self, event):
+        self._xPos = event.x
+        self._yPos = event.y
+        self.tlFrame.bind_all('<ButtonRelease-3>', self._on_right_release)
+        self.tlFrame.config(cursor='fleur')
+        self.tlFrame.bind_all('<B3-Motion>', self._on_drag)
+        self.tlFrame.set_drag_scrolling()
+
+    def _on_right_release(self, event):
+        self.tlFrame.unbind_all('<ButtonRelease-3>')
+        self.tlFrame.config(cursor='arrow')
+        self.tlFrame.unbind_all('<B3-Motion>')
+        self.tlFrame.set_normal_scrolling()
+
     def _page_back(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
-        self.startTimestamp -= xDelta
+        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
+        self.startTimestamp -= deltaX
 
     def _page_forward(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
-        self.startTimestamp += xDelta
+        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
+        self.startTimestamp += deltaX
 
     def _reduce_scale(self):
         self.scale *= 2
 
     def _scroll_back(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
-        self.startTimestamp -= xDelta
+        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
+        self.startTimestamp -= deltaX
 
     def _scroll_forward(self, event=None):
-        xDelta = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
-        self.startTimestamp += xDelta
+        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
+        self.startTimestamp += deltaX
 
     def _set_first_event(self):
         xPos = self.PAD_X
