@@ -4,11 +4,11 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-import platform
 from tkinter import ttk
 from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
 from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
+from nvtlviewlib.nvtlview_globals import PLATFORM
 
 
 class TlFrame(ttk.Frame):
@@ -51,7 +51,7 @@ class TlFrame(ttk.Frame):
         self.sectionCanvas.xview_moveto(0)
         self.sectionCanvas.yview_moveto(0)
 
-        if platform.system() == 'Linux':
+        if PLATFORM == 'ix':
             # Vertical scrolling
             self.sectionCanvas.bind("<Button-4>", self.on_mouse_wheel)
             self.sectionCanvas.bind("<Button-5>", self.on_mouse_wheel)
@@ -72,9 +72,9 @@ class TlFrame(ttk.Frame):
 
     def on_mouse_wheel(self, event):
         """Event handler for vertical scrolling."""
-        if platform.system() == 'Windows':
+        if PLATFORM == 'win':
             self.yview_scroll(int(-1 * (event.delta / 120)), "units")
-        elif platform.system() == 'Darwin':
+        elif PLATFORM == 'mac':
             self.yview_scroll(int(-1 * event.delta), "units")
         else:
             if event.num == 4:
@@ -84,7 +84,7 @@ class TlFrame(ttk.Frame):
 
     def destroy(self):
         """Destructor for deleting event bindings."""
-        if platform.system() == 'Linux':
+        if PLATFORM == 'ix':
             # Vertical scrolling
             self.sectionCanvas.unbind_all("<Button-4>")
             self.sectionCanvas.unbind_all("<Button-5>")

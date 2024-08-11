@@ -6,7 +6,6 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from calendar import day_abbr
 from datetime import datetime
-import platform
 from tkinter import ttk
 
 from novxlib.model.date_time_tools import get_specific_date
@@ -17,6 +16,7 @@ from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
 from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MAX
 from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MIN
+from nvtlviewlib.nvtlview_globals import PLATFORM
 from nvtlviewlib.nvtlview_globals import YEAR
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
@@ -294,13 +294,12 @@ class TlView(tk.Toplevel):
         self.bind('<F1>', open_help)
         self.bind(self._KEY_UNDO[0], self._ctrl.pop_event)
         self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
-        operatingSystem = platform.system()
-        if operatingSystem == 'Windows':
+        if PLATFORM == 'win':
             self.tlFrame.sectionCanvas.bind('<4>', self._page_back)
             self.tlFrame.sectionCanvas.bind('<5>', self._page_forward)
         else:
             self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
-        if operatingSystem == 'Linux':
+        if PLATFORM == 'ix':
             self.tlFrame.sectionCanvas.bind("<Control-Button-4>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Control-Button-5>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
@@ -311,7 +310,7 @@ class TlView(tk.Toplevel):
             self.tlFrame.sectionCanvas.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
-        if operatingSystem == 'Darwin':
+        if PLATFORM == 'mac':
             self.tlFrame.bind_all('<Button-2>', self._on_right_click)
             self._rightMotion = '<B2-Motion>'
         else:

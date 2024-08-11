@@ -73,7 +73,7 @@ class SectionCanvas(tk.Canvas):
                 )
             self.tag_bind(sectionMark, '<Double-Button-1>', self._on_double_click)
             self.tag_bind(sectionMark, '<Shift-Button-1>', self._on_shift_click)
-            self.tag_bind(sectionMark, '<Alt-Button-1>', self._on_alt_click)
+            self.tag_bind(sectionMark, '<Control-Shift-Button-1>', self._on_ctrl_shift_click)
 
             # Draw title and date/time.
             xLabel = xEnd + self.LABEL_DIST_X
@@ -110,10 +110,10 @@ class SectionCanvas(tk.Canvas):
         self.move(self._indicator, deltaX, 0)
         self.move(self._indicatorText, deltaX, 0)
 
-    def _on_alt_click(self, event):
+    def _on_ctrl_shift_click(self, event):
         """Begin increasing/decreasing the duration."""
         self._active_object = self._get_section_id(event)
-        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_alt_release)
+        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_ctrl_shift_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
         __, __, x2, __ = self.bbox(self._active_object)
         self._xStart = x2 - self.MARK_HALF
@@ -124,7 +124,7 @@ class SectionCanvas(tk.Canvas):
             )
         self._xStart = event.x
 
-    def _on_alt_release(self, event):
+    def _on_ctrl_shift_release(self, event):
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
         deltaX = event.x - self._xStart

@@ -4,6 +4,13 @@
 
 ## Changelog
 
+### v1.5.0
+
+- Shift event ends with Ctrl-Shift-move instead of Alt-move.
+- Make the right mouse button work under Mac OS.
+- Refactor: Provide a global PLATFORM constant.
+
+Compatibility: novelibre v4.7 API
 
 ### v1.4.0
 
