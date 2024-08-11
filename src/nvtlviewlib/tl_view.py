@@ -294,12 +294,13 @@ class TlView(tk.Toplevel):
         self.bind('<F1>', open_help)
         self.bind(self._KEY_UNDO[0], self._ctrl.pop_event)
         self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
-        if platform.system() == 'Windows':
+        operatingSystem = platform.system()
+        if operatingSystem == 'Windows':
             self.tlFrame.sectionCanvas.bind('<4>', self._page_back)
             self.tlFrame.sectionCanvas.bind('<5>', self._page_forward)
         else:
             self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
-        if platform.system() == 'Linux':
+        if operatingSystem == 'Linux':
             self.tlFrame.sectionCanvas.bind("<Control-Button-4>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Control-Button-5>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
@@ -310,7 +311,12 @@ class TlView(tk.Toplevel):
             self.tlFrame.sectionCanvas.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
             self.tlFrame.sectionCanvas.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
-        self.tlFrame.bind_all('<Button-3>', self._on_right_click)
+        if operatingSystem == 'Darwin':
+            self.tlFrame.bind_all('<Button-2>', self._on_right_click)
+            self._rightMotion = '<B2-Motion>'
+        else:
+            self.tlFrame.bind_all('<Button-3>', self._on_right_click)
+            self._rightMotion = '<B3-Motion>'
 
     def _build_menu(self):
         self.mainMenu = tk.Menu(self)
@@ -495,13 +501,13 @@ class TlView(tk.Toplevel):
         self._yPos = event.y
         self.tlFrame.bind_all('<ButtonRelease-3>', self._on_right_release)
         self.tlFrame.config(cursor='fleur')
-        self.tlFrame.bind_all('<B3-Motion>', self._on_drag)
+        self.tlFrame.bind_all(self._rightMotion, self._on_drag)
         self.tlFrame.set_drag_scrolling()
 
     def _on_right_release(self, event):
         self.tlFrame.unbind_all('<ButtonRelease-3>')
         self.tlFrame.config(cursor='arrow')
-        self.tlFrame.unbind_all('<B3-Motion>')
+        self.tlFrame.unbind_all(self._rightMotion)
         self.tlFrame.set_normal_scrolling()
 
     def _page_back(self, event=None):
