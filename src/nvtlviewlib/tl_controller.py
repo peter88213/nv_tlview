@@ -187,9 +187,18 @@ class TlController:
             seconds = 0
 
         days, hours, minutes = get_duration(seconds)
-        self._mdl.novel.sections[scId].lastsDays = str(days)
-        self._mdl.novel.sections[scId].lastsHours = str(hours)
-        self._mdl.novel.sections[scId].lastsMinutes = str(minutes)
+        if days:
+            self._mdl.novel.sections[scId].lastsDays = str(days)
+        else:
+            self._mdl.novel.sections[scId].lastsDays = None
+        if hours:
+            self._mdl.novel.sections[scId].lastsHours = str(hours)
+        else:
+            self._mdl.novel.sections[scId].lastsHours = None
+        if minutes:
+            self._mdl.novel.sections[scId].lastsMinutes = str(minutes)
+        else:
+            self._mdl.novel.sections[scId].lastsMinutes = None
 
     def push_event(self, scId, event=None):
         section = self._mdl.novel.sections[scId]

@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### v1.5.1
+
+- Preventing the display of zero days/hours/minutes after changing the duration.
+
+Compatibility: novelibre v4.7 API
+
 ### v1.5.0
 
 - Shift event ends with Ctrl-Shift-move instead of Alt-move.
