@@ -13,10 +13,10 @@ from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
 from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
-from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MIN
 from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
-from nvtlviewlib.nvtlview_globals import MINOR_WIDTH_MIN
+from nvtlviewlib.nvtlview_globals import MINOR_SPACING_MIN
 from nvtlviewlib.nvtlview_globals import MONTH
+from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MIN
 from nvtlviewlib.nvtlview_globals import YEAR
 from nvtlviewlib.nvtlview_globals import _
 import tkinter as tk
@@ -30,8 +30,8 @@ class ScaleCanvas(tk.Canvas):
         self['background'] = 'gray25'
         self._majorScaleColor = 'white'
         self._minorScaleColor = 'gray60'
-        self.majorWidth = None
-        self.minorWidth = None
+        self.majorSpacing = None
+        self.minorSpacing = None
 
     def draw(self, startTimestamp, scale, specificDate, refIso):
         self.delete("all")
@@ -46,9 +46,9 @@ class ScaleCanvas(tk.Canvas):
 
         # Calculate the resolution.
         resolution = HOUR
-        self.majorWidth = resolution / scale
+        self.majorSpacing = resolution / scale
         units = 0
-        while self.majorWidth < MAJOR_WIDTH_MIN:
+        while self.majorSpacing < SCALE_SPACING_MIN:
             resolution *= 2
             if units == 0 and resolution >= DAY:
                 resolution = DAY
@@ -59,7 +59,7 @@ class ScaleCanvas(tk.Canvas):
             elif units == 2 and resolution >= YEAR:
                 resolution = YEAR
                 units = 3
-            self.majorWidth = resolution / scale
+            self.majorSpacing = resolution / scale
 
         # Calculate the position of the first scale line.
         tsOffset = resolution - startTimestamp % resolution
@@ -104,21 +104,21 @@ class ScaleCanvas(tk.Canvas):
 
             self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill=self._majorScaleColor)
             self.create_text((xPos + 5, 2), text=dtStr, fill=self._majorScaleColor, anchor='nw')
-            xPos += self.majorWidth
+            xPos += self.majorSpacing
             timestamp += resolution
 
         #--- Draw the minor scale.
 
         # Calculate the resolution.
         resolution /= 4
-        self.minorWidth = resolution / scale
-        while self.minorWidth < MINOR_WIDTH_MIN:
+        self.minorSpacing = resolution / scale
+        while self.minorSpacing < MINOR_SPACING_MIN:
             resolution *= 2
             if units == 0 and resolution >= DAY:
                 resolution = DAY
             elif units == 1 and resolution >= YEAR:
                 resolution = YEAR
-            self.minorWidth = resolution / scale
+            self.minorSpacing = resolution / scale
 
         # Calculate the position of the first scale line.
         tsOffset = resolution - startTimestamp % resolution
@@ -160,7 +160,7 @@ class ScaleCanvas(tk.Canvas):
 
             self.create_line((xPos, MAJOR_HEIGHT), (xPos, MINOR_HEIGHT), width=1, fill=self._minorScaleColor)
             self.create_text((xPos + 5, MAJOR_HEIGHT + 1), text=dtStr, fill=self._minorScaleColor, anchor='nw')
-            xPos += self.minorWidth
+            xPos += self.minorSpacing
             timestamp += resolution
 
     def get_window_width(self):

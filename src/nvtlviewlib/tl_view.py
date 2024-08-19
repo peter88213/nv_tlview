@@ -4,23 +4,23 @@ Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
+
 from calendar import day_abbr
 from datetime import datetime
-from tkinter import ttk
-
 from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
-from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MAX
-from nvtlviewlib.nvtlview_globals import MAJOR_WIDTH_MIN
 from nvtlviewlib.nvtlview_globals import PLATFORM
+from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MAX
+from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MIN
 from nvtlviewlib.nvtlview_globals import YEAR
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tl_frame import TlFrame
+from tkinter import ttk
 import tkinter as tk
 
 
@@ -125,22 +125,18 @@ class TlView(tk.Frame):
     def draw_timeline(self, event=None):
         if self.startTimestamp is None:
             self.startTimestamp = self.firstTimestamp
-        self.tlFrame.scaleCanvas.draw(
-            self.startTimestamp,
-            self.scale,
-            self._specificDate,
-            self._mdl.novel.referenceDate
-            )
         self.tlFrame.draw_timeline(
             self.startTimestamp,
             self.scale,
             self.srtSections,
             self.minDist,
+            self._specificDate,
+            self._mdl.novel.referenceDate
             )
 
     def fit_window(self):
         self.sort_sections()
-        width = self.tlFrame.scaleCanvas.get_window_width() - 2 * self.PAD_X
+        width = self.tlFrame.get_window_width() - 2 * self.PAD_X
         self.scale = (self.lastTimestamp - self.firstTimestamp) / width
         self._set_first_event()
 
@@ -161,7 +157,7 @@ class TlView(tk.Frame):
         if sectionTimestamp is None:
             return
 
-        xPos = self.tlFrame.scaleCanvas.get_window_width() / 2
+        xPos = self.tlFrame.get_window_width() / 2
         self.startTimestamp = sectionTimestamp - xPos * self.scale
         self.tlFrame.draw_indicator(
             xPos,
@@ -193,7 +189,7 @@ class TlView(tk.Frame):
 
     def on_shift_mouse_wheel(self, event):
         """Move the time scale horizontally using the mouse wheel."""
-        deltaOffset = self.scale / self.SCALE_MIN * self.tlFrame.scaleCanvas.majorWidth
+        deltaOffset = self.scale / self.SCALE_MIN * self.tlFrame.get_scale_mark_spacing()
         if event.num == 5 or event.delta == -120:
             self.startTimestamp += deltaOffset
         if event.num == 4 or event.delta == 120:
@@ -216,13 +212,13 @@ class TlView(tk.Frame):
         self.minDist = self.DISTANCE_MIN
 
     def set_day_scale(self, event=None):
-        self.scale = (DAY * 2) / (MAJOR_WIDTH_MAX - MAJOR_WIDTH_MIN)
+        self.scale = (DAY * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
     def set_hour_scale(self, event=None):
-        self.scale = (HOUR * 2) / (MAJOR_WIDTH_MAX - MAJOR_WIDTH_MIN)
+        self.scale = (HOUR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
     def set_year_scale(self, event=None):
-        self.scale = (YEAR * 2) / (MAJOR_WIDTH_MAX - MAJOR_WIDTH_MIN)
+        self.scale = (YEAR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
     def sort_sections(self):
         srtSections = []
@@ -290,21 +286,21 @@ class TlView(tk.Frame):
         self.bind('<F1>', open_help)
         self.bind(self._KEY_UNDO[0], self._ctrl.pop_event)
         if PLATFORM == 'win':
-            self.tlFrame.sectionCanvas.bind('<4>', self._page_back)
-            self.tlFrame.sectionCanvas.bind('<5>', self._page_forward)
+            self.tlFrame.bind_section_canvas_event('<4>', self._page_back)
+            self.tlFrame.bind_section_canvas_event('<5>', self._page_forward)
         else:
             self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
         if PLATFORM == 'ix':
-            self.tlFrame.sectionCanvas.bind("<Control-Button-4>", self.on_control_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Control-Button-5>", self.on_control_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Shift-Button-4>", self.on_shift_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Shift-Button-5>", self.on_shift_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Control-Button-4>", self.on_control_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Control-Button-5>", self.on_control_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Shift-Button-4>", self.on_shift_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Shift-Button-5>", self.on_shift_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
         else:
-            self.tlFrame.sectionCanvas.bind("<Control-MouseWheel>", self.on_control_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
-            self.tlFrame.sectionCanvas.bind("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Control-MouseWheel>", self.on_control_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
+            self.tlFrame.bind_section_canvas_event("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
         if PLATFORM == 'mac':
             self.tlFrame.bind_all('<Button-2>', self._on_right_click)
             self._rightMotion = '<B2-Motion>'
@@ -506,22 +502,22 @@ class TlView(tk.Frame):
         self.tlFrame.set_normal_scrolling()
 
     def _page_back(self, event=None):
-        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
+        deltaX = self.tlFrame.get_window_width() * 0.9 * self.scale
         self.startTimestamp -= deltaX
 
     def _page_forward(self, event=None):
-        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.9 * self.scale
+        deltaX = self.tlFrame.get_window_width() * 0.9 * self.scale
         self.startTimestamp += deltaX
 
     def _reduce_scale(self):
         self.scale *= 2
 
     def _scroll_back(self, event=None):
-        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
+        deltaX = self.tlFrame.get_window_width() * 0.2 * self.scale
         self.startTimestamp -= deltaX
 
     def _scroll_forward(self, event=None):
-        deltaX = self.tlFrame.scaleCanvas.get_window_width() * 0.2 * self.scale
+        deltaX = self.tlFrame.get_window_width() * 0.2 * self.scale
         self.startTimestamp += deltaX
 
     def _set_first_event(self):
@@ -532,7 +528,7 @@ class TlView(tk.Frame):
         return xPos
 
     def _set_last_event(self):
-        xPos = self.tlFrame.scaleCanvas.get_window_width() - self.PAD_X
+        xPos = self.tlFrame.get_window_width() - self.PAD_X
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos
 
