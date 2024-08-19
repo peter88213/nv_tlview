@@ -114,12 +114,31 @@ class Plugin(PluginBase):
             return
 
         if self._tlCtrl is not None and self._tlCtrl.isOpen:
-            self._tlCtrl.open_viewer()
+            if self.mainWindow.state() == 'iconic':
+                self.mainWindow.state('normal')
+            self.mainWindow.lift()
+            self.mainWindow.focus()
             return
 
-        self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.kwargs)
-        self._tlCtrl.view.title(f'{self._mdl.novel.title} - {PLUGIN}')
-        set_icon(self._tlCtrl.view, icon='tLogo32', default=False)
+        self.mainWindow = tk.Toplevel()
+        self.mainWindow.geometry(self.kwargs['window_geometry'])
+        mainMenu = tk.Menu(self.mainWindow)
+        self.mainWindow.config(menu=mainMenu)
+
+        self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
+        self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
+        self.mainWindow.title(f'{self._mdl.novel.title} - {PLUGIN}')
+        self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)
+        set_icon(self.mainWindow, icon='tLogo32', default=False)
+        self.mainWindow.lift()
+        self.mainWindow.focus()
+        self.mainWindow.update()
+        # for whatever reason, this helps keep the window size
+
+    def close_main_window(self, event=None):
+        self.kwargs['window_geometry'] = self.mainWindow.winfo_geometry()
+        self._tlCtrl.on_quit()
+        self.mainWindow.destroy()
 
     def disable_menu(self):
         """Disable menu entries when no project is open.
@@ -142,20 +161,21 @@ class Plugin(PluginBase):
         
         Overrides the superclass method.
         """
-        self._tlCtrl.on_quit()
+        self.close_main_window()
 
     def on_quit(self):
         """Actions to be performed when novelibre is closed.
         
         Overrides the superclass method.
         """
+        self._save_configuration()
         if self._tlCtrl is None:
             return
 
-        self._tlCtrl.on_quit()
+        self.close_main_window()
         self._tlCtrl = None
 
-        #--- Save configuration.
+    def _save_configuration(self):
         for keyword in self.kwargs:
             if keyword in self.configuration.options:
                 self.configuration.options[keyword] = self.kwargs[keyword]

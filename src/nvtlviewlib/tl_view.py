@@ -24,7 +24,7 @@ from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 
 
-class TlView(tk.Toplevel):
+class TlView(tk.Frame):
     _KEY_QUIT_PROGRAM = ('<Control-q>', 'Ctrl-Q')
     _KEY_UNDO = ('<Control-z>', 'Ctrl-Z')
 
@@ -43,19 +43,14 @@ class TlView(tk.Toplevel):
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
 
-    def __init__(self, model, controller, kwargs):
+    def __init__(self, model, controller, master, menu, kwargs):
         self._mdl = model
         self._ctrl = controller
         self._kwargs = kwargs
-        super().__init__()
+        super().__init__(master)
+        self.pack(fill='both', expand=True)
 
         self._statusText = ''
-
-        self.geometry(kwargs['window_geometry'])
-        self.lift()
-        self.focus()
-        self.update()
-        # for whatever reason, this helps keep the window size
 
         self._skipUpdate = False
         self.isOpen = True
@@ -72,13 +67,15 @@ class TlView(tk.Toplevel):
 
         #--- The Timeline frame.
         self.tlFrame = TlFrame(self, self._ctrl)
-        self.tlFrame.pack(fill='both', expand=True, padx=2, pady=2)
+        self.tlFrame.pack(fill='both', expand=True)
 
         #--- Settings and options.
         self._substituteMissingTime = self._kwargs['substitute_missing_time']
         # if True, use 00:00 if no time is given
 
         self._bind_events()
+
+        self.mainMenu = menu
         self._build_menu()
         self._build_toolbar()
         self.fit_window()
@@ -190,7 +187,6 @@ class TlView(tk.Toplevel):
         return 'break'
 
     def on_quit(self, event=None):
-        self._kwargs['window_geometry'] = self.winfo_geometry()
         self.tlFrame.destroy()
         # this is necessary for deleting the event bindings
         self.destroy()
@@ -293,7 +289,6 @@ class TlView(tk.Toplevel):
         self.bind('<Configure>', self.draw_timeline)
         self.bind('<F1>', open_help)
         self.bind(self._KEY_UNDO[0], self._ctrl.pop_event)
-        self.protocol("WM_DELETE_WINDOW", self._ctrl.on_quit)
         if PLATFORM == 'win':
             self.tlFrame.sectionCanvas.bind('<4>', self._page_back)
             self.tlFrame.sectionCanvas.bind('<5>', self._page_forward)
@@ -318,8 +313,6 @@ class TlView(tk.Toplevel):
             self._rightMotion = '<B3-Motion>'
 
     def _build_menu(self):
-        self.mainMenu = tk.Menu(self)
-        self.config(menu=self.mainMenu)
 
         # "Go to" menu.
         self.goMenu = tk.Menu(self.mainMenu, tearoff=0)
@@ -477,8 +470,11 @@ class TlView(tk.Toplevel):
         ttk.Button(
             self.toolbar,
             text=_('Close'),
-            command=self._ctrl.on_quit
+            command=self._close_view
             ).pack(side='right')
+
+    def _close_view(self, event=None):
+        self.event_generate('<<close_view>>')
 
     def _increase_scale(self):
         self.scale /= 2

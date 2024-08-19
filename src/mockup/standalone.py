@@ -12,7 +12,7 @@ from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
 SETTINGS = dict(
-        window_geometry='1200x800',
+    window_geometry='1200x800',
 )
 OPTIONS = dict(
     substitute_missing_time=True,
@@ -79,19 +79,29 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
 
+    kwargs = SETTINGS
+    kwargs.update(OPTIONS)
+
     root = tk.Tk()
+    root.title('Timeline viewer')
+    root.geometry(kwargs['window_geometry'])
+
+    mainMenu = tk.Menu(root)
+    root.config(menu=mainMenu)
+
     if sections is None:
         sections = {}
     mdl = NvModelMock(sections, referenceDate)
     ui = NvViewMock(mdl)
-
-    kwargs = SETTINGS
-    kwargs.update(OPTIONS)
     nvCtrl = NvControllerMock()
-    tlCtrl = TlController(mdl, ui, nvCtrl, kwargs)
-    tlCtrl.view.bind("<Destroy>", sys.exit)
 
-    tlCtrl.open_viewer()
+    mainWindow = tk.Frame(root)
+    mainWindow.pack(fill='both', expand=True)
+
+    tlCtrl = TlController(mdl, ui, nvCtrl, mainWindow, mainMenu, kwargs)
+    tlCtrl.view.bind("<Destroy>", sys.exit)
+    tlCtrl.view.bind("<<close_view>>", sys.exit)
+
     root.mainloop()
 
 

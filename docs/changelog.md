@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.6.0
+
+- Refactor the tk frame architecture.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.5.2
 
 - Fix the SectionCanvas vertical scrolling.

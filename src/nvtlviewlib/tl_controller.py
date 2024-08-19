@@ -20,7 +20,7 @@ import tkinter as tk
 
 class TlController:
 
-    def __init__(self, model, view, controller, kwargs):
+    def __init__(self, model, view, controller, window, menu, kwargs):
         self._mdl = model
         self._ui = view
         self._ctrl = controller
@@ -58,7 +58,7 @@ class TlController:
                 self._toolbarIcons[icon] = None
 
         # Create the view.
-        self.view = TlView(self._mdl, self, kwargs)
+        self.view = TlView(self._mdl, self, window, menu, kwargs)
         self._ui.register_view(self.view)
         self.isOpen = True
 
@@ -137,14 +137,8 @@ class TlController:
 
         self.view.on_quit()
         self._ui.unregister_view(self.view)
-        del(self.view)
+        self.view.destroy()
         self.isOpen = False
-
-    def open_viewer(self):
-        if self.view.state() == 'iconic':
-            self.view.state('normal')
-        self.view.lift()
-        self.view.focus()
 
     def shift_event(self, scId, pixels):
         self.push_event(scId)
