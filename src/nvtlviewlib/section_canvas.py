@@ -81,9 +81,9 @@ class SectionCanvas(tk.Canvas):
             # returns a tuple like (x1, y1, x2, y2)
             if titleBounds is not None:
                 # this is a workaround because bbox() sometimes returns None for no known reason
-                timeLabel = self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
-                timeBounds = self.bbox(timeLabel)
-                labelEnd = max(titleBounds[2], timeBounds[2])
+                self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
+                __, __, x2, __ = self.bbox('all')
+                labelEnd = x2
             yPos += self.EVENT_DIST_Y
         __, __, __, y2 = self.bbox('all')
         self.configure(scrollregion=(0, 0, 0, y2))

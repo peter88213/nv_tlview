@@ -33,7 +33,7 @@ class TlView(tk.Toplevel):
     MAX_TIMESTAMP = get_timestamp(datetime.max)
 
     # Constants in pixels.
-    DISTANCE_MIN = -50
+    DISTANCE_MIN = -100
     DISTANCE_MAX = 200
     # minimum distance for cascading event marks
     PAD_X = 100
