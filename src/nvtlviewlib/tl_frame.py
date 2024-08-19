@@ -61,13 +61,16 @@ class TlFrame(ttk.Frame):
 
         self._yscrollincrement = self.sectionCanvas['yscrollincrement']
 
-    def yview(self, *args):
-        self.sectionCanvas.yview(*args)
-
     def xview(self, *args):
         self.sectionCanvas.xview(*args)
 
+    def yview(self, *args):
+        self.sectionCanvas.yview(*args)
+
     def yview_scroll(self, *args):
+        if self.sectionCanvas.yview() == (0.0, 1.0):
+            return
+
         self.sectionCanvas.yview_scroll(*args)
 
     def on_mouse_wheel(self, event):

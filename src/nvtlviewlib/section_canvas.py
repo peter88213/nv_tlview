@@ -45,7 +45,6 @@ class SectionCanvas(tk.Canvas):
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
         self.yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
-        self.configure(scrollregion=(0, 0, 0, self.yMax))
         yStart = self.EVENT_DIST_Y
         xEnd = 0
         yPos = yStart
@@ -86,6 +85,8 @@ class SectionCanvas(tk.Canvas):
                 timeBounds = self.bbox(timeLabel)
                 labelEnd = max(titleBounds[2], timeBounds[2])
             yPos += self.EVENT_DIST_Y
+        __, __, __, y2 = self.bbox('all')
+        self.configure(scrollregion=(0, 0, 0, y2))
 
     def draw_indicator(self, xPos, text=''):
         self.delete_indicator()
