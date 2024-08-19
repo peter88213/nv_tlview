@@ -131,7 +131,7 @@ class TlView(tk.Frame):
             self._specificDate,
             self._mdl.novel.referenceDate
             )
-        self.tlFrame.sectionCanvas.draw(
+        self.tlFrame.draw_timeline(
             self.startTimestamp,
             self.scale,
             self.srtSections,
@@ -146,11 +146,11 @@ class TlView(tk.Frame):
 
     def go_to_first(self, event=None):
         xPos = self._set_first_event()
-        self.tlFrame.sectionCanvas.draw_indicator(xPos)
+        self.tlFrame.draw_indicator(xPos)
 
     def go_to_last(self, event=None):
         xPos = self._set_last_event()
-        self.tlFrame.sectionCanvas.draw_indicator(xPos)
+        self.tlFrame.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
         scId = self._ctrl.get_selected_section()
@@ -163,7 +163,7 @@ class TlView(tk.Frame):
 
         xPos = self.tlFrame.scaleCanvas.get_window_width() / 2
         self.startTimestamp = sectionTimestamp - xPos * self.scale
-        self.tlFrame.sectionCanvas.draw_indicator(
+        self.tlFrame.draw_indicator(
             xPos,
             text=self._ctrl.get_section_title(scId)
             )

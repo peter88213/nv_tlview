@@ -105,6 +105,17 @@ class TlFrame(ttk.Frame):
             self.sectionCanvas.unbind_all("<Control-Shift-MouseWheel>")
         super().destroy()
 
+    def draw_indicator(self, xPos, text=''):
+        self.sectionCanvas.draw_indicator(xPos, text)
+
+    def draw_timeline(self, startTimestamp, scale, srtSections, minDist):
+        self.sectionCanvas.draw(
+            startTimestamp,
+            scale,
+            srtSections,
+            minDist,
+            )
+
     def set_drag_scrolling(self):
         self.sectionCanvas.configure(yscrollincrement=1)
 
