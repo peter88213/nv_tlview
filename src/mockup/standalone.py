@@ -56,8 +56,11 @@ class NovelMock:
 
 class TreeMock:
 
+    def __init__(self):
+        self.selectedNode = ['']
+
     def selection(self):
-        return ['']
+        return self.selectedNode
 
 
 class TreeViewerMock:
@@ -66,6 +69,7 @@ class TreeViewerMock:
         self.tree = TreeMock()
 
     def go_to_node(self, scId):
+        self.tree.selectedNode = [scId]
         print(scId)
 
 
