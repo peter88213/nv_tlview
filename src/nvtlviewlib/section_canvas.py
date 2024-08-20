@@ -16,11 +16,11 @@ class SectionCanvas(tk.Canvas):
     # horizontal distance between event mark and label
     MARK_HALF = 5
 
-    def __init__(self, controller, master=None, **kw):
+    def __init__(self, controller, color, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._ctrl = controller
         self['background'] = 'black'
-        self.eventMarkColor = 'red'
+        self.eventMarkColor = color
         self.eventTitleColor = 'white'
         self.eventDateColor = 'gray60'
         self.indicatorColor = 'lightblue'
@@ -85,8 +85,6 @@ class SectionCanvas(tk.Canvas):
                 __, __, x2, __ = self.bbox('all')
                 labelEnd = x2
             yPos += self.EVENT_DIST_Y
-        __, __, __, y2 = self.bbox('all')
-        self.configure(scrollregion=(0, 0, 0, y2))
 
     def draw_indicator(self, xPos, text=''):
         self.delete_indicator()
