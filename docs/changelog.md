@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.7.0
+
+- Refactor the code, implementing a layered architecture.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.6.0
 
 - Refactor the tk frame architecture.
