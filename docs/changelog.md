@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.7.1
+
+- Avoid the toolbar from disappearing when shrinking the window.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.7.0
 
 - Refactor the code, implementing a layered architecture.

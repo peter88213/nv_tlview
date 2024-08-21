@@ -65,9 +65,16 @@ class TlView(tk.Frame):
         self._xPos = None
         self._yPos = None
 
+        #--- The toolbar.
+        # Packing the toolbar before the Timeline frame
+        # to avoid it from disappearing when shrinking the window.
+        self.toolbar = ttk.Frame(self)
+        self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
+        self._build_toolbar()
+
         #--- The Timeline frame.
         self.tlFrame = TlFrame(self, self._ctrl)
-        self.tlFrame.pack(fill='both', expand=True)
+        self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.
         self._substituteMissingTime = self._kwargs['substitute_missing_time']
@@ -77,7 +84,6 @@ class TlView(tk.Frame):
 
         self.mainMenu = menu
         self._build_menu()
-        self._build_toolbar()
         self.fit_window()
 
     @property
@@ -283,8 +289,8 @@ class TlView(tk.Frame):
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
-        self.bind('<F1>', open_help)
-        self.bind(self._KEY_UNDO[0], self._ctrl.pop_event)
+        self.bind_all('<F1>', open_help)
+        self.bind_all(self._KEY_UNDO[0], self._ctrl.pop_event)
         if PLATFORM == 'win':
             self.tlFrame.bind_section_canvas_event('<4>', self._page_back)
             self.tlFrame.bind_section_canvas_event('<5>', self._page_forward)
@@ -349,9 +355,6 @@ class TlView(tk.Frame):
         self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
 
     def _build_toolbar(self):
-        self.toolbar = ttk.Frame(self)
-        self.toolbar.pack(fill='x', padx=5, pady=2)
-
         toolbarIcons = self._ctrl.get_toolbar_icons()
 
         # Moving the x position.
