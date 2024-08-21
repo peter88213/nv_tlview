@@ -11,6 +11,7 @@ from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
+from nvtlviewlib.filters import Filters
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
 from nvtlviewlib.nvtlview_globals import PLATFORM
@@ -60,6 +61,13 @@ class TlView(tk.Frame):
         self._startTimestamp = None
         self._minDist = 0
         self._specificDate = None
+
+        #--- Section grouping.
+        self._filters = Filters(self._mdl.novel)
+        self.sectionGrouping = tk.IntVar(value=0)
+        # 0 = None
+        # 1 = Plot line
+        # 2 = Main character
 
         #--- Canvas position.
         self._xPos = None
@@ -227,10 +235,21 @@ class TlView(tk.Frame):
         self.scale = (YEAR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
     def sort_sections(self):
+        filters = list(self._filters)
+        if not filters:
+            self.srtSections = []
+            return
+
+        filter = filters[0]
+        print(filter.get_message())
+
         srtSections = []
         # list of tuples to sort by timestamp
         self._specificDate = False
         for scId in self._mdl.novel.sections:
+            if not filter.accept(scId):
+                continue
+
             section = self._mdl.novel.sections[scId]
             if section.scType != 0:
                 continue
@@ -348,6 +367,14 @@ class TlView(tk.Frame):
         self.cascadeMenu.add_command(label=_('Tight'), command=self.set_casc_tight)
         self.cascadeMenu.add_command(label=_('Relaxed'), command=self.set_casc_relaxed)
         self.cascadeMenu.add_command(label=_('Standard'), command=self.reset_casc)
+
+        # "Group by" menu.
+        self.groupMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Group by'), menu=self.groupMenu)
+        self.groupMenu.add_radiobutton(label=_('None'), variable=self.sectionGrouping, command=self._change_groups, value=0)
+        self.groupMenu.add_separator()
+        self.groupMenu.add_radiobutton(label=_('Plot line'), variable=self.sectionGrouping, command=self._change_groups, value=1)
+        self.groupMenu.add_radiobutton(label=_('Major character'), variable=self.sectionGrouping, command=self._change_groups, value=2)
 
         # "Help" menu.
         self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
@@ -471,6 +498,11 @@ class TlView(tk.Frame):
             text=_('Close'),
             command=self._close_view
             ).pack(side='right')
+
+    def _change_groups(self):
+        self._filters.set_selector(self.sectionGrouping.get())
+        self.sort_sections()
+        self.draw_timeline()
 
     def _close_view(self, event=None):
         self.event_generate('<<close_view>>')

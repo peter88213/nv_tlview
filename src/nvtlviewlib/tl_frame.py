@@ -59,7 +59,7 @@ class TlFrame(ttk.Frame):
         self._sectionCanvas.yview_moveto(0)
 
         self._sectionCanvases = {}
-        for i in range(3):
+        for i in range(1):
             colorIndex = i % len(self.COLORS)
             canvas = SectionCanvas(
                 controller,
@@ -131,8 +131,10 @@ class TlFrame(ttk.Frame):
                 srtSections,
                 minDist,
                 )
-            __, __, __, y2 = canvas.bbox('all')
-            canvasHeight += y2
+
+            sectionBounds = canvas.bbox('all')
+            if sectionBounds is not None:
+                canvasHeight += sectionBounds[3]
         self._sectionCanvas.configure(scrollregion=(0, 0, 0, canvasHeight))
 
     def get_scale_mark_spacing(self):

@@ -52,6 +52,8 @@ class NovelMock:
     def __init__(self, sections, referenceDate):
         self.sections = sections
         self.referenceDate = referenceDate
+        self.characters = {}
+        self.plotLines = {}
 
 
 class TreeMock:
