@@ -88,6 +88,12 @@ class TlView(tk.Frame):
         self._substituteMissingTime = self._kwargs['substitute_missing_time']
         # if True, use 00:00 if no time is given
 
+        #--- Timeline parameters.
+        self.firstTimestamp = self.MIN_TIMESTAMP
+        self.lastTimestamp = self.MAX_TIMESTAMP
+        self.srtSections = {}
+        # key: message, value: list of section parameters
+
         self._bind_events()
 
         self.mainMenu = menu
@@ -235,76 +241,74 @@ class TlView(tk.Frame):
         self.scale = (YEAR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
     def sort_sections(self):
-        filters = list(self._filters)
-        if not filters:
-            self.srtSections = []
-            return
-
-        filter = filters[0]
-        print(filter.get_message())
-
-        srtSections = []
-        # list of tuples to sort by timestamp
-        self._specificDate = False
-        for scId in self._mdl.novel.sections:
-            if not filter.accept(scId):
-                continue
-
-            section = self._mdl.novel.sections[scId]
-            if section.scType != 0:
-                continue
-
-            try:
-                durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
-                refIso = self._mdl.novel.referenceDate
-                if section.time is None:
-                    if not self._substituteMissingTime:
-                        continue
-
-                    scTime = '00:00'
-                else:
-                    scTime = section.time
-
-                if section.date is not None:
-                    self._specificDate = True
-                    scDate = section.date
-                    dt = datetime.fromisoformat(f'{scDate} {scTime}')
-                    weekDay = day_abbr[dt.weekday()]
-                    timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
-                elif section.day is not None:
-                    if refIso is None:
-                        refIso = '0001-01-01'
-                        showWeekDay = False
-                    else:
-                        showWeekDay = True
-                    scDate = get_specific_date(section.day, refIso)
-                    dt = datetime.fromisoformat(f'{scDate} {scTime}')
-                    if showWeekDay:
-                        weekDay = f'{day_abbr[dt.weekday()]} '
-                    else:
-                        weekDay = ''
-                    timeStr = f"{weekDay}{_('Day')} {section.day} {dt.hour:02}:{dt.minute:02}{durationStr}"
-                else:
-                    continue
-
-                srtSections.append(
-                        (
-                        get_timestamp(dt),
-                        get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
-                        section.title,
-                        timeStr,
-                        scId
-                        )
-                    )
-            except:
-                pass
-        self.srtSections = sorted(srtSections)
-        if len(self.srtSections) > 1:
-            self.firstTimestamp = self.srtSections[0][0]
-            self.lastTimestamp = self.srtSections[-1][0] + self.srtSections[-1][1]
-        else:
+        self.srtSections = {}
+        for scFilter in self._filters:
             self.firstTimestamp = self.MIN_TIMESTAMP
             self.lastTimestamp = self.MAX_TIMESTAMP
+            srtSections = []
+            # list of tuples to sort by timestamp
+            self._specificDate = False
+            for scId in self._mdl.novel.sections:
+                if not scFilter.accept(scId):
+                    continue
+
+                section = self._mdl.novel.sections[scId]
+                if section.scType != 0:
+                    continue
+
+                try:
+                    durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
+                    refIso = self._mdl.novel.referenceDate
+                    if section.time is None:
+                        if not self._substituteMissingTime:
+                            continue
+
+                        scTime = '00:00'
+                    else:
+                        scTime = section.time
+
+                    if section.date is not None:
+                        self._specificDate = True
+                        scDate = section.date
+                        dt = datetime.fromisoformat(f'{scDate} {scTime}')
+                        weekDay = day_abbr[dt.weekday()]
+                        timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
+                    elif section.day is not None:
+                        if refIso is None:
+                            refIso = '0001-01-01'
+                            showWeekDay = False
+                        else:
+                            showWeekDay = True
+                        scDate = get_specific_date(section.day, refIso)
+                        dt = datetime.fromisoformat(f'{scDate} {scTime}')
+                        if showWeekDay:
+                            weekDay = f'{day_abbr[dt.weekday()]} '
+                        else:
+                            weekDay = ''
+                        timeStr = f"{weekDay}{_('Day')} {section.day} {dt.hour:02}:{dt.minute:02}{durationStr}"
+                    else:
+                        continue
+
+                    srtSections.append(
+                            (
+                            get_timestamp(dt),
+                            get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
+                            section.title,
+                            timeStr,
+                            scId,
+                            )
+                        )
+                except:
+                    pass
+            srtSections = sorted(srtSections)
+            if len(srtSections) > 1:
+                if self.firstTimestamp == self.MIN_TIMESTAMP:
+                    self.firstTimestamp = srtSections[0][0]
+                    self.lastTimestamp = srtSections[-1][0] + srtSections[-1][1]
+                else:
+                    self.firstTimestamp = min(self.firstTimestamp, srtSections[0][0])
+                    self.lastTimestamp = max(self.lastTimestamp, srtSections[-1][0] + srtSections[-1][1])
+            self.srtSections[scFilter.get_message()] = srtSections
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)

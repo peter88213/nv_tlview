@@ -31,4 +31,4 @@ class Filter:
 
     def get_message(self):
         """Return a message about how the document exported from source is filtered."""
-        return ''
+        return '_("All")'

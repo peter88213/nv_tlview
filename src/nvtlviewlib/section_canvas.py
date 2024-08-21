@@ -16,7 +16,7 @@ class SectionCanvas(tk.Canvas):
     # horizontal distance between event mark and label
     MARK_HALF = 5
 
-    def __init__(self, controller, color, master=None, **kw):
+    def __init__(self, controller, message, color, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._ctrl = controller
         self['background'] = 'black'

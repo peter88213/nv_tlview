@@ -17,17 +17,18 @@ import tkinter as tk
 class TlFrame(ttk.Frame):
     SCALE_HEIGHT = MINOR_HEIGHT
     COLORS = (
-        'LightSteelBlue',
-        'Gold',
-        'Coral',
-        'YellowGreen',
-        'MediumTurquoise',
-        'Plum',
+        'Red',
+        'Yellow',
+        'Green',
+        'Blue',
+        'Cyan',
+        'Magenta',
         )
 
     def __init__(self, parent, controller, *args, **kw):
 
         ttk.Frame.__init__(self, parent, *args, **kw)
+        self._ctrl = controller
 
         # Scrollbar.
         scrollY = ttk.Scrollbar(self, orient='vertical', command=self.yview)
@@ -58,23 +59,6 @@ class TlFrame(ttk.Frame):
         self._sectionCanvas.xview_moveto(0)
         self._sectionCanvas.yview_moveto(0)
 
-        self._sectionCanvases = {}
-        for i in range(1):
-            colorIndex = i % len(self.COLORS)
-            canvas = SectionCanvas(
-                controller,
-                self.COLORS[colorIndex],
-                self._sectionCanvas,
-                borderwidth=0,
-                highlightthickness=0
-                )
-            frame_id = self._sectionCanvas.create_window(
-                0, 0,
-                anchor='nw',
-                window=canvas,
-                )
-            self._sectionCanvases[frame_id] = canvas
-
         if PLATFORM == 'ix':
             # Vertical scrolling
             self._sectionCanvas.bind_all("<Button-4>", self.on_mouse_wheel)
@@ -85,6 +69,8 @@ class TlFrame(ttk.Frame):
 
         self._yscrollincrement = self._sectionCanvas['yscrollincrement']
         self.bind('<Configure>', self.resize_frame)
+
+        self._sectionCanvases = {}
 
     def bind_section_canvas_event(self, button, command):
         self._sectionCanvas.bind_all(button, command)
@@ -115,23 +101,48 @@ class TlFrame(ttk.Frame):
             canvas.draw_indicator(xPos, text)
 
     def draw_timeline(self, startTimestamp, scale, srtSections, minDist, specificDate, referenceDate):
+
+        # Draw the scale.
         self._scaleCanvas.draw(
             startTimestamp,
             scale,
             specificDate,
             referenceDate
             )
+
+        # Clear the section canvases.
+        canvases = list(self._sectionCanvases)
+        for frameId in canvases:
+            self._sectionCanvases[frameId].destroy()
+        self._sectionCanvases = {}
+
+        # Draw the section canvases.
         canvasHeight = 0
-        for frame_id in self._sectionCanvases:
-            self._sectionCanvas.moveto(frame_id, 0, canvasHeight)
-            canvas = self._sectionCanvases[frame_id]
+        canvasWidth = self._scaleCanvas.winfo_width()
+        for i, canvasTitle in enumerate(srtSections):
+            colorIndex = i % len(self.COLORS)
+            canvas = SectionCanvas(
+                self._ctrl,
+                canvasTitle,
+                color=self.COLORS[colorIndex],
+                master=self._sectionCanvas,
+                borderwidth=0,
+                highlightthickness=0,
+                width=canvasWidth,
+                )
+            frameId = self._sectionCanvas.create_window(
+                0, 0,
+                anchor='nw',
+                window=canvas,
+                )
+            self._sectionCanvases[frameId] = canvas
+            self._sectionCanvas.moveto(frameId, 0, canvasHeight)
             canvas.draw(
                 startTimestamp,
                 scale,
-                srtSections,
+                srtSections[canvasTitle],
                 minDist,
                 )
-
             sectionBounds = canvas.bbox('all')
             if sectionBounds is not None:
                 canvasHeight += sectionBounds[3]
@@ -155,9 +166,9 @@ class TlFrame(ttk.Frame):
             elif event.num == 5:
                 self.yview_scroll(1, "units")
 
-    def resize_frame(self, e):
+    def resize_frame(self, event):
         for frame_id in self._sectionCanvases:
-            self._sectionCanvas.itemconfig(frame_id, height=e.height, width=e.width)
+            self._sectionCanvas.itemconfig(frame_id, height=event.height, width=event.width)
 
     def set_drag_scrolling(self):
         self._sectionCanvas.configure(yscrollincrement=1)
