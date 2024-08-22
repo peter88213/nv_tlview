@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.7.2
+
+- Fix a regression from version 1.5.2 where an exception is raised if there is no section with date/time.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.7.1
 
 - Avoid the toolbar from disappearing when shrinking the window.

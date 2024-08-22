@@ -85,8 +85,9 @@ class SectionCanvas(tk.Canvas):
                 __, __, x2, __ = self.bbox('all')
                 labelEnd = x2
             yPos += self.EVENT_DIST_Y
-        __, __, __, y2 = self.bbox('all')
-        self.configure(scrollregion=(0, 0, 0, y2))
+        totalBounds = self.bbox('all')
+        if totalBounds is not None:
+            self.configure(scrollregion=(0, 0, 0, totalBounds[3]))
 
     def draw_indicator(self, xPos, text=''):
         self.delete_indicator()
