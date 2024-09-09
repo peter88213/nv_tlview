@@ -17,9 +17,9 @@ GNU General Public License for more details.
 """
 from pathlib import Path
 
+from nvtlviewlib.nvtlview_globals import _
 from novxlib.ui.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
-from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tl_button import TlButton
 from nvtlviewlib.tl_controller import TlController
