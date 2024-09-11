@@ -302,20 +302,21 @@ class TlView(tk.Frame):
         self.bind_all(self.keys.UNDO[0], self._ctrl.pop_event)
         self.tlFrame.bind_all(self.keys.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
-            self.tlFrame.bind_section_canvas_event('<4>', self._page_back)
-            self.tlFrame.bind_section_canvas_event('<5>', self._page_forward)
-        if PLATFORM == 'ix':
+            self.tlFrame.bind_section_canvas_event(self.keys.BACK_CLICK, self._page_back)
+            self.tlFrame.bind_section_canvas_event(self.keys.FORWARD_CLICK, self._page_forward)
+        else:
             self.bind(self.keys.QUIT_PROGRAM[0], self._ctrl.on_quit)
-            self.tlFrame.bind_section_canvas_event("<Control-Button-4>", self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event("<Control-Button-5>", self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event("<Shift-Button-4>", self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event("<Shift-Button-5>", self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-4>", self.adjust_cascading)
-            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-5>", self.adjust_cascading)
+        if PLATFORM == 'ix':
+            self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE_BCK, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE_FWD, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING_BCK, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING_FWD, self.adjust_cascading)
         else:
             self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING, self.adjust_cascading)
             self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING, self.adjust_cascading)
 
     def _build_menu(self):
 

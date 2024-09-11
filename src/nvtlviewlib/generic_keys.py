@@ -14,9 +14,17 @@ class GenericKeys:
     UNDO = ('<Control-z>', f'{_("Ctrl")}-Z')
 
     ADJUST_CASCADING = '<Control-Shift-MouseWheel>'
-    MOVE_TIME_SCALE = '<Shift-MouseWheel>'
+    ADJUST_CASCADING_BCK = '<Control-Shift-Button-4>'
+    ADJUST_CASCADING_FWD = '<Control-Shift-Button-5>'
+    BACK_CLICK = '<Button-4>'
+    FORWARD_CLICK = '<Button-5>'
     LEFT_CLICK = '<Button-1>'
+    MOVE_TIME_SCALE = '<Shift-MouseWheel>'
+    MOVE_TIME_SCALE_BCK = '<Shift-Button-4>'
+    MOVE_TIME_SCALE_FWD = '<Shift-Button-5>'
     RIGHT_CLICK = '<Button-3>'
     RIGHT_MOTION = '<B3-Motion>'
     RIGHT_RELEASE = '<ButtonRelease-3>'
     STRETCH_TIME_SCALE = '<Control-MouseWheel>'
+    STRETCH_TIME_SCALE_BCK = '<Control-Button-4>'
+    STRETCH_TIME_SCALE_FWD = '<Control-Button-5>'

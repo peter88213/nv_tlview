@@ -10,3 +10,4 @@ from nvtlviewlib.generic_keys import GenericKeys
 class WindowsKeys(GenericKeys):
 
     QUIT_PROGRAM = ('<Alt-F4>', 'Alt-F4')
+

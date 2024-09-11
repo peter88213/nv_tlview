@@ -4,6 +4,13 @@
 
 ## Changelog
 
+### Version 1.8.2
+
+- Refactor the event bindings.
+- Restore the "Quit" menu command for the Mac.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.8.1
 
 - Automatically resize the setup window.

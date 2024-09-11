@@ -12,6 +12,7 @@ class MacKeys(GenericKeys):
     UNDO = ('<Command-z>', 'Cmd-Z')
 
     ADJUST_CASCADING = '<Command-Shift-MouseWheel>'
+    MOVE_TIME_SCALE = '<Shift-MouseWheel>'
     RIGHT_CLICK = '<Button-2>'
     RIGHT_MOTION = '<B2-Motion>'
     RIGHT_RELEASE = '<ButtonRelease-2>'
