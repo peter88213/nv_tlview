@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.8.0
+
+- Refactor, providing shortcuts, mouse operation, and key bindings for Mac OS.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.7.3
 
 - Refactor: Change import order for a quick start.

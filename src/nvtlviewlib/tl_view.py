@@ -22,11 +22,12 @@ from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tl_frame import TlFrame
 from tkinter import ttk
 import tkinter as tk
+from nvtlviewlib.generic_keys import GenericKeys
+from nvtlviewlib.mac_keys import MacKeys
+from nvtlviewlib.windows_keys import WindowsKeys
 
 
 class TlView(tk.Frame):
-    _KEY_QUIT_PROGRAM = ('<Control-q>', 'Ctrl-Q')
-    _KEY_UNDO = ('<Control-z>', 'Ctrl-Z')
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
@@ -49,6 +50,14 @@ class TlView(tk.Frame):
         self._kwargs = kwargs
         super().__init__(master)
         self.pack(fill='both', expand=True)
+
+        # Select platform specific keys.
+        if PLATFORM == 'win':
+            self.keys = WindowsKeys()
+        elif PLATFORM == 'mac':
+            self.keys = MacKeys()
+        else:
+            self.keys = GenericKeys()
 
         self._statusText = ''
 
@@ -170,7 +179,7 @@ class TlView(tk.Frame):
             text=self._ctrl.get_section_title(scId)
             )
 
-    def on_control_mouse_wheel(self, event):
+    def stretch_time_scale(self, event):
         """Stretch the time scale using the mouse wheel."""
         deltaScale = 1.1
         if event.num == 5 or event.delta == -120:
@@ -179,7 +188,7 @@ class TlView(tk.Frame):
             self.scale /= deltaScale
         return 'break'
 
-    def on_control_shift_mouse_wheel(self, event):
+    def adjust_cascading(self, event):
         """Change the distance for cascading events using the mouse wheel."""
         deltaDist = 10
         if event.num == 5 or event.delta == -120:
@@ -193,7 +202,7 @@ class TlView(tk.Frame):
         # this is necessary for deleting the event bindings
         self.destroy()
 
-    def on_shift_mouse_wheel(self, event):
+    def move_time_scale(self, event):
         """Move the time scale horizontally using the mouse wheel."""
         deltaOffset = self.scale / self.SCALE_MIN * self.tlFrame.get_scale_mark_spacing()
         if event.num == 5 or event.delta == -120:
@@ -289,30 +298,24 @@ class TlView(tk.Frame):
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
-        self.bind_all('<F1>', open_help)
-        self.bind_all(self._KEY_UNDO[0], self._ctrl.pop_event)
+        self.bind_all(self.keys.OPEN_HELP[0], open_help)
+        self.bind_all(self.keys.UNDO[0], self._ctrl.pop_event)
+        self.tlFrame.bind_all(self.keys.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
             self.tlFrame.bind_section_canvas_event('<4>', self._page_back)
             self.tlFrame.bind_section_canvas_event('<5>', self._page_forward)
-        else:
-            self.bind(self._KEY_QUIT_PROGRAM[0], self._ctrl.on_quit)
         if PLATFORM == 'ix':
-            self.tlFrame.bind_section_canvas_event("<Control-Button-4>", self.on_control_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Control-Button-5>", self.on_control_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Shift-Button-4>", self.on_shift_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Shift-Button-5>", self.on_shift_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-4>", self.on_control_shift_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-5>", self.on_control_shift_mouse_wheel)
+            self.bind(self.keys.QUIT_PROGRAM[0], self._ctrl.on_quit)
+            self.tlFrame.bind_section_canvas_event("<Control-Button-4>", self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event("<Control-Button-5>", self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event("<Shift-Button-4>", self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event("<Shift-Button-5>", self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-4>", self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event("<Control-Shift-Button-5>", self.adjust_cascading)
         else:
-            self.tlFrame.bind_section_canvas_event("<Control-MouseWheel>", self.on_control_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Shift-MouseWheel>", self.on_shift_mouse_wheel)
-            self.tlFrame.bind_section_canvas_event("<Control-Shift-MouseWheel>", self.on_control_shift_mouse_wheel)
-        if PLATFORM == 'mac':
-            self.tlFrame.bind_all('<Button-2>', self._on_right_click)
-            self._rightMotion = '<B2-Motion>'
-        else:
-            self.tlFrame.bind_all('<Button-3>', self._on_right_click)
-            self._rightMotion = '<B3-Motion>'
+            self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE, self.move_time_scale)
 
     def _build_menu(self):
 
@@ -493,15 +496,15 @@ class TlView(tk.Frame):
     def _on_right_click(self, event):
         self._xPos = event.x
         self._yPos = event.y
-        self.tlFrame.bind_all('<ButtonRelease-3>', self._on_right_release)
+        self.tlFrame.bind_all(self.keys.RIGHT_RELEASE, self._on_right_release)
         self.tlFrame.config(cursor='fleur')
-        self.tlFrame.bind_all(self._rightMotion, self._on_drag)
+        self.tlFrame.bind_all(self.keys.RIGHT_MOTION, self._on_drag)
         self.tlFrame.set_drag_scrolling()
 
     def _on_right_release(self, event):
-        self.tlFrame.unbind_all('<ButtonRelease-3>')
+        self.tlFrame.unbind_all(self.keys.RIGHT_RELEASE)
         self.tlFrame.config(cursor='arrow')
-        self.tlFrame.unbind_all(self._rightMotion)
+        self.tlFrame.unbind_all(self.keys.RIGHT_MOTION)
         self.tlFrame.set_normal_scrolling()
 
     def _page_back(self, event=None):

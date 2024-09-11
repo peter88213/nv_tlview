@@ -18,6 +18,7 @@ class TlFrame(ttk.Frame):
     def __init__(self, parent, controller, *args, **kw):
 
         ttk.Frame.__init__(self, parent, *args, **kw)
+        self._ui = parent
 
         # Scrollbar.
         scrollY = ttk.Scrollbar(self, orient='vertical', command=self.yview)
@@ -54,11 +55,11 @@ class TlFrame(ttk.Frame):
 
         if PLATFORM == 'ix':
             # Vertical scrolling
-            self._sectionCanvas.bind("<Button-4>", self.on_mouse_wheel)
-            self._sectionCanvas.bind("<Button-5>", self.on_mouse_wheel)
+            self._sectionCanvas.bind('<Button-4>', self.on_mouse_wheel)
+            self._sectionCanvas.bind('<Button-5>', self.on_mouse_wheel)
         else:
             # Vertical scrolling
-            self._sectionCanvas.bind("<MouseWheel>", self.on_mouse_wheel)
+            self._sectionCanvas.bind('<MouseWheel>', self.on_mouse_wheel)
 
         self._yscrollincrement = self._sectionCanvas['yscrollincrement']
 
@@ -69,20 +70,20 @@ class TlFrame(ttk.Frame):
         """Destructor for deleting event bindings."""
         if PLATFORM == 'ix':
             # Vertical scrolling
-            self._sectionCanvas.unbind_all("<Button-4>")
-            self._sectionCanvas.unbind_all("<Button-5>")
-            self._sectionCanvas.unbind_all("<Control-Button-4>")
-            self._sectionCanvas.unbind_all("<Control-Button-5>")
-            self._sectionCanvas.unbind_all("<Shift-Button-4>")
-            self._sectionCanvas.unbind_all("<Shift-Button-5>")
-            self._sectionCanvas.unbind_all("<Control-Shift-Button-4>")
-            self._sectionCanvas.unbind_all("<Control-Shift-Button-5>")
+            self._sectionCanvas.unbind_all('<Button-4>')
+            self._sectionCanvas.unbind_all('<Button-5>')
+            self._sectionCanvas.unbind_all('<Control-Button-4>')
+            self._sectionCanvas.unbind_all('<Control-Button-5>')
+            self._sectionCanvas.unbind_all('<Shift-Button-4>')
+            self._sectionCanvas.unbind_all('<Shift-Button-5>')
+            self._sectionCanvas.unbind_all('<Control-Shift-Button-4>')
+            self._sectionCanvas.unbind_all('<Control-Shift-Button-5>')
         else:
             # Vertical scrolling
-            self._sectionCanvas.unbind_all("<MouseWheel>")
-            self._sectionCanvas.unbind_all("<Control-MouseWheel>")
-            self._sectionCanvas.unbind_all("<Shift-MouseWheel>")
-            self._sectionCanvas.unbind_all("<Control-Shift-MouseWheel>")
+            self._sectionCanvas.unbind_all('<MouseWheel>')
+            self._sectionCanvas.unbind_all(self._ui.keys.STRETCH_TIME_SCALE)
+            self._sectionCanvas.unbind_all(self._ui.keys.MOVE_TIME_SCALE)
+            self._sectionCanvas.unbind_all(self._ui.keys.ADJUST_CASCADING)
         super().destroy()
 
     def draw_indicator(self, xPos, text=''):
@@ -111,14 +112,14 @@ class TlFrame(ttk.Frame):
     def on_mouse_wheel(self, event):
         """Event handler for vertical scrolling."""
         if PLATFORM == 'win':
-            self.yview_scroll(int(-1 * (event.delta / 120)), "units")
+            self.yview_scroll(int(-1 * (event.delta / 120)), 'units')
         elif PLATFORM == 'mac':
-            self.yview_scroll(int(-1 * event.delta), "units")
+            self.yview_scroll(int(-1 * event.delta), 'units')
         else:
             if event.num == 4:
-                self.yview_scroll(-1, "units")
+                self.yview_scroll(-1, 'units')
             elif event.num == 5:
-                self.yview_scroll(1, "units")
+                self.yview_scroll(1, 'units')
 
     def set_drag_scrolling(self):
         self._sectionCanvas.configure(yscrollincrement=1)
