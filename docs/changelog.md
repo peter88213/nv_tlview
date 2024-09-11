@@ -4,6 +4,13 @@
 
 ## Changelog
 
+### Version 1.8.1
+
+- Automatically resize the setup window.
+- Translate accelerators.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.8.0
 
 - Refactor, providing shortcuts, mouse operation, and key bindings for Mac OS.

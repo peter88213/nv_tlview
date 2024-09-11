@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 1.8.0\n"
-"POT-Creation-Date: 2024-09-11 09:24:55\n"
-"PO-Revision-Date: 2024-09-11 09:24:55\n"
+"Project-Id-Version: 1.8.1\n"
+"POT-Creation-Date: 2024-09-11 14:59:07\n"
+"PO-Revision-Date: 2024-09-11 14:59:07\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -18,6 +18,9 @@ msgstr "Kaskadieren"
 
 msgid "Close"
 msgstr "Schließen"
+
+msgid "Ctrl"
+msgstr "Strg"
 
 msgid "Day"
 msgstr "Tag"
