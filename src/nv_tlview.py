@@ -39,7 +39,7 @@ PLUGIN = f'{APPLICATION} plugin v@release'
 class Plugin(PluginBase):
     """Plugin class for the timeline view."""
     VERSION = '@release'
-    API_VERSION = '4.7'
+    API_VERSION = '4.11'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
 

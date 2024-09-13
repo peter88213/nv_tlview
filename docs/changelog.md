@@ -4,6 +4,19 @@
 
 ## Changelog
 
+
+### Version 1.9.0
+
+- Add a tooltip to the application's toolbar button.
+- Add footer toolbar tooltips.
+
+Refactor:
+
+- Separate keyboard settings and mouse operation settings.
+- Put everything in the new platform_settings module.
+
+Compatibility: novelibre 4.11 API
+
 ### Version 1.8.3
 
 - Refactor the event bindings.

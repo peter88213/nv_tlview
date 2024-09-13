@@ -17,7 +17,7 @@ that are given a narrative date/day and time.
 
 ## Requirements
 
-- [novelibre](https://github.com/peter88213/novelibre/) version 4.7+
+- [novelibre](https://github.com/peter88213/novelibre/) version 4.11+
 
 ## Download and install
 
