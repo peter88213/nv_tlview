@@ -468,6 +468,27 @@ class TlView(tk.Frame):
             command=self._close_view
             ).pack(side='right')
 
+        # Initialize tooltips.
+        if not self._ctrl.prefs['enable_hovertips']:
+            return
+
+        try:
+            from idlelib.tooltip import Hovertip
+        except ModuleNotFoundError:
+            return
+
+        Hovertip(rewindLeftButton, rewindLeftButton['text'])
+        Hovertip(arrowLeftButton, arrowLeftButton['text'])
+        Hovertip(goToFirstButton, goToFirstButton['text'])
+        Hovertip(goToSelectedButton, goToSelectedButton['text'])
+        Hovertip(goToLastButton, goToLastButton['text'])
+        Hovertip(arrowRightButton, arrowRightButton['text'])
+        Hovertip(rewindRightButton, rewindRightButton['text'])
+        Hovertip(arrowDownButton, arrowDownButton['text'])
+        Hovertip(fitToWindowButton, fitToWindowButton['text'])
+        Hovertip(arrowUpButton, arrowUpButton['text'])
+        Hovertip(self.undoButton, self.undoButton['text'])
+
     def _close_view(self, event=None):
         self.event_generate('<<close_view>>')
 
