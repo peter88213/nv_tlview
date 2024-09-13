@@ -6,9 +6,9 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tkinter import ttk
 
-from nvtlviewlib.key_definitions import KEYS
 from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
-from nvtlviewlib.nvtlview_globals import PLATFORM
+from nvtlviewlib.platform_settings import MOUSE
+from nvtlviewlib.platform_settings import PLATFORM
 from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
 
@@ -56,8 +56,8 @@ class TlFrame(ttk.Frame):
 
         if PLATFORM == 'ix':
             # Vertical scrolling
-            self._sectionCanvas.bind('<Button-4>', self.on_mouse_wheel)
-            self._sectionCanvas.bind('<Button-5>', self.on_mouse_wheel)
+            self._sectionCanvas.bind(MOUSE.BACK_SCROLL, self.on_mouse_wheel)
+            self._sectionCanvas.bind(MOUSE.FORWARD_SCROLL, self.on_mouse_wheel)
         else:
             # Vertical scrolling
             self._sectionCanvas.bind('<MouseWheel>', self.on_mouse_wheel)
@@ -71,20 +71,20 @@ class TlFrame(ttk.Frame):
         """Destructor for deleting event bindings."""
         if PLATFORM == 'ix':
             # Vertical scrolling
-            self._sectionCanvas.unbind_all('<Button-4>')
-            self._sectionCanvas.unbind_all('<Button-5>')
-            self._sectionCanvas.unbind_all('<Control-Button-4>')
-            self._sectionCanvas.unbind_all('<Control-Button-5>')
-            self._sectionCanvas.unbind_all('<Shift-Button-4>')
-            self._sectionCanvas.unbind_all('<Shift-Button-5>')
-            self._sectionCanvas.unbind_all('<Control-Shift-Button-4>')
-            self._sectionCanvas.unbind_all('<Control-Shift-Button-5>')
+            self._sectionCanvas.unbind_all(MOUSE.BACK_SCROLL)
+            self._sectionCanvas.unbind_all(MOUSE.FORWARD_SCROLL)
+            self._sectionCanvas.unbind_all(MOUSE.STRETCH_TIME_SCALE_BCK)
+            self._sectionCanvas.unbind_all(MOUSE.STRETCH_TIME_SCALE_FWD)
+            self._sectionCanvas.unbind_all(MOUSE.MOVE_TIME_SCALE_BCK)
+            self._sectionCanvas.unbind_all(MOUSE.MOVE_TIME_SCALE_FWD)
+            self._sectionCanvas.unbind_all(MOUSE.ADJUST_CASCADING_BCK)
+            self._sectionCanvas.unbind_all(MOUSE.ADJUST_CASCADING_FWD)
         else:
             # Vertical scrolling
             self._sectionCanvas.unbind_all('<MouseWheel>')
-            self._sectionCanvas.unbind_all(KEYS.STRETCH_TIME_SCALE)
-            self._sectionCanvas.unbind_all(KEYS.MOVE_TIME_SCALE)
-            self._sectionCanvas.unbind_all(KEYS.ADJUST_CASCADING)
+            self._sectionCanvas.unbind_all(MOUSE.STRETCH_TIME_SCALE)
+            self._sectionCanvas.unbind_all(MOUSE.MOVE_TIME_SCALE)
+            self._sectionCanvas.unbind_all(MOUSE.ADJUST_CASCADING)
         super().destroy()
 
     def draw_indicator(self, xPos, text=''):

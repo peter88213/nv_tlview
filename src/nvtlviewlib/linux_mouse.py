@@ -1,14 +1,16 @@
-"""Provide a class with key definitions for Linux.
+"""Provide a class with mouse operation definitions for Linux.
 
 Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-from nvtlviewlib.generic_keys import GenericKeys
+from nvtlviewlib.generic_mouse import GenericMouse
 
 
-class LinuxKeys(GenericKeys):
+class LinuxMouse(GenericMouse):
 
+    BACK_SCROLL = '<Button-4>'
+    FORWARD_SCROLL = '<Button-5>'
     ADJUST_CASCADING_BCK = '<Control-Shift-Button-4>'
     ADJUST_CASCADING_FWD = '<Control-Shift-Button-5>'
     MOVE_TIME_SCALE_BCK = '<Shift-Button-4>'

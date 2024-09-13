@@ -13,15 +13,16 @@ from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
-from nvtlviewlib.key_definitions import KEYS
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
-from nvtlviewlib.nvtlview_globals import PLATFORM
 from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MAX
 from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MIN
 from nvtlviewlib.nvtlview_globals import YEAR
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
+from nvtlviewlib.platform_settings import KEYS
+from nvtlviewlib.platform_settings import MOUSE
+from nvtlviewlib.platform_settings import PLATFORM
 from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 
@@ -291,23 +292,23 @@ class TlView(tk.Frame):
         self.bind('<Configure>', self.draw_timeline)
         self.bind_all(KEYS.OPEN_HELP[0], open_help)
         self.bind_all(KEYS.UNDO[0], self._ctrl.pop_event)
-        self.tlFrame.bind_all(KEYS.RIGHT_CLICK, self._on_right_click)
+        self.tlFrame.bind_all(MOUSE.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
-            self.tlFrame.bind_section_canvas_event(KEYS.BACK_CLICK, self._page_back)
-            self.tlFrame.bind_section_canvas_event(KEYS.FORWARD_CLICK, self._page_forward)
+            self.tlFrame.bind_section_canvas_event(MOUSE.BACK_CLICK, self._page_back)
+            self.tlFrame.bind_section_canvas_event(MOUSE.FORWARD_CLICK, self._page_forward)
         else:
             self.bind(KEYS.QUIT_PROGRAM[0], self._ctrl.on_quit)
         if PLATFORM == 'ix':
-            self.tlFrame.bind_section_canvas_event(KEYS.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(KEYS.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(KEYS.MOVE_TIME_SCALE_BCK, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(KEYS.MOVE_TIME_SCALE_FWD, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(KEYS.ADJUST_CASCADING_BCK, self.adjust_cascading)
-            self.tlFrame.bind_section_canvas_event(KEYS.ADJUST_CASCADING_FWD, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(MOUSE.MOVE_TIME_SCALE_BCK, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(MOUSE.MOVE_TIME_SCALE_FWD, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(MOUSE.ADJUST_CASCADING_BCK, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(MOUSE.ADJUST_CASCADING_FWD, self.adjust_cascading)
         else:
-            self.tlFrame.bind_section_canvas_event(KEYS.STRETCH_TIME_SCALE, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(KEYS.MOVE_TIME_SCALE, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(KEYS.ADJUST_CASCADING, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(MOUSE.MOVE_TIME_SCALE, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(MOUSE.ADJUST_CASCADING, self.adjust_cascading)
 
     def _build_menu(self):
 
@@ -488,15 +489,15 @@ class TlView(tk.Frame):
     def _on_right_click(self, event):
         self._xPos = event.x
         self._yPos = event.y
-        self.tlFrame.bind_all(KEYS.RIGHT_RELEASE, self._on_right_release)
+        self.tlFrame.bind_all(MOUSE.RIGHT_RELEASE, self._on_right_release)
         self.tlFrame.config(cursor='fleur')
-        self.tlFrame.bind_all(KEYS.RIGHT_MOTION, self._on_drag)
+        self.tlFrame.bind_all(MOUSE.RIGHT_MOTION, self._on_drag)
         self.tlFrame.set_drag_scrolling()
 
     def _on_right_release(self, event):
-        self.tlFrame.unbind_all(KEYS.RIGHT_RELEASE)
+        self.tlFrame.unbind_all(MOUSE.RIGHT_RELEASE)
         self.tlFrame.config(cursor='arrow')
-        self.tlFrame.unbind_all(KEYS.RIGHT_MOTION)
+        self.tlFrame.unbind_all(MOUSE.RIGHT_MOTION)
         self.tlFrame.set_normal_scrolling()
 
     def _page_back(self, event=None):
