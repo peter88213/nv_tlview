@@ -4,6 +4,12 @@
 
 ## Changelog
 
+### Version 1.8.3
+
+- Refactor the event bindings.
+
+Compatibility: novelibre 4.7 API
+
 ### Version 1.8.2
 
 - Refactor the event bindings.

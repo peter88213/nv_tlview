@@ -6,6 +6,7 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tkinter import ttk
 
+from nvtlviewlib.key_definitions import KEYS
 from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
 from nvtlviewlib.nvtlview_globals import PLATFORM
 from nvtlviewlib.scale_canvas import ScaleCanvas
@@ -81,9 +82,9 @@ class TlFrame(ttk.Frame):
         else:
             # Vertical scrolling
             self._sectionCanvas.unbind_all('<MouseWheel>')
-            self._sectionCanvas.unbind_all(self._ui.keys.STRETCH_TIME_SCALE)
-            self._sectionCanvas.unbind_all(self._ui.keys.MOVE_TIME_SCALE)
-            self._sectionCanvas.unbind_all(self._ui.keys.ADJUST_CASCADING)
+            self._sectionCanvas.unbind_all(KEYS.STRETCH_TIME_SCALE)
+            self._sectionCanvas.unbind_all(KEYS.MOVE_TIME_SCALE)
+            self._sectionCanvas.unbind_all(KEYS.ADJUST_CASCADING)
         super().destroy()
 
     def draw_indicator(self, xPos, text=''):

@@ -7,10 +7,13 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 from calendar import day_abbr
 from datetime import datetime
+from tkinter import ttk
+
 from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
+from nvtlviewlib.key_definitions import KEYS
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR
 from nvtlviewlib.nvtlview_globals import PLATFORM
@@ -20,11 +23,7 @@ from nvtlviewlib.nvtlview_globals import YEAR
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tl_frame import TlFrame
-from tkinter import ttk
 import tkinter as tk
-from nvtlviewlib.generic_keys import GenericKeys
-from nvtlviewlib.mac_keys import MacKeys
-from nvtlviewlib.windows_keys import WindowsKeys
 
 
 class TlView(tk.Frame):
@@ -50,14 +49,6 @@ class TlView(tk.Frame):
         self._kwargs = kwargs
         super().__init__(master)
         self.pack(fill='both', expand=True)
-
-        # Select platform specific keys.
-        if PLATFORM == 'win':
-            self.keys = WindowsKeys()
-        elif PLATFORM == 'mac':
-            self.keys = MacKeys()
-        else:
-            self.keys = GenericKeys()
 
         self._statusText = ''
 
@@ -298,25 +289,25 @@ class TlView(tk.Frame):
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
-        self.bind_all(self.keys.OPEN_HELP[0], open_help)
-        self.bind_all(self.keys.UNDO[0], self._ctrl.pop_event)
-        self.tlFrame.bind_all(self.keys.RIGHT_CLICK, self._on_right_click)
+        self.bind_all(KEYS.OPEN_HELP[0], open_help)
+        self.bind_all(KEYS.UNDO[0], self._ctrl.pop_event)
+        self.tlFrame.bind_all(KEYS.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
-            self.tlFrame.bind_section_canvas_event(self.keys.BACK_CLICK, self._page_back)
-            self.tlFrame.bind_section_canvas_event(self.keys.FORWARD_CLICK, self._page_forward)
+            self.tlFrame.bind_section_canvas_event(KEYS.BACK_CLICK, self._page_back)
+            self.tlFrame.bind_section_canvas_event(KEYS.FORWARD_CLICK, self._page_forward)
         else:
-            self.bind(self.keys.QUIT_PROGRAM[0], self._ctrl.on_quit)
+            self.bind(KEYS.QUIT_PROGRAM[0], self._ctrl.on_quit)
         if PLATFORM == 'ix':
-            self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE_BCK, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE_FWD, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING_BCK, self.adjust_cascading)
-            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING_FWD, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(KEYS.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(KEYS.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(KEYS.MOVE_TIME_SCALE_BCK, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(KEYS.MOVE_TIME_SCALE_FWD, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(KEYS.ADJUST_CASCADING_BCK, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(KEYS.ADJUST_CASCADING_FWD, self.adjust_cascading)
         else:
-            self.tlFrame.bind_section_canvas_event(self.keys.STRETCH_TIME_SCALE, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.MOVE_TIME_SCALE, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(self.keys.ADJUST_CASCADING, self.adjust_cascading)
+            self.tlFrame.bind_section_canvas_event(KEYS.STRETCH_TIME_SCALE, self.stretch_time_scale)
+            self.tlFrame.bind_section_canvas_event(KEYS.MOVE_TIME_SCALE, self.move_time_scale)
+            self.tlFrame.bind_section_canvas_event(KEYS.ADJUST_CASCADING, self.adjust_cascading)
 
     def _build_menu(self):
 
@@ -497,15 +488,15 @@ class TlView(tk.Frame):
     def _on_right_click(self, event):
         self._xPos = event.x
         self._yPos = event.y
-        self.tlFrame.bind_all(self.keys.RIGHT_RELEASE, self._on_right_release)
+        self.tlFrame.bind_all(KEYS.RIGHT_RELEASE, self._on_right_release)
         self.tlFrame.config(cursor='fleur')
-        self.tlFrame.bind_all(self.keys.RIGHT_MOTION, self._on_drag)
+        self.tlFrame.bind_all(KEYS.RIGHT_MOTION, self._on_drag)
         self.tlFrame.set_drag_scrolling()
 
     def _on_right_release(self, event):
-        self.tlFrame.unbind_all(self.keys.RIGHT_RELEASE)
+        self.tlFrame.unbind_all(KEYS.RIGHT_RELEASE)
         self.tlFrame.config(cursor='arrow')
-        self.tlFrame.unbind_all(self.keys.RIGHT_MOTION)
+        self.tlFrame.unbind_all(KEYS.RIGHT_MOTION)
         self.tlFrame.set_normal_scrolling()
 
     def _page_back(self, event=None):
