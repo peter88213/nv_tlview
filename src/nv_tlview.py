@@ -16,12 +16,12 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 from pathlib import Path
+from tkinter import ttk
 
 from nvtlviewlib.nvtlview_globals import _
 from novxlib.ui.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
 from nvtlviewlib.nvtlview_globals import open_help
-from nvtlviewlib.tl_button import TlButton
 from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
@@ -86,28 +86,7 @@ class Plugin(PluginBase):
         self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=open_help)
 
         #--- Configure the toolbar.
-
-        # Get the icons.
-        prefs = controller.get_preferences()
-        if prefs.get('large_icons', False):
-            size = 24
-        else:
-            size = 16
-        try:
-            homeDir = str(Path.home()).replace('\\', '/')
-            iconPath = f'{homeDir}/.novx/icons/{size}'
-        except:
-            iconPath = None
-        try:
-            tlIcon = tk.PhotoImage(file=f'{iconPath}/tlview.png')
-        except:
-            tlIcon = None
-
-        # Put a Separator on the toolbar.
-        tk.Frame(view.toolbar.buttonBar, bg='light gray', width=1).pack(side='left', fill='y', padx=4)
-
-        # Initialize the operation.
-        self._tlButton = TlButton(view, _('Timeline view'), tlIcon, self._open_viewer)
+        self._configure_toolbar()
 
     def _open_viewer(self):
         if not self._mdl.prjFile:
@@ -146,7 +125,7 @@ class Plugin(PluginBase):
         Overrides the superclass method.
         """
         self._ui.toolsMenu.entryconfig(APPLICATION, state='disabled')
-        self._tlButton.disable()
+        self._tlButton.config(state='disabled')
 
     def enable_menu(self):
         """Enable menu entries when a project is open.
@@ -154,7 +133,7 @@ class Plugin(PluginBase):
         Overrides the superclass method.
         """
         self._ui.toolsMenu.entryconfig(APPLICATION, state='normal')
-        self._tlButton.enable()
+        self._tlButton.config(state='normal')
 
     def on_close(self):
         """Actions to be performed when a project is closed.
@@ -174,6 +153,48 @@ class Plugin(PluginBase):
 
         self.close_main_window()
         self._tlCtrl = None
+
+    def _configure_toolbar(self):
+
+        # Get the icons.
+        prefs = self._ctrl.get_preferences()
+        if prefs.get('large_icons', False):
+            size = 24
+        else:
+            size = 16
+        try:
+            homeDir = str(Path.home()).replace('\\', '/')
+            iconPath = f'{homeDir}/.novx/icons/{size}'
+        except:
+            iconPath = None
+        try:
+            tlIcon = tk.PhotoImage(file=f'{iconPath}/tlview.png')
+        except:
+            tlIcon = None
+
+        # Put a Separator on the toolbar.
+        tk.Frame(self._ui.toolbar.buttonBar, bg='light gray', width=1).pack(side='left', fill='y', padx=4)
+
+        # Put a button on the toolbar.
+        self._tlButton = ttk.Button(
+            self._ui.toolbar.buttonBar,
+            text=_('Timeline view'),
+            image=tlIcon,
+            command=self._open_viewer
+            )
+        self._tlButton.pack(side='left')
+        self._tlButton.image = tlIcon
+
+        # Initialize tooltip.
+        if not prefs['enable_hovertips']:
+            return
+
+        try:
+            from idlelib.tooltip import Hovertip
+        except ModuleNotFoundError:
+            return
+
+        Hovertip(self._tlButton, self._tlButton['text'])
 
     def _save_configuration(self):
         for keyword in self.kwargs:
