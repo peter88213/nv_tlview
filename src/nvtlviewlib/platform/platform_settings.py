@@ -6,13 +6,13 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 import platform
 
-from nvtlviewlib.generic_keys import GenericKeys
-from nvtlviewlib.generic_mouse import GenericMouse
-from nvtlviewlib.linux_mouse import LinuxMouse
-from nvtlviewlib.mac_keys import MacKeys
-from nvtlviewlib.mac_mouse import MacMouse
-from nvtlviewlib.windows_keys import WindowsKeys
-from nvtlviewlib.windows_mouse import WindowsMouse
+from nvtlviewlib.platform.generic_keys import GenericKeys
+from nvtlviewlib.platform.generic_mouse import GenericMouse
+from nvtlviewlib.platform.linux_mouse import LinuxMouse
+from nvtlviewlib.platform.mac_keys import MacKeys
+from nvtlviewlib.platform.mac_mouse import MacMouse
+from nvtlviewlib.platform.windows_keys import WindowsKeys
+from nvtlviewlib.platform.windows_mouse import WindowsMouse
 
 if platform.system() == 'Windows':
     PLATFORM = 'win'

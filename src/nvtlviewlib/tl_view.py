@@ -20,9 +20,9 @@ from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MIN
 from nvtlviewlib.nvtlview_globals import YEAR
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
-from nvtlviewlib.platform_settings import KEYS
-from nvtlviewlib.platform_settings import MOUSE
-from nvtlviewlib.platform_settings import PLATFORM
+from nvtlviewlib.platform.platform_settings import KEYS
+from nvtlviewlib.platform.platform_settings import MOUSE
+from nvtlviewlib.platform.platform_settings import PLATFORM
 from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 

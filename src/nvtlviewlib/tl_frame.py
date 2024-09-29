@@ -7,8 +7,8 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from tkinter import ttk
 
 from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
-from nvtlviewlib.platform_settings import MOUSE
-from nvtlviewlib.platform_settings import PLATFORM
+from nvtlviewlib.platform.platform_settings import MOUSE
+from nvtlviewlib.platform.platform_settings import PLATFORM
 from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
 
