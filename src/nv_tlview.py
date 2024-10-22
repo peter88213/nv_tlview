@@ -25,16 +25,6 @@ from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tl_controller import TlController
 import tkinter as tk
 
-SETTINGS = dict(
-    window_geometry='600x800',
-)
-OPTIONS = dict(
-    substitute_missing_time=False,
-)
-
-APPLICATION = _('Timeline view')
-PLUGIN = f'{APPLICATION} plugin v@release'
-
 
 class Plugin(PluginBase):
     """Plugin class for the timeline view."""
@@ -42,6 +32,14 @@ class Plugin(PluginBase):
     API_VERSION = '4.11'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
+
+    FEATURE = _('Timeline view')
+    SETTINGS = dict(
+        window_geometry='600x800',
+    )
+    OPTIONS = dict(
+        substitute_missing_time=False,
+    )
 
     def install(self, model, view, controller, prefs=None):
         """Install the plugin.
@@ -70,8 +68,8 @@ class Plugin(PluginBase):
             configDir = '.'
         self.iniFile = f'{configDir}/tlview.ini'
         self.configuration = self._mdl.nvService.make_configuration(
-            settings=SETTINGS,
-            options=OPTIONS
+            settings=self.SETTINGS,
+            options=self.OPTIONS
             )
         self.configuration.read(self.iniFile)
         self.kwargs = {}
@@ -79,8 +77,8 @@ class Plugin(PluginBase):
         self.kwargs.update(self.configuration.options)
 
         # Add an entry to the Tools menu.
-        self._ui.toolsMenu.add_command(label=APPLICATION, command=self._open_viewer)
-        self._ui.toolsMenu.entryconfig(APPLICATION, state='disabled')
+        self._ui.toolsMenu.add_command(label=self.FEATURE, command=self._open_viewer)
+        self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
 
         # Add an entry to the Help menu.
         self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=open_help)
@@ -106,7 +104,7 @@ class Plugin(PluginBase):
 
         self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
         self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
-        self.mainWindow.title(f'{self._mdl.novel.title} - {PLUGIN}')
+        self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE} plugin v@release')
         self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)
         set_icon(self.mainWindow, icon='tLogo32', default=False)
         self.mainWindow.lift()
@@ -124,7 +122,7 @@ class Plugin(PluginBase):
         
         Overrides the superclass method.
         """
-        self._ui.toolsMenu.entryconfig(APPLICATION, state='disabled')
+        self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
         self._tlButton.config(state='disabled')
 
     def enable_menu(self):
@@ -132,7 +130,7 @@ class Plugin(PluginBase):
         
         Overrides the superclass method.
         """
-        self._ui.toolsMenu.entryconfig(APPLICATION, state='normal')
+        self._ui.toolsMenu.entryconfig(self.FEATURE, state='normal')
         self._tlButton.config(state='normal')
 
     def on_close(self):
