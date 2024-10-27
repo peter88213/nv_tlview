@@ -25,10 +25,10 @@ class NvViewMock:
         self._mdl = model
         self.tv = TreeViewerMock()
 
-    def register_view(self, view):
-        self._mdl.register_client(view)
+    def register_view(self, viewComponent):
+        self._mdl.register_client(viewComponent)
 
-    def unregister_view(self, view):
+    def unregister_view(self, viewComponent):
         pass
 
 
@@ -75,7 +75,7 @@ class TreeViewerMock:
 class NvControllerMock:
 
     def get_preferences(self):
-        return {}
+        return {'enable_hovertips':True}
 
 
 def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
