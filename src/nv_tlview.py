@@ -104,7 +104,7 @@ class Plugin(PluginBase):
 
         self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
         self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
-        self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE} plugin v@release')
+        self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE}')
         self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)
         set_icon(self.mainWindow, icon='tLogo32', default=False)
         self.mainWindow.lift()
