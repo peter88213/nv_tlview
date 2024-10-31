@@ -52,11 +52,9 @@ class Plugin(PluginBase):
         Optional arguments:
             prefs -- deprecated. Please use controller.get_preferences() instead.
         
-        Overrides the superclass method.
+        Extends the superclass method.
         """
-        self._mdl = model
-        self._ctrl = controller
-        self._ui = view
+        super().install(model, view, controller)
         self._tlUi = None
         self._tlCtrl = None
 

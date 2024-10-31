@@ -15,6 +15,8 @@ class SectionCanvas(tk.Canvas):
     LABEL_DIST_X = 10
     # horizontal distance between event mark and label
     MARK_HALF = 5
+    isLocked = False
+    # class variable to be changed from the parent view component
 
     def __init__(self, controller, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
@@ -113,6 +115,9 @@ class SectionCanvas(tk.Canvas):
         self.move(self._indicatorText, deltaX, 0)
 
     def _on_ctrl_shift_click(self, event):
+        if self.isLocked:
+            return
+
         """Begin increasing/decreasing the duration."""
         self._active_object = self._get_section_id(event)
         self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_ctrl_shift_release)
@@ -151,6 +156,9 @@ class SectionCanvas(tk.Canvas):
 
     def _on_shift_click(self, event):
         """Begin moving the event in time."""
+        if self.isLocked:
+            return
+
         self._active_object = self._get_section_id(event)
         self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_shift_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)

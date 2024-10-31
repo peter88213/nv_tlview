@@ -5,7 +5,6 @@ For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
-from pathlib import Path
 
 from novxlib.model.date_time_tools import get_specific_date
 from novxlib.model.date_time_tools import get_unspecific_date
@@ -14,8 +13,8 @@ from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.dt_helper import get_duration
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
+from nvtlviewlib.section_canvas import SectionCanvas
 from nvtlviewlib.tl_view import TlView
-import tkinter as tk
 
 
 class TlController:
@@ -25,57 +24,35 @@ class TlController:
         self._ui = view
         self._ctrl = controller
 
-        # Prepare the view's toolbar icons.
-        self.prefs = self._ctrl.get_preferences()
-        if self.prefs.get('large_icons', False):
-            size = 24
-        else:
-            size = 16
-        try:
-            homeDir = str(Path.home()).replace('\\', '/')
-            iconPath = f'{homeDir}/.novx/icons/{size}'
-        except:
-            iconPath = None
-
-        self._toolbarIcons = {}
-        icons = [
-            'rewindLeft',
-            'arrowLeft',
-            'goToFirst',
-            'goToLast',
-            'arrowRight',
-            'rewindRight',
-            'goToSelected',
-            'fitToWindow',
-            'arrowUp',
-            'arrowDown',
-            'undo',
-            ]
-        for icon in icons:
-            try:
-                self._toolbarIcons[icon] = tk.PhotoImage(file=f'{iconPath}/{icon}.png')
-            except:
-                self._toolbarIcons[icon] = None
-
-        # Create the view.
-        self.view = TlView(self._mdl, self, window, menu, kwargs)
-        self._ui.register_view(self.view)
+        # Create the view component.
+        self.view = TlView(self._mdl, self._ui, self._ctrl, window, self, menu, kwargs)
         self.isOpen = True
 
         self.firstTimestamp = None
         self.lastTimestamp = None
 
         #--- Settings and options.
-        self._kwargs = kwargs
 
         self._controlBuffer = []
+
+    @property
+    def canUndo(self):
+        # If True, recent operations can be undone.
+        if self._controlBuffer:
+            return True
+        else:
+            return False
+
+    @canUndo.setter
+    def canUndo(self, setFlag):
+        raise NotImplementedError
 
     def datestr(self, dt):
         """Return a localized date string, if the localize_date option is set.
         
         Otherwise return the ISO date string.
         """
-        if self.prefs.get('localize_date', True):
+        if self._ctrl.get_preferences().get('localize_date', True):
             return dt.strftime("%x")
         else:
             return dt.isoformat().split('T')[0]
@@ -136,8 +113,6 @@ class TlController:
             return
 
         self.view.on_quit()
-        self._ui.unregister_view(self.view)
-        self.view.destroy()
         self.isOpen = False
 
     def shift_event(self, scId, pixels):
@@ -210,6 +185,9 @@ class TlController:
 
     def pop_event(self, event=None):
         if not self._controlBuffer:
+            return
+
+        if SectionCanvas.isLocked:
             return
 
         eventData = self._controlBuffer.pop()

@@ -7,8 +7,10 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 from calendar import day_abbr
 from datetime import datetime
+from pathlib import Path
 from tkinter import ttk
 
+from apptk.view.view_component_base import ViewComponentBase
 from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
@@ -23,11 +25,12 @@ from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.platform.platform_settings import KEYS
 from nvtlviewlib.platform.platform_settings import MOUSE
 from nvtlviewlib.platform.platform_settings import PLATFORM
+from nvtlviewlib.section_canvas import SectionCanvas
 from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 
 
-class TlView(tk.Frame):
+class TlView(ViewComponentBase, tk.Frame):
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
@@ -44,11 +47,17 @@ class TlView(tk.Frame):
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
 
-    def __init__(self, model, controller, master, menu, kwargs):
-        self._mdl = model
-        self._ctrl = controller
+    def __init__(self, model, view, controller, master, tlController, menu, kwargs):
+        ViewComponentBase.__init__(self, model, view, controller)
+        tk.Frame.__init__(self, master)
+
+        #--- Register this view component.
+        self._ui.register_view(self)
+        if self._ctrl.isLocked:
+            self.lock()
+
+        self._tlCtrl = tlController
         self._kwargs = kwargs
-        super().__init__(master)
         self.pack(fill='both', expand=True)
 
         self._statusText = ''
@@ -67,6 +76,37 @@ class TlView(tk.Frame):
         self._yPos = None
 
         #--- The toolbar.
+        # Prepare the toolbar icons.
+        if self._ctrl.get_preferences().get('large_icons', False):
+            size = 24
+        else:
+            size = 16
+        try:
+            homeDir = str(Path.home()).replace('\\', '/')
+            iconPath = f'{homeDir}/.novx/icons/{size}'
+        except:
+            iconPath = None
+
+        self._toolbarIcons = {}
+        icons = [
+            'rewindLeft',
+            'arrowLeft',
+            'goToFirst',
+            'goToLast',
+            'arrowRight',
+            'rewindRight',
+            'goToSelected',
+            'fitToWindow',
+            'arrowUp',
+            'arrowDown',
+            'undo',
+            ]
+        for icon in icons:
+            try:
+                self._toolbarIcons[icon] = tk.PhotoImage(file=f'{iconPath}/{icon}.png')
+            except:
+                self._toolbarIcons[icon] = None
+
         # Packing the toolbar before the Timeline frame
         # to avoid it from disappearing when shrinking the window.
         self.toolbar = ttk.Frame(self)
@@ -74,7 +114,7 @@ class TlView(tk.Frame):
         self._build_toolbar()
 
         #--- The Timeline frame.
-        self.tlFrame = TlFrame(self, self._ctrl)
+        self.tlFrame = TlFrame(self, self._tlCtrl)
         self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.
@@ -156,11 +196,11 @@ class TlView(tk.Frame):
         self.tlFrame.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
-        scId = self._ctrl.get_selected_section()
+        scId = self._tlCtrl.get_selected_section()
         if scId is None:
             return
 
-        sectionTimestamp = self._ctrl.get_section_timestamp(scId)
+        sectionTimestamp = self._tlCtrl.get_section_timestamp(scId)
         if sectionTimestamp is None:
             return
 
@@ -168,7 +208,7 @@ class TlView(tk.Frame):
         self.startTimestamp = sectionTimestamp - xPos * self.scale
         self.tlFrame.draw_indicator(
             xPos,
-            text=self._ctrl.get_section_title(scId)
+            text=self._tlCtrl.get_section_title(scId)
             )
 
     def stretch_time_scale(self, event):
@@ -189,10 +229,10 @@ class TlView(tk.Frame):
             self.minDist -= deltaDist
         return 'break'
 
-    def on_quit(self, event=None):
-        self.tlFrame.destroy()
-        # this is necessary for deleting the event bindings
-        self.destroy()
+    def lock(self):
+        """Inhibit element change."""
+        SectionCanvas.isLocked = True
+        self.undoButton.config(state='disabled')
 
     def move_time_scale(self, event):
         """Move the time scale horizontally using the mouse wheel."""
@@ -202,6 +242,12 @@ class TlView(tk.Frame):
         if event.num == 4 or event.delta == 120:
             self.startTimestamp -= deltaOffset
         return 'break'
+
+    def on_quit(self, event=None):
+        self._ui.unregister_view(self)
+        self.tlFrame.destroy()
+        # this is necessary for deleting the event bindings
+        self.destroy()
 
     def refresh(self):
         """Refresh the view after changes have been made "outsides"."""
@@ -252,7 +298,7 @@ class TlView(tk.Frame):
                     scDate = section.date
                     dt = datetime.fromisoformat(f'{scDate} {scTime}')
                     weekDay = day_abbr[dt.weekday()]
-                    timeStr = f"{weekDay} {self._ctrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
+                    timeStr = f"{weekDay} {self._tlCtrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
                 elif section.day is not None:
                     if refIso is None:
                         refIso = '0001-01-01'
@@ -288,16 +334,22 @@ class TlView(tk.Frame):
             self.firstTimestamp = self.MIN_TIMESTAMP
             self.lastTimestamp = self.MAX_TIMESTAMP
 
+    def unlock(self):
+        """Enable element change."""
+        SectionCanvas.isLocked = False
+        if self._tlCtrl.canUndo:
+            self.undoButton.config(state='normal')
+
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
         self.bind_all(KEYS.OPEN_HELP[0], open_help)
-        self.bind_all(KEYS.UNDO[0], self._ctrl.pop_event)
+        self.bind_all(KEYS.UNDO[0], self._tlCtrl.pop_event)
         self.tlFrame.bind_all(MOUSE.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
             self.tlFrame.bind_section_canvas_event(MOUSE.BACK_CLICK, self._page_back)
             self.tlFrame.bind_section_canvas_event(MOUSE.FORWARD_CLICK, self._page_forward)
         else:
-            self.bind(KEYS.QUIT_PROGRAM[0], self._ctrl.on_quit)
+            self.bind(KEYS.QUIT_PROGRAM[0], self._tlCtrl.on_quit)
         if PLATFORM == 'ix':
             self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
             self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
@@ -351,71 +403,70 @@ class TlView(tk.Frame):
         self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
 
     def _build_toolbar(self):
-        toolbarIcons = self._ctrl.get_toolbar_icons()
 
         # Moving the x position.
         rewindLeftButton = ttk.Button(
             self.toolbar,
             text=_('Page back'),
-            image=toolbarIcons['rewindLeft'],
+            image=self._toolbarIcons['rewindLeft'],
             command=self._page_back
             )
         rewindLeftButton.pack(side='left')
-        rewindLeftButton.image = toolbarIcons['rewindLeft']
+        rewindLeftButton.image = self._toolbarIcons['rewindLeft']
 
         arrowLeftButton = ttk.Button(
             self.toolbar,
             text=_('Scroll back'),
-            image=toolbarIcons['arrowLeft'],
+            image=self._toolbarIcons['arrowLeft'],
             command=self._scroll_back
             )
         arrowLeftButton.pack(side='left')
-        arrowLeftButton.image = toolbarIcons['arrowLeft']
+        arrowLeftButton.image = self._toolbarIcons['arrowLeft']
 
         goToFirstButton = ttk.Button(
             self.toolbar,
             text=_('First event'),
-            image=toolbarIcons['goToFirst'],
+            image=self._toolbarIcons['goToFirst'],
             command=self.go_to_first
             )
         goToFirstButton.pack(side='left')
-        goToFirstButton.image = toolbarIcons['goToFirst']
+        goToFirstButton.image = self._toolbarIcons['goToFirst']
 
         goToSelectedButton = ttk.Button(
             self.toolbar,
             text=_('Selected section'),
-            image=toolbarIcons['goToSelected'],
+            image=self._toolbarIcons['goToSelected'],
             command=self.go_to_selected
             )
         goToSelectedButton.pack(side='left')
-        goToSelectedButton.image = toolbarIcons['goToSelected']
+        goToSelectedButton.image = self._toolbarIcons['goToSelected']
 
         goToLastButton = ttk.Button(
             self.toolbar,
             text=_('Last event'),
-            image=toolbarIcons['goToLast'],
+            image=self._toolbarIcons['goToLast'],
             command=self.go_to_last
             )
         goToLastButton.pack(side='left')
-        goToLastButton.image = toolbarIcons['goToLast']
+        goToLastButton.image = self._toolbarIcons['goToLast']
 
         arrowRightButton = ttk.Button(
             self.toolbar,
             text=_('Scroll forward'),
-            image=toolbarIcons['arrowRight'],
+            image=self._toolbarIcons['arrowRight'],
             command=self._scroll_forward
             )
         arrowRightButton.pack(side='left')
-        arrowRightButton.image = toolbarIcons['arrowRight']
+        arrowRightButton.image = self._toolbarIcons['arrowRight']
 
         rewindRightButton = ttk.Button(
             self.toolbar,
             text=_('Page forward'),
-            image=toolbarIcons['rewindRight'],
+            image=self._toolbarIcons['rewindRight'],
             command=self._page_forward
             )
         rewindRightButton.pack(side='left')
-        rewindRightButton.image = toolbarIcons['rewindRight']
+        rewindRightButton.image = self._toolbarIcons['rewindRight']
 
         # Separator.
         tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
@@ -424,29 +475,29 @@ class TlView(tk.Frame):
         arrowDownButton = ttk.Button(
             self.toolbar,
             text=_('Reduce scale'),
-            image=toolbarIcons['arrowDown'],
+            image=self._toolbarIcons['arrowDown'],
             command=self._reduce_scale
             )
         arrowDownButton.pack(side='left')
-        arrowDownButton.image = toolbarIcons['arrowDown']
+        arrowDownButton.image = self._toolbarIcons['arrowDown']
 
         fitToWindowButton = ttk.Button(
             self.toolbar,
             text=_('Fit to window'),
-            image=toolbarIcons['fitToWindow'],
+            image=self._toolbarIcons['fitToWindow'],
             command=self.fit_window
             )
         fitToWindowButton.pack(side='left')
-        fitToWindowButton.image = toolbarIcons['fitToWindow']
+        fitToWindowButton.image = self._toolbarIcons['fitToWindow']
 
         arrowUpButton = ttk.Button(
             self.toolbar,
             text=_('Increase scale'),
-            image=toolbarIcons['arrowUp'],
+            image=self._toolbarIcons['arrowUp'],
             command=self._increase_scale
             )
         arrowUpButton.pack(side='left')
-        arrowUpButton.image = toolbarIcons['arrowUp']
+        arrowUpButton.image = self._toolbarIcons['arrowUp']
 
         # Separator.
         tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
@@ -454,12 +505,12 @@ class TlView(tk.Frame):
         self.undoButton = ttk.Button(
             self.toolbar,
             text=_('Undo'),
-            image=toolbarIcons['undo'],
-            command=self._ctrl.pop_event,
+            image=self._toolbarIcons['undo'],
+            command=self._tlCtrl.pop_event,
             state='disabled',
             )
         self.undoButton.pack(side='left')
-        self.undoButton.image = toolbarIcons['undo']
+        self.undoButton.image = self._toolbarIcons['undo']
 
         # "Close" button.
         ttk.Button(
@@ -469,7 +520,7 @@ class TlView(tk.Frame):
             ).pack(side='right')
 
         # Initialize tooltips.
-        if not self._ctrl.prefs['enable_hovertips']:
+        if not self._ctrl.get_preferences()['enable_hovertips']:
             return
 
         try:

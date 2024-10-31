@@ -4,6 +4,19 @@
 
 ## Changelog
 
+### Version 1.9.1
+
+- Fix a bug where the project lock has no effect on user operation. Closes #13
+
+Refactor the code for better maintainability:
+
+- Link the source code to the new "apptk" GUI library.
+- Make the TlView class a ViewComponentBase subclass.
+- Replace global constants with class constants.
+- Move platform-specific modules to their own package.
+
+Compatible with novelibre 4.11
+Based on apptk 2.2.0
 
 ### Version 1.9.0
 
