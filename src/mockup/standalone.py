@@ -74,6 +74,8 @@ class TreeViewerMock:
 
 class NvControllerMock:
 
+    isLocked = False
+
     def get_preferences(self):
         return {'enable_hovertips':True}
 
