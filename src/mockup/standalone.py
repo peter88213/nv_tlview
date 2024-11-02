@@ -25,10 +25,10 @@ class NvViewMock:
         self._mdl = model
         self.tv = TreeViewerMock()
 
-    def register_view(self, viewComponent):
+    def register_client(self, viewComponent):
         self._mdl.register_client(viewComponent)
 
-    def unregister_view(self, viewComponent):
+    def unregister_client(self, viewComponent):
         pass
 
 

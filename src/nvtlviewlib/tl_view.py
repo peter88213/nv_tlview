@@ -10,7 +10,7 @@ from datetime import datetime
 from pathlib import Path
 from tkinter import ttk
 
-from apptk.view.view_component_base import ViewComponentBase
+from mvclib.view.view_component_base import ViewComponentBase
 from novxlib.model.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
@@ -52,7 +52,7 @@ class TlView(ViewComponentBase, tk.Frame):
         tk.Frame.__init__(self, master)
 
         #--- Register this view component.
-        self._ui.register_view(self)
+        self._ui.register_client(self)
         if self._ctrl.isLocked:
             self.lock()
 
@@ -244,7 +244,7 @@ class TlView(ViewComponentBase, tk.Frame):
         return 'break'
 
     def on_quit(self, event=None):
-        self._ui.unregister_view(self)
+        self._ui.unregister_client(self)
         self.tlFrame.destroy()
         # this is necessary for deleting the event bindings
         self.destroy()

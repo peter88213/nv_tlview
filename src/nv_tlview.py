@@ -18,7 +18,7 @@ GNU General Public License for more details.
 from pathlib import Path
 from tkinter import ttk
 
-from apptk.view.set_icon_tk import set_icon
+from mvclib.view.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
