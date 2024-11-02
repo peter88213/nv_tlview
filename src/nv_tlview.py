@@ -41,7 +41,7 @@ class Plugin(PluginBase):
         substitute_missing_time=False,
     )
 
-    def install(self, model, view, controller, prefs=None):
+    def install(self, model, view, controller):
         """Install the plugin.
         
         Positional arguments:
