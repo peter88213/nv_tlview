@@ -8,7 +8,7 @@ from _datetime import date
 from calendar import day_abbr
 from calendar import month_abbr
 
-from novxlib.model.date_time_tools import get_unspecific_date
+from nvlib.model.data.date_time_tools import get_unspecific_date
 from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.nvtlview_globals import DAY
 from nvtlviewlib.nvtlview_globals import HOUR

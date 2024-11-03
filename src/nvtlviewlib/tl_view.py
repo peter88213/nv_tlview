@@ -11,7 +11,7 @@ from pathlib import Path
 from tkinter import ttk
 
 from mvclib.view.view_component_base import ViewComponentBase
-from novxlib.model.date_time_tools import get_specific_date
+from nvlib.model.data.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp

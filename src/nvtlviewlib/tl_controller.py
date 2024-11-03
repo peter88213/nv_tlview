@@ -6,9 +6,9 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from datetime import datetime
 
-from novxlib.model.date_time_tools import get_specific_date
-from novxlib.model.date_time_tools import get_unspecific_date
-from novxlib.novx_globals import SECTION_PREFIX
+from nvlib.model.data.date_time_tools import get_specific_date
+from nvlib.model.data.date_time_tools import get_unspecific_date
+from nvlib.novx_globals import SECTION_PREFIX
 from nvtlviewlib.dt_helper import from_timestamp
 from nvtlviewlib.dt_helper import get_duration
 from nvtlviewlib.dt_helper import get_seconds
