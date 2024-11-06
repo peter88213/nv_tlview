@@ -53,9 +53,6 @@ class TlView(ViewComponentBase, tk.Frame):
 
         #--- Register this view component.
         self._ui.register_view(self)
-        if self._ctrl.isLocked:
-            self.lock()
-
         self._tlCtrl = tlController
         self._kwargs = kwargs
         self.pack(fill='both', expand=True)
@@ -126,6 +123,9 @@ class TlView(ViewComponentBase, tk.Frame):
         self.mainMenu = menu
         self._build_menu()
         self.fit_window()
+
+        if self._ctrl.isLocked:
+            self.lock()
 
     @property
     def startTimestamp(self):

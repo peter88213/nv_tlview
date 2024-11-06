@@ -4,6 +4,14 @@
 
 ## Changelog
 
+
+### Version 1.9.2
+
+- Fix a bug where an exception is raised when the viewer is started while the project is locked.
+
+Compatible with novelibre 4.11
+Based on apptk 2.2.0
+
 ### Version 1.9.1
 
 - Fix a bug where the project lock has no effect on user operation. Closes #13
