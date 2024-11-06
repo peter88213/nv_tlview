@@ -84,32 +84,6 @@ class Plugin(PluginBase):
         #--- Configure the toolbar.
         self._configure_toolbar()
 
-    def _open_viewer(self):
-        if not self._mdl.prjFile:
-            return
-
-        if self._tlCtrl is not None and self._tlCtrl.isOpen:
-            if self.mainWindow.state() == 'iconic':
-                self.mainWindow.state('normal')
-            self.mainWindow.lift()
-            self.mainWindow.focus()
-            return
-
-        self.mainWindow = tk.Toplevel()
-        self.mainWindow.geometry(self.kwargs['window_geometry'])
-        mainMenu = tk.Menu(self.mainWindow)
-        self.mainWindow.config(menu=mainMenu)
-
-        self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
-        self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
-        self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE}')
-        self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)
-        set_icon(self.mainWindow, icon='tLogo32', default=False)
-        self.mainWindow.lift()
-        self.mainWindow.focus()
-        self.mainWindow.update()
-        # for whatever reason, this helps keep the window size
-
     def close_main_window(self, event=None):
         self.kwargs['window_geometry'] = self.mainWindow.winfo_geometry()
         self._tlCtrl.on_quit()
@@ -131,6 +105,14 @@ class Plugin(PluginBase):
         self._ui.toolsMenu.entryconfig(self.FEATURE, state='normal')
         self._tlButton.config(state='normal')
 
+    def lock(self):
+        """Inhibit changes on the model.
+        
+        Overrides the superclass method.
+        """
+        if self._tlCtrl:
+            self._tlCtrl.lock()
+
     def on_close(self):
         """Actions to be performed when a project is closed.
         
@@ -149,6 +131,14 @@ class Plugin(PluginBase):
 
         self.close_main_window()
         self._tlCtrl = None
+
+    def unlock(self):
+        """Enable changes on the model.
+        
+        Overrides the superclass method.
+        """
+        if self._tlCtrl:
+            self._tlCtrl.unlock()
 
     def _configure_toolbar(self):
 
@@ -191,6 +181,32 @@ class Plugin(PluginBase):
             return
 
         Hovertip(self._tlButton, self._tlButton['text'])
+
+    def _open_viewer(self):
+        if not self._mdl.prjFile:
+            return
+
+        if self._tlCtrl is not None and self._tlCtrl.isOpen:
+            if self.mainWindow.state() == 'iconic':
+                self.mainWindow.state('normal')
+            self.mainWindow.lift()
+            self.mainWindow.focus()
+            return
+
+        self.mainWindow = tk.Toplevel()
+        self.mainWindow.geometry(self.kwargs['window_geometry'])
+        mainMenu = tk.Menu(self.mainWindow)
+        self.mainWindow.config(menu=mainMenu)
+
+        self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
+        self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
+        self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE}')
+        self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)
+        set_icon(self.mainWindow, icon='tLogo32', default=False)
+        self.mainWindow.lift()
+        self.mainWindow.focus()
+        self.mainWindow.update()
+        # for whatever reason, this helps keep the window size
 
     def _save_configuration(self):
         for keyword in self.kwargs:

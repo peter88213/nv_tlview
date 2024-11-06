@@ -25,10 +25,10 @@ class NvViewMock:
         self._mdl = model
         self.tv = TreeViewerMock()
 
-    def register_client(self, viewComponent):
-        self._mdl.register_client(viewComponent)
+    def add_observer(self, viewComponent):
+        self._mdl.add_observer(self)
 
-    def unregister_client(self, viewComponent):
+    def delete_observer(self, viewComponent):
         pass
 
 
@@ -43,7 +43,7 @@ class NvModelMock:
     def on_element_change(self):
         self.client.refresh()
 
-    def register_client(self, client):
+    def add_observer(self, client):
         self.client = client
 
 

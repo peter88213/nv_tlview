@@ -53,10 +53,7 @@ class TlView(SubController, Observer, tk.Frame):
         tk.Frame.__init__(self, master)
 
         #--- Register this view component.
-        self._ui.register_client(self)
-        if self._ctrl.isLocked:
-            self.lock()
-
+        self._mdl.add_observer(self)
         self._tlCtrl = tlController
         self._kwargs = kwargs
         self.pack(fill='both', expand=True)
@@ -127,6 +124,9 @@ class TlView(SubController, Observer, tk.Frame):
         self.mainMenu = menu
         self._build_menu()
         self.fit_window()
+
+        if self._ctrl.isLocked:
+            self.lock()
 
     @property
     def startTimestamp(self):
@@ -245,7 +245,7 @@ class TlView(SubController, Observer, tk.Frame):
         return 'break'
 
     def on_quit(self, event=None):
-        self._ui.unregister_client(self)
+        self._mdl.delete_observer(self)
         self.tlFrame.destroy()
         # this is necessary for deleting the event bindings
         self.destroy()

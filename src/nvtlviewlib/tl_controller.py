@@ -107,6 +107,13 @@ class TlController:
     def go_to_section(self, scId):
         self._ui.tv.go_to_node(scId)
 
+    def lock(self):
+        """Inhibit changes on the model.
+        
+        Overrides the superclass method.
+        """
+        self.view.lock()
+
     def on_quit(self):
         """Actions to be performed when the viewer is closed."""
         if not self.isOpen:
@@ -168,6 +175,13 @@ class TlController:
             self._mdl.novel.sections[scId].lastsMinutes = str(minutes)
         else:
             self._mdl.novel.sections[scId].lastsMinutes = None
+
+    def unlock(self):
+        """Enable changes on the model.
+        
+        Overrides the superclass method.
+        """
+        self.view.unlock()
 
     def push_event(self, scId, event=None):
         section = self._mdl.novel.sections[scId]
