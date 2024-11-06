@@ -10,7 +10,8 @@ from datetime import datetime
 from pathlib import Path
 from tkinter import ttk
 
-from mvclib.view.view_component_base import ViewComponentBase
+from mvclib.controller.sub_controller import SubController
+from mvclib.view.observer import Observer
 from nvlib.model.data.date_time_tools import get_specific_date
 from nvtlviewlib.dt_helper import get_duration_str
 from nvtlviewlib.dt_helper import get_seconds
@@ -30,7 +31,7 @@ from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 
 
-class TlView(ViewComponentBase, tk.Frame):
+class TlView(SubController, Observer, tk.Frame):
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
@@ -48,7 +49,7 @@ class TlView(ViewComponentBase, tk.Frame):
     SCALE_MAX = YEAR * 5
 
     def __init__(self, model, view, controller, master, tlController, menu, kwargs):
-        ViewComponentBase.__init__(self, model, view, controller)
+        SubController.__init__(self, model, view, controller)
         tk.Frame.__init__(self, master)
 
         #--- Register this view component.
