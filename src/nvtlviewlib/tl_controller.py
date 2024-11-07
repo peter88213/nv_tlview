@@ -97,7 +97,7 @@ class TlController:
         
         If no section is selected, return None.
         """
-        scId = self._ui.tv.tree.selection()[0]
+        scId = self._ui.selectedNode
         if scId.startswith(SECTION_PREFIX):
             return scId
 
