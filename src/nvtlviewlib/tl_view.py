@@ -31,7 +31,7 @@ from nvtlviewlib.tl_frame import TlFrame
 import tkinter as tk
 
 
-class TlView(SubController, Observer, tk.Frame):
+class TlView(SubController, Observer, ttk.Frame):
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
