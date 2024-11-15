@@ -1,6 +1,6 @@
 [![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v0.99.0.pyzw)
 [![Changelog](docs/img/changelog-button.png)](docs/changelog.md)
-[![News](docs/img/news-button.png)](https://github.com/peter88213/novelibre/discussions/1)
+[![News/Feedback](docs/img/news-button.png)](https://github.com/peter88213/novelibre/discussions)
 [![Online help](docs/img/help-button.png)](https://peter88213.github.io/nvhelp-en/nv_tlview/)
 
 
@@ -17,7 +17,7 @@ that are given a narrative date/day and time.
 
 ## Requirements
 
-- [novelibre](https://github.com/peter88213/novelibre/) version 5.0+
+- [novelibre](https://github.com/peter88213/novelibre/) version 4.11+
 
 ## Download and install
 
