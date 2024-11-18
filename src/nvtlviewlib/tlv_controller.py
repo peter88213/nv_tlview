@@ -14,10 +14,10 @@ from nvtlviewlib.dt_helper import get_duration
 from nvtlviewlib.dt_helper import get_seconds
 from nvtlviewlib.dt_helper import get_timestamp
 from nvtlviewlib.section_canvas import SectionCanvas
-from nvtlviewlib.tl_view import TlView
+from nvtlviewlib.tlv_main_frame import TlvMainFrame
 
 
-class TlController:
+class TlvController:
 
     def __init__(self, model, view, controller, window, menu, kwargs):
         self._mdl = model
@@ -25,7 +25,7 @@ class TlController:
         self._ctrl = controller
 
         # Create the view component.
-        self.view = TlView(self._mdl, self._ui, self._ctrl, window, self, menu, kwargs)
+        self.view = TlvMainFrame(self._mdl, self._ui, self._ctrl, window, self, menu, kwargs)
         self.isOpen = True
 
         self.firstTimestamp = None

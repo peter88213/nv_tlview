@@ -13,7 +13,7 @@ from nvtlviewlib.scale_canvas import ScaleCanvas
 from nvtlviewlib.section_canvas import SectionCanvas
 
 
-class TlFrame(ttk.Frame):
+class TlvScrollFrame(ttk.Frame):
     SCALE_HEIGHT = MINOR_HEIGHT
 
     def __init__(self, parent, controller, *args, **kw):

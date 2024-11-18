@@ -22,7 +22,7 @@ from mvclib.view.set_icon_tk import set_icon
 from nvlib.plugin.plugin_base import PluginBase
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
-from nvtlviewlib.tl_controller import TlController
+from nvtlviewlib.tlv_controller import TlvController
 import tkinter as tk
 
 
@@ -198,7 +198,7 @@ class Plugin(PluginBase):
         mainMenu = tk.Menu(self.mainWindow)
         self.mainWindow.config(menu=mainMenu)
 
-        self._tlCtrl = TlController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
+        self._tlCtrl = TlvController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
         self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
         self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE}')
         self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)

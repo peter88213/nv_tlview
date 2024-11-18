@@ -27,11 +27,11 @@ from nvtlviewlib.platform.platform_settings import KEYS
 from nvtlviewlib.platform.platform_settings import MOUSE
 from nvtlviewlib.platform.platform_settings import PLATFORM
 from nvtlviewlib.section_canvas import SectionCanvas
-from nvtlviewlib.tl_frame import TlFrame
+from nvtlviewlib.tlv_scroll_frame import TlvScrollFrame
 import tkinter as tk
 
 
-class TlView(SubController, Observer, ttk.Frame):
+class TlvMainFrame(ttk.Frame, Observer, SubController):
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
@@ -49,8 +49,10 @@ class TlView(SubController, Observer, ttk.Frame):
     SCALE_MAX = YEAR * 5
 
     def __init__(self, model, view, controller, master, tlController, menu, kwargs):
-        SubController.__init__(self, model, view, controller)
-        tk.Frame.__init__(self, master)
+        super().__init__(master)
+        self._mdl = model
+        self._ui = view
+        self._ctrl = controller
 
         #--- Register this view component.
         self._mdl.add_observer(self)
@@ -112,7 +114,7 @@ class TlView(SubController, Observer, ttk.Frame):
         self._build_toolbar()
 
         #--- The Timeline frame.
-        self.tlFrame = TlFrame(self, self._tlCtrl)
+        self.tlFrame = TlvScrollFrame(self, self._tlCtrl)
         self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.

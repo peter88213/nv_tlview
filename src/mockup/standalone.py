@@ -9,7 +9,7 @@ import sys
 from tkinter import ttk
 
 from mockup.event import Event
-from nvtlviewlib.tl_controller import TlController
+from nvtlviewlib.tlv_controller import TlvController
 import tkinter as tk
 
 SETTINGS = dict(
@@ -104,7 +104,7 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     mainWindow = ttk.Frame(root)
     mainWindow.pack(fill='both', expand=True)
 
-    tlCtrl = TlController(mdl, ui, nvCtrl, mainWindow, mainMenu, kwargs)
+    tlCtrl = TlvController(mdl, ui, nvCtrl, mainWindow, mainMenu, kwargs)
     tlCtrl.view.bind("<Destroy>", sys.exit)
     tlCtrl.view.bind("<<close_view>>", sys.exit)
 
