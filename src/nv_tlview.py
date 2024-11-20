@@ -19,7 +19,7 @@ from pathlib import Path
 from tkinter import ttk
 
 from mvclib.view.set_icon_tk import set_icon
-from nvlib.plugin.plugin_base import PluginBase
+from nvlib.controller.plugin.plugin_base import PluginBase
 from nvtlviewlib.nvtlview_globals import _
 from nvtlviewlib.nvtlview_globals import open_help
 from nvtlviewlib.tlv_controller import TlvController
