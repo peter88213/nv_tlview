@@ -164,7 +164,7 @@ class Plugin(PluginBase):
         # Put a button on the toolbar.
         self._tlButton = ttk.Button(
             self._ui.toolbar.buttonBar,
-            text=_('Timeline view'),
+            text=self.FEATURE,
             image=tlIcon,
             command=self._open_viewer
             )
