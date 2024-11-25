@@ -4,13 +4,13 @@
 
 ## Changelog
 
-### Version 5.0.0
+### Version 5.0.1
 
 Library update:
 - Refactor the code for better maintainability.
 
-API: 5.0
-Based on novelibre 5.0.0
+API: 5.0.5
+Based on novelibre 5.0.5
 
 ### Version 1.9.1
 
