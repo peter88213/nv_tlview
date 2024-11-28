@@ -9,7 +9,7 @@
 Library update:
 - Refactor the code for better maintainability.
 
-API: 5.0.5
+API: 5.0
 Based on novelibre 5.0.5
 
 ### Version 1.9.1
