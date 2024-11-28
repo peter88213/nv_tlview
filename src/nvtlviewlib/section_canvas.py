@@ -18,9 +18,9 @@ class SectionCanvas(tk.Canvas):
     isLocked = False
     # class variable to be changed from the parent view component
 
-    def __init__(self, controller, master=None, **kw):
+    def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
-        self._ctrl = controller
+        self._tlvCtrl = tlvController
         self['background'] = 'black'
         self.eventMarkColor = 'red'
         self.eventTitleColor = 'white'
@@ -127,7 +127,7 @@ class SectionCanvas(tk.Canvas):
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,
-            text=f'{_("Shift end")}: {self._ctrl.get_section_title(self._active_object)}'
+            text=f'{_("Shift end")}: {self._tlvCtrl.get_section_title(self._active_object)}'
             )
         self._xStart = event.x
 
@@ -135,13 +135,13 @@ class SectionCanvas(tk.Canvas):
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
         deltaX = event.x - self._xStart
-        self._ctrl.shift_event_end(self._active_object, deltaX)
+        self._tlvCtrl.shift_event_end(self._active_object, deltaX)
         self._active_object = None
 
     def _on_double_click(self, event):
         """Select the double-clicked section in the project tree."""
         scId = self._get_section_id(event)
-        self._ctrl.go_to_section(scId)
+        self._tlvCtrl.go_to_section(scId)
 
     def _on_drag(self, event):
         deltaX = event.x - self._xPos
@@ -167,7 +167,7 @@ class SectionCanvas(tk.Canvas):
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,
-            text=f'{_("Shift start")}: {self._ctrl.get_section_title(self._active_object)}'
+            text=f'{_("Shift start")}: {self._tlvCtrl.get_section_title(self._active_object)}'
             )
         self._xStart = event.x
 
@@ -175,6 +175,6 @@ class SectionCanvas(tk.Canvas):
         self.tag_unbind(self._active_object, '<ButtonRelease-1>')
         self.tag_unbind(self._active_object, '<B1-Motion>')
         deltaX = event.x - self._xStart
-        self._ctrl.shift_event(self._active_object, deltaX)
+        self._tlvCtrl.shift_event(self._active_object, deltaX)
         self._active_object = None
 

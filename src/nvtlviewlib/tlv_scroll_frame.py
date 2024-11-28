@@ -16,10 +16,9 @@ from nvtlviewlib.section_canvas import SectionCanvas
 class TlvScrollFrame(ttk.Frame):
     SCALE_HEIGHT = MINOR_HEIGHT
 
-    def __init__(self, parent, controller, *args, **kw):
+    def __init__(self, parent, tlvController, *args, **kw):
 
         ttk.Frame.__init__(self, parent, *args, **kw)
-        self._ui = parent
 
         # Scrollbar.
         scrollY = ttk.Scrollbar(self, orient='vertical', command=self.yview)
@@ -27,7 +26,7 @@ class TlvScrollFrame(ttk.Frame):
 
         # Fixed scale.
         self._scaleCanvas = ScaleCanvas(
-            controller,
+            tlvController,
             self,
             height=self.SCALE_HEIGHT,
             borderwidth=0,
@@ -40,7 +39,7 @@ class TlvScrollFrame(ttk.Frame):
 
         #--- Vertically scrollable event area.
         self._sectionCanvas = SectionCanvas(
-            controller,
+            tlvController,
             self,
             borderwidth=0,
             highlightthickness=0

@@ -24,9 +24,9 @@ import tkinter as tk
 
 class ScaleCanvas(tk.Canvas):
 
-    def __init__(self, controller, master=None, **kw):
+    def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
-        self._ctrl = controller
+        self._tlvCtrl = tlvController
         self['background'] = 'gray25'
         self._majorScaleColor = 'white'
         self._minorScaleColor = 'gray60'
@@ -80,9 +80,9 @@ class ScaleCanvas(tk.Canvas):
                 weekDay = day_abbr[dt.weekday()]
                 month = month_abbr[dt.month]
                 if units == 0:
-                    dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
+                    dtStr = f"{weekDay} {self._tlvCtrl.datestr(dt)}"
                 if units == 1:
-                    dtStr = f"{weekDay} {self._ctrl.datestr(dt)}"
+                    dtStr = f"{weekDay} {self._tlvCtrl.datestr(dt)}"
                 elif units == 2:
                     dtStr = f"{month} {dt.year}"
                 elif units == 3:

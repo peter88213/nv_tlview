@@ -48,7 +48,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
 
-    def __init__(self, model, view, controller, master, tlController, menu, kwargs):
+    def __init__(self, model, view, controller, master, tlvController, menu, kwargs):
         super().__init__(master)
         self._mdl = model
         self._ui = view
@@ -56,7 +56,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
 
         #--- Register this view component.
         self._mdl.add_observer(self)
-        self._tlCtrl = tlController
+        self._tlvCtrl = tlvController
         self._kwargs = kwargs
         self.pack(fill='both', expand=True)
 
@@ -114,7 +114,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self._build_toolbar()
 
         #--- The Timeline frame.
-        self.tlFrame = TlvScrollFrame(self, self._tlCtrl)
+        self.tlFrame = TlvScrollFrame(self, self._tlvCtrl)
         self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.
@@ -199,11 +199,11 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self.tlFrame.draw_indicator(xPos)
 
     def go_to_selected(self, event=None):
-        scId = self._tlCtrl.get_selected_section()
+        scId = self._tlvCtrl.get_selected_section()
         if scId is None:
             return
 
-        sectionTimestamp = self._tlCtrl.get_section_timestamp(scId)
+        sectionTimestamp = self._tlvCtrl.get_section_timestamp(scId)
         if sectionTimestamp is None:
             return
 
@@ -211,7 +211,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self.startTimestamp = sectionTimestamp - xPos * self.scale
         self.tlFrame.draw_indicator(
             xPos,
-            text=self._tlCtrl.get_section_title(scId)
+            text=self._tlvCtrl.get_section_title(scId)
             )
 
     def stretch_time_scale(self, event):
@@ -301,7 +301,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
                     scDate = section.date
                     dt = datetime.fromisoformat(f'{scDate} {scTime}')
                     weekDay = day_abbr[dt.weekday()]
-                    timeStr = f"{weekDay} {self._tlCtrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
+                    timeStr = f"{weekDay} {self._tlvCtrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
                 elif section.day is not None:
                     if refIso is None:
                         refIso = '0001-01-01'
@@ -340,19 +340,19 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
     def unlock(self):
         """Enable element change."""
         SectionCanvas.isLocked = False
-        if self._tlCtrl.canUndo:
+        if self._tlvCtrl.canUndo:
             self.undoButton.config(state='normal')
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
         self.bind_all(KEYS.OPEN_HELP[0], open_help)
-        self.bind_all(KEYS.UNDO[0], self._tlCtrl.pop_event)
+        self.bind_all(KEYS.UNDO[0], self._tlvCtrl.pop_event)
         self.tlFrame.bind_all(MOUSE.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
             self.tlFrame.bind_section_canvas_event(MOUSE.BACK_CLICK, self._page_back)
             self.tlFrame.bind_section_canvas_event(MOUSE.FORWARD_CLICK, self._page_forward)
         else:
-            self.bind(KEYS.QUIT_PROGRAM[0], self._tlCtrl.on_quit)
+            self.bind(KEYS.QUIT_PROGRAM[0], self._tlvCtrl.on_quit)
         if PLATFORM == 'ix':
             self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
             self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
@@ -509,7 +509,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
             self.toolbar,
             text=_('Undo'),
             image=self._toolbarIcons['undo'],
-            command=self._tlCtrl.pop_event,
+            command=self._tlvCtrl.pop_event,
             state='disabled',
             )
         self.undoButton.pack(side='left')

@@ -55,8 +55,7 @@ class Plugin(PluginBase):
         Extends the superclass method.
         """
         super().install(model, view, controller)
-        self._tlUi = None
-        self._tlCtrl = None
+        self._tlvCtrl = None
 
         #--- Load configuration.
         try:
@@ -86,7 +85,7 @@ class Plugin(PluginBase):
 
     def close_main_window(self, event=None):
         self.kwargs['window_geometry'] = self.mainWindow.winfo_geometry()
-        self._tlCtrl.on_quit()
+        self._tlvCtrl.on_quit()
         self.mainWindow.destroy()
 
     def disable_menu(self):
@@ -110,8 +109,8 @@ class Plugin(PluginBase):
         
         Overrides the superclass method.
         """
-        if self._tlCtrl:
-            self._tlCtrl.lock()
+        if self._tlvCtrl:
+            self._tlvCtrl.lock()
 
     def on_close(self):
         """Actions to be performed when a project is closed.
@@ -126,19 +125,19 @@ class Plugin(PluginBase):
         Overrides the superclass method.
         """
         self._save_configuration()
-        if self._tlCtrl is None:
+        if self._tlvCtrl is None:
             return
 
         self.close_main_window()
-        self._tlCtrl = None
+        self._tlvCtrl = None
 
     def unlock(self):
         """Enable changes on the model.
         
         Overrides the superclass method.
         """
-        if self._tlCtrl:
-            self._tlCtrl.unlock()
+        if self._tlvCtrl:
+            self._tlvCtrl.unlock()
 
     def _configure_toolbar(self):
 
@@ -186,7 +185,7 @@ class Plugin(PluginBase):
         if not self._mdl.prjFile:
             return
 
-        if self._tlCtrl is not None and self._tlCtrl.isOpen:
+        if self._tlvCtrl is not None and self._tlvCtrl.isOpen:
             if self.mainWindow.state() == 'iconic':
                 self.mainWindow.state('normal')
             self.mainWindow.lift()
@@ -198,10 +197,10 @@ class Plugin(PluginBase):
         mainMenu = tk.Menu(self.mainWindow)
         self.mainWindow.config(menu=mainMenu)
 
-        self._tlCtrl = TlvController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
+        self._tlvCtrl = TlvController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
         self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
         self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE}')
-        self._tlCtrl.view.bind('<<close_view>>', self.close_main_window)
+        self._tlvCtrl.view.bind('<<close_view>>', self.close_main_window)
         set_icon(self.mainWindow, icon='tLogo32', default=False)
         self.mainWindow.lift()
         self.mainWindow.focus()
