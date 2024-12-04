@@ -75,8 +75,6 @@ An easy way may be to put a posting in the [novelibre forum](https://github.com/
 
 ## Development
 
-*nv_tlview* depends on the [novxlib](https://github.com/peter88213/novxlib) and [tlviewnv](https://github.com/peter88213/tlviewnv) libraries which must be present in your file system. It is organized as an Eclipse PyDev project. The official release branch on GitHub is *main*.
-
 ### Mandatory directory structure for building the plugin package
 
 ```
@@ -92,9 +90,6 @@ An easy way may be to put a posting in the [novelibre forum](https://github.com/
 │       ├── pgettext.py
 │       ├── translate_de.py
 │       └── translations.py
-├── novxlib/
-│   └── src/
-│       └── novxlib/
 └── nv_tlview/
     ├── i18n/
     ├── src/
