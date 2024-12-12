@@ -9,16 +9,16 @@ from calendar import day_abbr
 from calendar import month_abbr
 
 from nvlib.model.data.date_time_tools import get_unspecific_date
-from nvtlviewlib.dt_helper import from_timestamp
-from nvtlviewlib.nvtlview_globals import DAY
-from nvtlviewlib.nvtlview_globals import HOUR
-from nvtlviewlib.nvtlview_globals import MAJOR_HEIGHT
-from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
-from nvtlviewlib.nvtlview_globals import MINOR_SPACING_MIN
-from nvtlviewlib.nvtlview_globals import MONTH
-from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MIN
-from nvtlviewlib.nvtlview_globals import YEAR
-from nvtlviewlib.nvtlview_globals import _
+from nvtlview.dt_helper import from_timestamp
+from nvtlview.nvtlview_globals import DAY
+from nvtlview.nvtlview_globals import HOUR
+from nvtlview.nvtlview_globals import MAJOR_HEIGHT
+from nvtlview.nvtlview_globals import MINOR_HEIGHT
+from nvtlview.nvtlview_globals import MINOR_SPACING_MIN
+from nvtlview.nvtlview_globals import MONTH
+from nvtlview.nvtlview_globals import SCALE_SPACING_MIN
+from nvtlview.nvtlview_globals import YEAR
+from nvtlview.nvtlview_locale import _
 import tkinter as tk
 
 

@@ -9,7 +9,7 @@ import sys
 from tkinter import ttk
 
 from mockup.event import Event
-from nvtlviewlib.tlv_controller import TlvController
+from nvtlview.tlv_controller import TlvController
 import tkinter as tk
 
 SETTINGS = dict(

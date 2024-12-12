@@ -7,7 +7,7 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from datetime import datetime
 from datetime import timedelta
 
-from nvtlviewlib.nvtlview_globals import _
+from nvtlview.nvtlview_locale import _
 
 
 def from_timestamp(ts):

@@ -19,7 +19,7 @@ VERSION = '5.0.2'
 class PluginBuilder(PackageBuilder):
 
     PRJ_NAME = 'nv_tlview'
-    LOCAL_LIB = 'nvtlviewlib'
+    LOCAL_LIB = 'nvtlview'
     GERMAN_TRANSLATION = True
 
     def add_extras(self):

@@ -6,11 +6,11 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tkinter import ttk
 
-from nvtlviewlib.nvtlview_globals import MINOR_HEIGHT
-from nvtlviewlib.platform.platform_settings import MOUSE
-from nvtlviewlib.platform.platform_settings import PLATFORM
-from nvtlviewlib.scale_canvas import ScaleCanvas
-from nvtlviewlib.section_canvas import SectionCanvas
+from nvtlview.nvtlview_globals import MINOR_HEIGHT
+from nvtlview.platform.platform_settings import MOUSE
+from nvtlview.platform.platform_settings import PLATFORM
+from nvtlview.scale_canvas import ScaleCanvas
+from nvtlview.section_canvas import SectionCanvas
 
 
 class TlvScrollFrame(ttk.Frame):

@@ -13,21 +13,21 @@ from tkinter import ttk
 from mvclib.controller.sub_controller import SubController
 from mvclib.view.observer import Observer
 from nvlib.model.data.date_time_tools import get_specific_date
-from nvtlviewlib.dt_helper import get_duration_str
-from nvtlviewlib.dt_helper import get_seconds
-from nvtlviewlib.dt_helper import get_timestamp
-from nvtlviewlib.nvtlview_globals import DAY
-from nvtlviewlib.nvtlview_globals import HOUR
-from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MAX
-from nvtlviewlib.nvtlview_globals import SCALE_SPACING_MIN
-from nvtlviewlib.nvtlview_globals import YEAR
-from nvtlviewlib.nvtlview_globals import _
-from nvtlviewlib.nvtlview_globals import open_help
-from nvtlviewlib.platform.platform_settings import KEYS
-from nvtlviewlib.platform.platform_settings import MOUSE
-from nvtlviewlib.platform.platform_settings import PLATFORM
-from nvtlviewlib.section_canvas import SectionCanvas
-from nvtlviewlib.tlv_scroll_frame import TlvScrollFrame
+from nvtlview.dt_helper import get_duration_str
+from nvtlview.dt_helper import get_seconds
+from nvtlview.dt_helper import get_timestamp
+from nvtlview.nvtlview_globals import DAY
+from nvtlview.nvtlview_globals import HOUR
+from nvtlview.nvtlview_globals import SCALE_SPACING_MAX
+from nvtlview.nvtlview_globals import SCALE_SPACING_MIN
+from nvtlview.nvtlview_globals import YEAR
+from nvtlview.nvtlview_help import NvtlviewHelp
+from nvtlview.nvtlview_locale import _
+from nvtlview.platform.platform_settings import KEYS
+from nvtlview.platform.platform_settings import MOUSE
+from nvtlview.platform.platform_settings import PLATFORM
+from nvtlview.section_canvas import SectionCanvas
+from nvtlview.tlv_scroll_frame import TlvScrollFrame
 import tkinter as tk
 
 
@@ -252,6 +252,9 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         # this is necessary for deleting the event bindings
         self.destroy()
 
+    def open_help(self, event=None):
+        NvtlviewHelp.open_help_page()
+
     def refresh(self):
         """Refresh the view after changes have been made "outsides"."""
         if not self._skipUpdate:
@@ -345,7 +348,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
-        self.bind_all(KEYS.OPEN_HELP[0], open_help)
+        self.bind_all(KEYS.OPEN_HELP[0], self.open_help)
         self.bind_all(KEYS.UNDO[0], self._tlvCtrl.pop_event)
         self.tlFrame.bind_all(MOUSE.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
@@ -403,7 +406,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         # "Help" menu.
         self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
-        self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=open_help)
+        self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=self.open_help)
 
     def _build_toolbar(self):
 

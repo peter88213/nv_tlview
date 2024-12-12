@@ -9,12 +9,12 @@ from datetime import datetime
 from nvlib.model.data.date_time_tools import get_specific_date
 from nvlib.model.data.date_time_tools import get_unspecific_date
 from nvlib.novx_globals import SECTION_PREFIX
-from nvtlviewlib.dt_helper import from_timestamp
-from nvtlviewlib.dt_helper import get_duration
-from nvtlviewlib.dt_helper import get_seconds
-from nvtlviewlib.dt_helper import get_timestamp
-from nvtlviewlib.section_canvas import SectionCanvas
-from nvtlviewlib.tlv_main_frame import TlvMainFrame
+from nvtlview.dt_helper import from_timestamp
+from nvtlview.dt_helper import get_duration
+from nvtlview.dt_helper import get_seconds
+from nvtlview.dt_helper import get_timestamp
+from nvtlview.section_canvas import SectionCanvas
+from nvtlview.tlv_main_frame import TlvMainFrame
 
 
 class TlvController:

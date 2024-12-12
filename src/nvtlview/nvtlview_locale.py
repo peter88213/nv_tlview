@@ -1,4 +1,4 @@
-"""Provide global variables and functions.
+"""Locale settings for nv_tlview.
 
 Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
@@ -8,7 +8,6 @@ import gettext
 import locale
 import os
 import sys
-import webbrowser
 
 # Initialize localization.
 LOCALE_PATH = f'{os.path.dirname(sys.argv[0])}/locale/'
@@ -24,24 +23,4 @@ except:
 
     def _(message):
         return message
-
-# Constants in pixels.
-MAJOR_HEIGHT = 15
-MINOR_HEIGHT = 30
-SCALE_SPACING_MIN = 120
-MINOR_SPACING_MIN = 40
-SCALE_SPACING_MAX = 480
-
-# Constants in seconds per pixel.
-HOUR = 3600
-DAY = HOUR * 24
-YEAR = DAY * 365
-MONTH = DAY * 30
-
-HELP_URL = f'{_("https://peter88213.github.io/nvhelp-en")}/nv_tlview/'
-
-
-def open_help(event=None):
-    """Show the online help page specified by HELP_URL."""
-    webbrowser.open(HELP_URL)
 

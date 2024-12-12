@@ -20,9 +20,9 @@ from tkinter import ttk
 
 from mvclib.view.set_icon_tk import set_icon
 from nvlib.controller.plugin.plugin_base import PluginBase
-from nvtlviewlib.nvtlview_globals import _
-from nvtlviewlib.nvtlview_globals import open_help
-from nvtlviewlib.tlv_controller import TlvController
+from nvtlview.nvtlview_help import NvtlviewHelp
+from nvtlview.nvtlview_locale import _
+from nvtlview.tlv_controller import TlvController
 import tkinter as tk
 
 
@@ -78,7 +78,7 @@ class Plugin(PluginBase):
         self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
 
         # Add an entry to the Help menu.
-        self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=open_help)
+        self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=self.open_help)
 
         #--- Configure the toolbar.
         self._configure_toolbar()
@@ -130,6 +130,9 @@ class Plugin(PluginBase):
 
         self.close_main_window()
         self._tlvCtrl = None
+
+    def open_help(self, event=None):
+        NvtlviewHelp.open_help_page()
 
     def unlock(self):
         """Enable changes on the model.
