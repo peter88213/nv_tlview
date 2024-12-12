@@ -18,12 +18,11 @@ GNU General Public License for more details.
 from pathlib import Path
 from tkinter import ttk
 
-from mvclib.view.set_icon_tk import set_icon
 from nvlib.controller.plugin.plugin_base import PluginBase
 from nvtlview.nvtlview_help import NvtlviewHelp
 from nvtlview.nvtlview_locale import _
-from nvtlview.tlv_controller import TlvController
 import tkinter as tk
+from nvtlview.tlview_service import TlviewService
 
 
 class Plugin(PluginBase):
@@ -34,12 +33,6 @@ class Plugin(PluginBase):
     URL = 'https://github.com/peter88213/nv_tlview'
 
     FEATURE = _('Timeline view')
-    SETTINGS = dict(
-        window_geometry='600x800',
-    )
-    OPTIONS = dict(
-        substitute_missing_time=False,
-    )
 
     def install(self, model, view, controller):
         """Install the plugin.
@@ -55,26 +48,10 @@ class Plugin(PluginBase):
         Extends the superclass method.
         """
         super().install(model, view, controller)
-        self._tlvCtrl = None
-
-        #--- Load configuration.
-        try:
-            homeDir = str(Path.home()).replace('\\', '/')
-            configDir = f'{homeDir}/.novx/config'
-        except:
-            configDir = '.'
-        self.iniFile = f'{configDir}/tlview.ini'
-        self.configuration = self._mdl.nvService.new_configuration(
-            settings=self.SETTINGS,
-            options=self.OPTIONS
-            )
-        self.configuration.read(self.iniFile)
-        self.kwargs = {}
-        self.kwargs.update(self.configuration.settings)
-        self.kwargs.update(self.configuration.options)
+        self.tlviewService = TlviewService(model, view, controller)
 
         # Add an entry to the Tools menu.
-        self._ui.toolsMenu.add_command(label=self.FEATURE, command=self._open_viewer)
+        self._ui.toolsMenu.add_command(label=self.FEATURE, command=self.open_viewer)
         self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
 
         # Add an entry to the Help menu.
@@ -84,9 +61,7 @@ class Plugin(PluginBase):
         self._configure_toolbar()
 
     def close_main_window(self, event=None):
-        self.kwargs['window_geometry'] = self.mainWindow.winfo_geometry()
-        self._tlvCtrl.on_quit()
-        self.mainWindow.destroy()
+        self.tlviewService.close_main_window()
 
     def disable_menu(self):
         """Disable menu entries when no project is open.
@@ -109,38 +84,34 @@ class Plugin(PluginBase):
         
         Overrides the superclass method.
         """
-        if self._tlvCtrl:
-            self._tlvCtrl.lock()
+        self.tlviewService.lock()
 
     def on_close(self):
         """Actions to be performed when a project is closed.
         
         Overrides the superclass method.
         """
-        self.close_main_window()
+        self.tlviewService.on_close()
 
     def on_quit(self):
         """Actions to be performed when novelibre is closed.
         
         Overrides the superclass method.
         """
-        self._save_configuration()
-        if self._tlvCtrl is None:
-            return
-
-        self.close_main_window()
-        self._tlvCtrl = None
+        self.tlviewService.on_quit()
 
     def open_help(self, event=None):
         NvtlviewHelp.open_help_page()
+
+    def open_viewer(self):
+        self.tlviewService.open_viewer(self.FEATURE)
 
     def unlock(self):
         """Enable changes on the model.
         
         Overrides the superclass method.
         """
-        if self._tlvCtrl:
-            self._tlvCtrl.unlock()
+        self.tlviewService.unlock()
 
     def _configure_toolbar(self):
 
@@ -168,7 +139,7 @@ class Plugin(PluginBase):
             self._ui.toolbar.buttonBar,
             text=self.FEATURE,
             image=tlIcon,
-            command=self._open_viewer
+            command=self.open_viewer
             )
         self._tlButton.pack(side='left')
         self._tlButton.image = tlIcon
@@ -184,36 +155,3 @@ class Plugin(PluginBase):
 
         Hovertip(self._tlButton, self._tlButton['text'])
 
-    def _open_viewer(self):
-        if not self._mdl.prjFile:
-            return
-
-        if self._tlvCtrl is not None and self._tlvCtrl.isOpen:
-            if self.mainWindow.state() == 'iconic':
-                self.mainWindow.state('normal')
-            self.mainWindow.lift()
-            self.mainWindow.focus()
-            return
-
-        self.mainWindow = tk.Toplevel()
-        self.mainWindow.geometry(self.kwargs['window_geometry'])
-        mainMenu = tk.Menu(self.mainWindow)
-        self.mainWindow.config(menu=mainMenu)
-
-        self._tlvCtrl = TlvController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.kwargs)
-        self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
-        self.mainWindow.title(f'{self._mdl.novel.title} - {self.FEATURE}')
-        self._tlvCtrl.view.bind('<<close_view>>', self.close_main_window)
-        set_icon(self.mainWindow, icon='tLogo32', default=False)
-        self.mainWindow.lift()
-        self.mainWindow.focus()
-        self.mainWindow.update()
-        # for whatever reason, this helps keep the window size
-
-    def _save_configuration(self):
-        for keyword in self.kwargs:
-            if keyword in self.configuration.options:
-                self.configuration.options[keyword] = self.kwargs[keyword]
-            elif keyword in self.configuration.settings:
-                self.configuration.settings[keyword] = self.kwargs[keyword]
-        self.configuration.write(self.iniFile)

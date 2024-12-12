@@ -57,7 +57,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         #--- Register this view component.
         self._mdl.add_observer(self)
         self._tlvCtrl = tlvController
-        self._kwargs = kwargs
+        self.prefs = kwargs
         self.pack(fill='both', expand=True)
 
         self._statusText = ''
@@ -118,7 +118,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.
-        self._substituteMissingTime = self._kwargs['substitute_missing_time']
+        self._substituteMissingTime = self.prefs['substitute_missing_time']
         # if True, use 00:00 if no time is given
 
         self._bind_events()
@@ -611,7 +611,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
 
     def _set_substitute_missing_time(self):
         self._substituteMissingTime = self._substTime.get()
-        self._kwargs['substitute_missing_time'] = self._substituteMissingTime
+        self.prefs['substitute_missing_time'] = self._substituteMissingTime
         self.sort_sections()
         self.draw_timeline()
 
