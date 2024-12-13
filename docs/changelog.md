@@ -4,13 +4,17 @@
 
 ## Changelog
 
-### Version 5.0.3
+### Version 5.0.4
+
+Bugfix:
+- Fixed a bug where aborting mouse drag operations with "Esc" may raise an exception.
+- Fixed key binding issues by deactivating "Undo" and "Help" shortcuts. 
 
 Library update:
 - Refactor the code for better maintainability.
 
 API: 5.0
-Based on novelibre 5.0.26
+Based on novelibre 5.0.27
 
 ### Version 1.9.1
 

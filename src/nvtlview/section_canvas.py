@@ -132,8 +132,13 @@ class SectionCanvas(tk.Canvas):
         self._xStart = event.x
 
     def _on_ctrl_shift_release(self, event):
-        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
-        self.tag_unbind(self._active_object, '<B1-Motion>')
+        try:
+            self.tag_unbind(self._active_object, '<ButtonRelease-1>')
+            self.tag_unbind(self._active_object, '<B1-Motion>')
+        except:
+            # the action might already be aborted with "Escape"
+            return
+
         deltaX = event.x - self._xStart
         self._tlvCtrl.shift_event_end(self._active_object, deltaX)
         self._active_object = None
@@ -172,8 +177,13 @@ class SectionCanvas(tk.Canvas):
         self._xStart = event.x
 
     def _on_shift_release(self, event):
-        self.tag_unbind(self._active_object, '<ButtonRelease-1>')
-        self.tag_unbind(self._active_object, '<B1-Motion>')
+        try:
+            self.tag_unbind(self._active_object, '<ButtonRelease-1>')
+            self.tag_unbind(self._active_object, '<B1-Motion>')
+        except:
+            # the action might already be aborted with "Escape"
+            return
+
         deltaX = event.x - self._xStart
         self._tlvCtrl.shift_event(self._active_object, deltaX)
         self._active_object = None

@@ -49,10 +49,8 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
     SCALE_MAX = YEAR * 5
 
     def __init__(self, model, view, controller, master, tlvController, menu, kwargs):
-        super().__init__(master)
-        self._mdl = model
-        self._ui = view
-        self._ctrl = controller
+        ttk.Frame.__init__(self, master)
+        SubController.initialize_controller(self, model, view, controller)
 
         #--- Register this view component.
         self._mdl.add_observer(self)
@@ -348,9 +346,9 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
 
     def _bind_events(self):
         self.bind('<Configure>', self.draw_timeline)
-        self.bind_all(KEYS.OPEN_HELP[0], self.open_help)
-        self.bind_all(KEYS.UNDO[0], self._tlvCtrl.pop_event)
-        self.tlFrame.bind_all(MOUSE.RIGHT_CLICK, self._on_right_click)
+        # self.bind_all(KEYS.OPEN_HELP[0], self.open_help)
+        # self.bind_all(KEYS.UNDO[0], self._tlvCtrl.pop_event)
+        self.tlFrame.bind_section_canvas_event(MOUSE.RIGHT_CLICK, self._on_right_click)
         if PLATFORM == 'win':
             self.tlFrame.bind_section_canvas_event(MOUSE.BACK_CLICK, self._page_back)
             self.tlFrame.bind_section_canvas_event(MOUSE.FORWARD_CLICK, self._page_forward)
@@ -406,7 +404,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         # "Help" menu.
         self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
-        self.helpMenu.add_command(label=_('Online help'), accelerator='F1', command=self.open_help)
+        self.helpMenu.add_command(label=_('Online help'), command=self.open_help)
 
     def _build_toolbar(self):
 
@@ -567,9 +565,9 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
     def _on_right_click(self, event):
         self._xPos = event.x
         self._yPos = event.y
-        self.tlFrame.bind_all(MOUSE.RIGHT_RELEASE, self._on_right_release)
+        self.tlFrame.bind_section_canvas_event(MOUSE.RIGHT_RELEASE, self._on_right_release)
         self.tlFrame.config(cursor='fleur')
-        self.tlFrame.bind_all(MOUSE.RIGHT_MOTION, self._on_drag)
+        self.tlFrame.bind_section_canvas_event(MOUSE.RIGHT_MOTION, self._on_drag)
         self.tlFrame.set_drag_scrolling()
 
     def _on_right_release(self, event):
