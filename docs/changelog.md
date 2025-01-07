@@ -4,6 +4,15 @@
 
 ## Changelog
 
+
+### Version 5.0.5
+
+- Secured the calculation against overflow. 
+
+API: 5.0
+Based on novelibre 5.6.0
+
+
 ### Version 5.0.4
 
 Bugfix:

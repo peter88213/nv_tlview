@@ -1,11 +1,11 @@
 # nv_tlview Dictionary (English-German)
-# Copyright (C) 2022 Peter Triesberger
+# Copyright (C) 2025 Peter Triesberger
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.0.4\n"
-"POT-Creation-Date: 2024-12-13 16:31:06\n"
-"PO-Revision-Date: 2024-12-13 16:31:06\n"
+"Project-Id-Version: 5.0.5\n"
+"POT-Creation-Date: 2025-01-07 23:22:23\n"
+"PO-Revision-Date: 2025-01-07 23:22:23\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,12 @@ msgstr "Maßstab vergrößern"
 
 msgid "Last event"
 msgstr "Letztes Ereignis"
+
+msgid "Major Character"
+msgstr "Hauptfigur"
+
+msgid "Minor Character"
+msgstr "Nebenfigur"
 
 msgid "Online help"
 msgstr "Online-Hilfe"

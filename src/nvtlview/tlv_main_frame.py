@@ -63,9 +63,6 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self._skipUpdate = False
         self.isOpen = True
 
-        self._calculating = False
-        # semaphore to prevent recursion
-
         #--- Timeline variables.
         self._scale = self.SCALE_MIN
         self._startTimestamp = None
@@ -263,9 +260,11 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
 
     def refresh(self):
         """Refresh the view after changes have been made "outsides"."""
-        if not self._skipUpdate:
-            self.sort_sections()
-            self.draw_timeline()
+        if self._skipUpdate:
+            return
+
+        self.sort_sections()
+        self.draw_timeline()
 
     def reset_casc(self, event=None):
         self.minDist = 0
@@ -353,6 +352,8 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
             self.undoButton.config(state='normal')
 
     def _bind_events(self):
+        self._calculating = False
+        # semaphore to prevent overflow
         self.bind('<Configure>', self.draw_timeline)
         # self.bind_all(KEYS.OPEN_HELP[0], self.open_help)
         # self.bind_all(KEYS.UNDO[0], self._tlvCtrl.pop_event)
