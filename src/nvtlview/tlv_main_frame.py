@@ -63,6 +63,9 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self._skipUpdate = False
         self.isOpen = True
 
+        self._calculating = False
+        # semaphore to prevent recursion
+
         #--- Timeline variables.
         self._scale = self.SCALE_MIN
         self._startTimestamp = None
@@ -171,6 +174,10 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self.draw_timeline()
 
     def draw_timeline(self, event=None):
+        if self._calculating:
+            return
+
+        self._calculating = True
         if self.startTimestamp is None:
             self.startTimestamp = self.firstTimestamp
         self.tlFrame.draw_timeline(
@@ -181,6 +188,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
             self._specificDate,
             self._mdl.novel.referenceDate
             )
+        self._calculating = False
 
     def fit_window(self):
         self.sort_sections()
