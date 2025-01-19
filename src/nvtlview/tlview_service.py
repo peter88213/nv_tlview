@@ -92,6 +92,7 @@ class TlviewService(SubController):
 
         self.mainWindow = tk.Toplevel()
         self.mainWindow.geometry(self.prefs['window_geometry'])
+        self.mainWindow.minsize(400, 200)
         mainMenu = tk.Menu(self.mainWindow)
         self.mainWindow.config(menu=mainMenu)
 

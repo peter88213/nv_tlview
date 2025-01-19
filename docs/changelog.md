@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.0.6
+
+- Set the minimum window size to 400x200. 
+
+API: 5.0
+Based on novelibre 5.11.0
+
+
 ### Version 5.0.5
 
 - Secured the calculation against overflow. 
