@@ -10,8 +10,8 @@ from datetime import datetime
 from pathlib import Path
 from tkinter import ttk
 
-from mvclib.controller.sub_controller import SubController
-from mvclib.view.observer import Observer
+from nvlib.controller.sub_controller import SubController
+from nvlib.gui.observer import Observer
 from nvlib.model.data.date_time_tools import get_specific_date
 from nvtlview.dt_helper import get_duration_str
 from nvtlview.dt_helper import get_seconds
