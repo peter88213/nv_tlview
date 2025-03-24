@@ -24,13 +24,7 @@ class NvViewMock:
 
     def __init__(self, model):
         self._mdl = model
-        self.tv = TreeViewerMock()
-
-    def add_observer(self, viewComponent):
-        self._mdl.add_observer(self)
-
-    def delete_observer(self, viewComponent):
-        pass
+        self.selectedNode = ''
 
 
 class NvModelMock:
@@ -55,24 +49,6 @@ class NovelMock:
         self.referenceDate = referenceDate
 
 
-class TreeMock:
-
-    def __init__(self):
-        self.selectedNode = ''
-
-    def selection(self):
-        return [self.selectedNode]
-
-
-class TreeViewerMock:
-
-    def __init__(self):
-        self.tree = TreeMock()
-
-    def go_to_node(self, scId):
-        self.tree.selectedNode = scId
-
-
 class NvControllerMock:
 
     isLocked = False
@@ -82,6 +58,10 @@ class NvControllerMock:
 
 
 def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
+
+    def on_quit(event=None):
+        sys.exit(0)
+
     locale.setlocale(locale.LC_TIME, "")
     # enabling localized time display
 
@@ -105,8 +85,8 @@ def show_timeline(sections=None, startTimestamp=None, referenceDate=None):
     mainWindow.pack(fill='both', expand=True)
 
     tlCtrl = TlvController(mdl, ui, nvCtrl, mainWindow, mainMenu, kwargs)
-    tlCtrl.view.bind("<Destroy>", sys.exit)
-    tlCtrl.view.bind("<<close_view>>", sys.exit)
+    tlCtrl.view.bind("<Destroy>", on_quit)
+    tlCtrl.view.bind("<<close_view>>", on_quit)
 
     root.mainloop()
 

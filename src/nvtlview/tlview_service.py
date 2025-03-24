@@ -40,7 +40,7 @@ class TlviewService(SubController):
         self.prefs.update(self.configuration.settings)
         self.prefs.update(self.configuration.options)
 
-    def close_main_window(self):
+    def close_main_window(self, event=None):
         self.prefs['window_geometry'] = self.mainWindow.winfo_geometry()
         self._tlvCtrl.on_quit()
         self.mainWindow.destroy()
@@ -106,6 +106,14 @@ class TlviewService(SubController):
         self.mainWindow.focus()
         self.mainWindow.update()
         # for whatever reason, this helps keep the window size
+
+        self.canvas = self._tlvCtrl.get_canvas()
+        self.canvas.bind('<<double-click>>', self.go_to_selected_event)
+
+    def go_to_selected_event(self, event):
+        """Select the section corresponding to the double-clicked event."""
+        scId = self.canvas.get_section_id(event)
+        self._ui.tv.go_to_node(scId)
 
     def _save_configuration(self):
         for keyword in self.prefs:

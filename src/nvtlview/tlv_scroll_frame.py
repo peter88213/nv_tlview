@@ -103,6 +103,9 @@ class TlvScrollFrame(ttk.Frame):
             minDist,
             )
 
+    def get_canvas(self):
+        return self._sectionCanvas
+
     def get_scale_mark_spacing(self):
         return self._scaleCanvas.majorSpacing
 

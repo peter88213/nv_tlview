@@ -31,9 +31,8 @@ class TlvController:
         self.firstTimestamp = None
         self.lastTimestamp = None
 
-        #--- Settings and options.
-
         self._controlBuffer = []
+        # stack for operations that can be undone
 
     @property
     def canUndo(self):
@@ -56,6 +55,9 @@ class TlvController:
             return dt.strftime("%x")
         else:
             return dt.isoformat().split('T')[0]
+
+    def get_canvas(self):
+        return self.view.get_canvas()
 
     def get_minutes(self, pixels):
         return pixels * self.view.scale // 60
@@ -103,9 +105,6 @@ class TlvController:
 
     def get_toolbar_icons(self):
         return self._toolbarIcons
-
-    def go_to_section(self, scId):
-        self._ui.tv.go_to_node(scId)
 
     def lock(self):
         """Inhibit changes on the model.

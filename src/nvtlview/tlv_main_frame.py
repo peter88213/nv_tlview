@@ -193,6 +193,9 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self.scale = (self.lastTimestamp - self.firstTimestamp) / width
         self._set_first_event()
 
+    def get_canvas(self):
+        return self.tlFrame.get_canvas()
+
     def go_to_first(self, event=None):
         xPos = self._set_first_event()
         self.tlFrame.draw_indicator(xPos)

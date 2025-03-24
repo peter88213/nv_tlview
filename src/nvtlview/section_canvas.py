@@ -107,7 +107,7 @@ class SectionCanvas(tk.Canvas):
             fill=self.indicatorColor
             )
 
-    def _get_section_id(self, event):
+    def get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
 
     def _move_indicator(self, deltaX):
@@ -118,8 +118,8 @@ class SectionCanvas(tk.Canvas):
         if self.isLocked:
             return
 
-        """Begin increasing/decreasing the duration."""
-        self._active_object = self._get_section_id(event)
+        # Begin increasing/decreasing the duration.
+        self._active_object = self.get_section_id(event)
         self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_ctrl_shift_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
         __, __, x2, __ = self.bbox(self._active_object)
@@ -144,9 +144,7 @@ class SectionCanvas(tk.Canvas):
         self._active_object = None
 
     def _on_double_click(self, event):
-        """Select the double-clicked section in the project tree."""
-        scId = self._get_section_id(event)
-        self._tlvCtrl.go_to_section(scId)
+        self.event_generate('<<double-click>>', when='tail')
 
     def _on_drag(self, event):
         deltaX = event.x - self._xPos
@@ -160,11 +158,11 @@ class SectionCanvas(tk.Canvas):
         self._active_object = None
 
     def _on_shift_click(self, event):
-        """Begin moving the event in time."""
         if self.isLocked:
             return
 
-        self._active_object = self._get_section_id(event)
+        # Begin moving the event in time.
+        self._active_object = self.get_section_id(event)
         self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_shift_release)
         self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
         x1, __, __, __ = self.bbox(self._active_object)

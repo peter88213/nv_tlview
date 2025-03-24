@@ -5,6 +5,15 @@
 ## Changelog
 
 
+### Version 5.1.0
+
+- Fixed a bug where clicking on the "Close" button raises an exception.
+- Refactored the code, decoupling the timeline view from the novel tree view. 
+
+API: 5.0
+Based on novelibre 5.17.3
+
+
 ### Version 5.0.6
 
 - Set the minimum window size to 400x200. 
