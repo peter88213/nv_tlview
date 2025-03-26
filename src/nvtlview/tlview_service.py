@@ -8,7 +8,11 @@ from pathlib import Path
 
 from nvlib.controller.sub_controller import SubController
 from nvlib.gui.set_icon_tk import set_icon
+from nvlib.novx_globals import SECTION_PREFIX
 from nvtlview.tlv_controller import TlvController
+from nvtlview.tlview_help import TlviewHelp
+from nvtlview.tlview_menu import TlviewMenu
+from nvtlview.tlview_toolbar import TlviewToolbar
 import tkinter as tk
 
 
@@ -39,8 +43,12 @@ class TlviewService(SubController):
         self.prefs = {}
         self.prefs.update(self.configuration.settings)
         self.prefs.update(self.configuration.options)
+        self.settings = {
+            'substitute_missing_time':tk.BooleanVar(value=self.prefs['substitute_missing_time']),
+        }
 
     def close_main_window(self, event=None):
+        self._mdl.delete_observer(self)
         self.prefs['window_geometry'] = self.mainWindow.winfo_geometry()
         self._tlvCtrl.on_quit()
         self.mainWindow.destroy()
@@ -52,6 +60,7 @@ class TlviewService(SubController):
         """
         if self._tlvCtrl:
             self._tlvCtrl.lock()
+            self._disable_undo_button()
 
     def on_close(self):
         """Actions to be performed when a project is closed.
@@ -77,8 +86,10 @@ class TlviewService(SubController):
         
         Overrides the superclass method.
         """
-        if self._tlvCtrl:
+        if self._tlvCtrl is not None:
             self._tlvCtrl.unlock()
+            if self._tlvCtrl.canUndo():
+                self._enable_undo_button()
 
     def open_viewer(self, windowTitle):
         if not self._mdl.prjFile:
@@ -94,28 +105,88 @@ class TlviewService(SubController):
         self.mainWindow = tk.Toplevel()
         self.mainWindow.geometry(self.prefs['window_geometry'])
         self.mainWindow.minsize(400, 200)
-        mainMenu = tk.Menu(self.mainWindow)
+        self.mainWindow.title(f'{self._mdl.novel.title} - {windowTitle}')
+        set_icon(self.mainWindow, icon='tLogo32', default=False)
+
+        #--- Create the menu.
+        mainMenu = TlviewMenu(self.mainWindow, self.settings)
         self.mainWindow.config(menu=mainMenu)
 
-        self._tlvCtrl = TlvController(self._mdl, self._ui, self._ctrl, self.mainWindow, mainMenu, self.prefs)
-        self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
-        self.mainWindow.title(f'{self._mdl.novel.title} - {windowTitle}')
-        self._tlvCtrl.view.bind('<<close_view>>', self.close_main_window)
-        set_icon(self.mainWindow, icon='tLogo32', default=False)
+        #--- Create the toolbar.
+        largeIcons = self._ctrl.get_preferences().get('large_icons', False)
+        enableHovertips = self._ctrl.get_preferences().get('enable_hovertips', False)
+        self.toolbar = TlviewToolbar(self.mainWindow, largeIcons, enableHovertips)
+        self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
+
+        #--- Create the timeline viewer.
+        self._tlvCtrl = TlvController(
+            self._mdl.novel,
+            self.mainWindow,
+            self._ctrl.get_preferences().get('localize_date', True),
+            self.settings,
+            )
+        if self._ctrl.isLocked:
+            self._tlvCtrl.lock()
+        self._mdl.add_observer(self._tlvCtrl)
+        self._bind_events()
         self.mainWindow.lift()
         self.mainWindow.focus()
         self.mainWindow.update()
         # for whatever reason, this helps keep the window size
 
-        self.canvas = self._tlvCtrl.get_canvas()
-        self.canvas.bind('<<double-click>>', self.go_to_selected_event)
+    def _bind_events(self):
+        self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)
+        event_callbacks = {
+            '<<refresh_view>>': self._tlvCtrl.refresh,
+            '<<go_to_first>>': self._tlvCtrl.go_to_first,
+            '<<go_to_last>>': self._tlvCtrl.go_to_last,
+            '<<set_hour_scale>>': self._tlvCtrl.set_hour_scale,
+            '<<set_day_scale>>': self._tlvCtrl.set_day_scale,
+            '<<set_year_scale>>': self._tlvCtrl.set_year_scale,
+            '<<fit_window>>': self._tlvCtrl.fit_window,
+            '<<set_casc_tight>>': self._tlvCtrl.set_casc_tight,
+            '<<set_casc_relaxed>>': self._tlvCtrl.set_casc_relaxed,
+            '<<reset_casc>>': self._tlvCtrl.reset_casc,
+            '<<page_back>>': self._tlvCtrl.page_back,
+            '<<page_forward>>': self._tlvCtrl.page_forward,
+            '<<scroll_back>>': self._tlvCtrl.scroll_back,
+            '<<scroll_forward>>': self._tlvCtrl.scroll_forward,
+            '<<reduce_scale>>': self._tlvCtrl.reduce_scale,
+            '<<increase_scale>>': self._tlvCtrl.increase_scale,
+            '<<undo>>': self._tlvCtrl.undo,
+            '<<disable_undo>>': self._disable_undo_button,
+            '<<enable_undo>>': self._enable_undo_button,
+            '<<close_view>>': self.close_main_window,
+            '<<open_help>>': self._open_help,
+            '<<go_to_selected>>': self._go_to_selected_section,
+        }
+        for sequence, callback in event_callbacks.items():
+            self.mainWindow.bind(sequence, callback)
 
-    def go_to_selected_event(self, event):
+        self.canvas = self._tlvCtrl.get_canvas()
+        self.canvas.bind('<<double-click>>', self._go_to_selected_event)
+
+    def _disable_undo_button(self, event=None):
+        self.toolbar.undoButton.config(state='disabled')
+
+    def _enable_undo_button(self, event=None):
+        self.toolbar.undoButton.config(state='normal')
+
+    def _go_to_selected_section(self, event):
+        scId = self._ui.selectedNode
+        if scId.startswith(SECTION_PREFIX):
+            self._tlvCtrl.go_to(scId)
+
+    def _go_to_selected_event(self, event):
         """Select the section corresponding to the double-clicked event."""
-        scId = self.canvas.get_section_id(event)
+        scId = self._tlvCtrl.get_section_id(event)
         self._ui.tv.go_to_node(scId)
 
+    def _open_help(self, event=None):
+        TlviewHelp.open_help_page()
+
     def _save_configuration(self):
+        self.prefs['substitute_missing_time'] = self.settings['substitute_missing_time'].get()
         for keyword in self.prefs:
             if keyword in self.configuration.options:
                 self.configuration.options[keyword] = self.prefs[keyword]

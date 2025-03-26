@@ -6,11 +6,11 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tkinter import ttk
 
-from nvtlview.nvtlview_globals import MINOR_HEIGHT
 from nvtlview.platform.platform_settings import MOUSE
 from nvtlview.platform.platform_settings import PLATFORM
-from nvtlview.scale_canvas import ScaleCanvas
-from nvtlview.section_canvas import SectionCanvas
+from nvtlview.tlv_globals import MINOR_HEIGHT
+from nvtlview.tlv_scale_canvas import TlvScaleCanvas
+from nvtlview.tlv_section_canvas import TlvSectionCanvas
 
 
 class TlvScrollFrame(ttk.Frame):
@@ -25,7 +25,7 @@ class TlvScrollFrame(ttk.Frame):
         scrollY.pack(fill='y', side='right', expand=False)
 
         # Fixed scale.
-        self._scaleCanvas = ScaleCanvas(
+        self._scaleCanvas = TlvScaleCanvas(
             tlvController,
             self,
             height=self.SCALE_HEIGHT,
@@ -38,7 +38,7 @@ class TlvScrollFrame(ttk.Frame):
             )
 
         #--- Vertically scrollable event area.
-        self._sectionCanvas = SectionCanvas(
+        self._sectionCanvas = TlvSectionCanvas(
             tlvController,
             self,
             borderwidth=0,
@@ -63,8 +63,8 @@ class TlvScrollFrame(ttk.Frame):
 
         self._yscrollincrement = self._sectionCanvas['yscrollincrement']
 
-    def bind_section_canvas_event(self, button, command):
-        self._sectionCanvas.bind(button, command)
+    def bind_section_canvas_event(self, event, command):
+        self._sectionCanvas.bind(event, command)
 
     def destroy(self):
         """Destructor for deleting event bindings."""

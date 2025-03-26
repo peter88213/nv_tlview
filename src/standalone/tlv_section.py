@@ -8,7 +8,7 @@ from datetime import date
 from datetime import time
 
 
-class Event:
+class TlvSection:
 
     def __init__(self,
             on_element_change=None,
@@ -45,9 +45,6 @@ class Event:
     @property
     def scType(self):
         # 0 = Normal
-        # 1 = Unused
-        # 2 = Level 1 stage
-        # 3 = Level 2 stage
         return self._scType
 
     @scType.setter

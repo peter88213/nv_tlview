@@ -1,4 +1,4 @@
-"""Provide a tkinter widget for a tlFrame view.
+"""Provide a tkinter widget for a TlvMainFrame view.
 
 Copyright (c) 2025 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
@@ -7,31 +7,26 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 from calendar import day_abbr
 from datetime import datetime
-from pathlib import Path
 from tkinter import ttk
 
-from nvlib.controller.sub_controller import SubController
-from nvlib.gui.observer import Observer
-from nvlib.model.data.date_time_tools import get_specific_date
-from nvtlview.dt_helper import get_duration_str
-from nvtlview.dt_helper import get_seconds
-from nvtlview.dt_helper import get_timestamp
-from nvtlview.nvtlview_globals import DAY
-from nvtlview.nvtlview_globals import HOUR
-from nvtlview.nvtlview_globals import SCALE_SPACING_MAX
-from nvtlview.nvtlview_globals import SCALE_SPACING_MIN
-from nvtlview.nvtlview_globals import YEAR
-from nvtlview.nvtlview_help import NvtlviewHelp
-from nvtlview.nvtlview_locale import _
 from nvtlview.platform.platform_settings import KEYS
 from nvtlview.platform.platform_settings import MOUSE
 from nvtlview.platform.platform_settings import PLATFORM
-from nvtlview.section_canvas import SectionCanvas
+from nvtlview.tlv_globals import DAY
+from nvtlview.tlv_globals import HOUR
+from nvtlview.tlv_globals import SCALE_SPACING_MAX
+from nvtlview.tlv_globals import SCALE_SPACING_MIN
+from nvtlview.tlv_globals import YEAR
+from nvtlview.tlv_helper import get_duration_str
+from nvtlview.tlv_helper import get_seconds
+from nvtlview.tlv_helper import get_specific_date
+from nvtlview.tlv_helper import get_timestamp
+from nvtlview.tlv_locale import _
 from nvtlview.tlv_scroll_frame import TlvScrollFrame
-import tkinter as tk
+from nvtlview.tlv_section_canvas import TlvSectionCanvas
 
 
-class TlvMainFrame(ttk.Frame, Observer, SubController):
+class TlvMainFrame(ttk.Frame):
 
     # Constants in seconds.
     MIN_TIMESTAMP = get_timestamp(datetime.min)
@@ -48,19 +43,16 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
 
-    def __init__(self, model, view, controller, master, tlvController, menu, kwargs):
+    def __init__(self, model, master, tlvController, settings):
         ttk.Frame.__init__(self, master)
-        SubController.initialize_controller(self, model, view, controller)
 
-        #--- Register this view component.
-        self._mdl.add_observer(self)
+        self._dataModel = model
+        self.master = master
+
         self._tlvCtrl = tlvController
-        self.prefs = kwargs
         self.pack(fill='both', expand=True)
 
         self._statusText = ''
-
-        self._skipUpdate = False
         self.isOpen = True
 
         #--- Timeline variables.
@@ -73,60 +65,15 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self._xPos = None
         self._yPos = None
 
-        #--- The toolbar.
-        # Prepare the toolbar icons.
-        if self._ctrl.get_preferences().get('large_icons', False):
-            size = 24
-        else:
-            size = 16
-        try:
-            homeDir = str(Path.home()).replace('\\', '/')
-            iconPath = f'{homeDir}/.novx/icons/{size}'
-        except:
-            iconPath = None
-
-        self._toolbarIcons = {}
-        icons = [
-            'rewindLeft',
-            'arrowLeft',
-            'goToFirst',
-            'goToLast',
-            'arrowRight',
-            'rewindRight',
-            'goToSelected',
-            'fitToWindow',
-            'arrowUp',
-            'arrowDown',
-            'undo',
-            ]
-        for icon in icons:
-            try:
-                self._toolbarIcons[icon] = tk.PhotoImage(file=f'{iconPath}/{icon}.png')
-            except:
-                self._toolbarIcons[icon] = None
-
-        # Packing the toolbar before the Timeline frame
-        # to avoid it from disappearing when shrinking the window.
-        self.toolbar = ttk.Frame(self)
-        self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
-        self._build_toolbar()
-
         #--- The Timeline frame.
         self.tlFrame = TlvScrollFrame(self, self._tlvCtrl)
         self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.
-        self._substituteMissingTime = self.prefs['substitute_missing_time']
-        # if True, use 00:00 if no time is given
+        self.settings = settings
 
         self._bind_events()
-
-        self.mainMenu = menu
-        self._build_menu()
         self.fit_window()
-
-        if self._ctrl.isLocked:
-            self.lock()
 
     @property
     def startTimestamp(self):
@@ -183,7 +130,7 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
             self.srtSections,
             self.minDist,
             self._specificDate,
-            self._mdl.novel.referenceDate
+            self._dataModel.referenceDate
             )
         self._calculating = False
 
@@ -196,16 +143,15 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
     def get_canvas(self):
         return self.tlFrame.get_canvas()
 
-    def go_to_first(self, event=None):
+    def go_to_first(self):
         xPos = self._set_first_event()
         self.tlFrame.draw_indicator(xPos)
 
-    def go_to_last(self, event=None):
+    def go_to_last(self):
         xPos = self._set_last_event()
         self.tlFrame.draw_indicator(xPos)
 
-    def go_to_selected(self, event=None):
-        scId = self._tlvCtrl.get_selected_section()
+    def go_to(self, scId):
         if scId is None:
             return
 
@@ -238,10 +184,12 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
             self.minDist -= deltaDist
         return 'break'
 
+    def increase_scale(self):
+        self.scale /= 2
+
     def lock(self):
         """Inhibit element change."""
-        SectionCanvas.isLocked = True
-        self.undoButton.config(state='disabled')
+        TlvSectionCanvas.isLocked = True
 
     def move_time_scale(self, event):
         """Move the time scale horizontally using the mouse wheel."""
@@ -252,55 +200,62 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
             self.startTimestamp -= deltaOffset
         return 'break'
 
-    def on_quit(self, event=None):
-        self._mdl.delete_observer(self)
+    def on_quit(self):
         self.tlFrame.destroy()
         # this is necessary for deleting the event bindings
         self.destroy()
 
-    def open_help(self, event=None):
-        NvtlviewHelp.open_help_page()
+    def page_back(self):
+        deltaX = self.tlFrame.get_window_width() * 0.9 * self.scale
+        self.startTimestamp -= deltaX
 
-    def refresh(self):
-        """Refresh the view after changes have been made "outsides"."""
-        if self._skipUpdate:
-            return
+    def page_forward(self):
+        deltaX = self.tlFrame.get_window_width() * 0.9 * self.scale
+        self.startTimestamp += deltaX
 
-        self.sort_sections()
-        self.draw_timeline()
+    def reduce_scale(self):
+        self.scale *= 2
 
-    def reset_casc(self, event=None):
+    def reset_casc(self):
         self.minDist = 0
 
-    def set_casc_relaxed(self, event=None):
+    def scroll_back(self):
+        deltaX = self.tlFrame.get_window_width() * 0.2 * self.scale
+        self.startTimestamp -= deltaX
+
+    def scroll_forward(self):
+        deltaX = self.tlFrame.get_window_width() * 0.2 * self.scale
+        self.startTimestamp += deltaX
+
+    def set_casc_relaxed(self):
         self.minDist = self.DISTANCE_MAX
 
-    def set_casc_tight(self, event=None):
+    def set_casc_tight(self):
         self.minDist = self.DISTANCE_MIN
 
-    def set_day_scale(self, event=None):
+    def set_day_scale(self):
         self.scale = (DAY * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
-    def set_hour_scale(self, event=None):
+    def set_hour_scale(self):
         self.scale = (HOUR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
-    def set_year_scale(self, event=None):
+    def set_year_scale(self):
         self.scale = (YEAR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
 
     def sort_sections(self):
         srtSections = []
         # list of tuples to sort by timestamp
         self._specificDate = False
-        for scId in self._mdl.novel.sections:
-            section = self._mdl.novel.sections[scId]
+        for scId in self._dataModel.sections:
+            section = self._dataModel.sections[scId]
             if section.scType != 0:
                 continue
 
             try:
                 durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
-                refIso = self._mdl.novel.referenceDate
+                refIso = self._dataModel.referenceDate
                 if section.time is None:
-                    if not self._substituteMissingTime:
+                    if not self.settings['substitute_missing_time'].get():
                         continue
 
                     scTime = '00:00'
@@ -350,217 +305,43 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
 
     def unlock(self):
         """Enable element change."""
-        SectionCanvas.isLocked = False
-        if self._tlvCtrl.canUndo:
-            self.undoButton.config(state='normal')
+        TlvSectionCanvas.isLocked = False
 
     def _bind_events(self):
         self._calculating = False
         # semaphore to prevent overflow
         self.bind('<Configure>', self.draw_timeline)
         # self.bind_all(KEYS.OPEN_HELP[0], self.open_help)
-        # self.bind_all(KEYS.UNDO[0], self._tlvCtrl.pop_event)
-        self.tlFrame.bind_section_canvas_event(MOUSE.RIGHT_CLICK, self._on_right_click)
+        # self.bind_all(KEYS.UNDO[0], self._tlvCtrl.undo)
+
+        # Bind mouse events to the canvas.
         if PLATFORM == 'win':
-            self.tlFrame.bind_section_canvas_event(MOUSE.BACK_CLICK, self._page_back)
-            self.tlFrame.bind_section_canvas_event(MOUSE.FORWARD_CLICK, self._page_forward)
+            event_callbacks = {
+                MOUSE.BACK_CLICK: self.page_back,
+                MOUSE.FORWARD_CLICK: self.page_forward,
+            }
         else:
             self.bind(KEYS.QUIT_PROGRAM[0], self._tlvCtrl.on_quit)
         if PLATFORM == 'ix':
-            self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_BCK, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE_FWD, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(MOUSE.MOVE_TIME_SCALE_BCK, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(MOUSE.MOVE_TIME_SCALE_FWD, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(MOUSE.ADJUST_CASCADING_BCK, self.adjust_cascading)
-            self.tlFrame.bind_section_canvas_event(MOUSE.ADJUST_CASCADING_FWD, self.adjust_cascading)
+            event_callbacks = {
+                MOUSE.STRETCH_TIME_SCALE_BCK: self.stretch_time_scale,
+                MOUSE.STRETCH_TIME_SCALE_FWD: self.stretch_time_scale,
+                MOUSE.MOVE_TIME_SCALE_BCK: self.move_time_scale,
+                MOUSE.MOVE_TIME_SCALE_FWD: self.move_time_scale,
+                MOUSE.ADJUST_CASCADING_BCK: self.adjust_cascading,
+                MOUSE.ADJUST_CASCADING_FWD: self.adjust_cascading,
+            }
         else:
-            self.tlFrame.bind_section_canvas_event(MOUSE.STRETCH_TIME_SCALE, self.stretch_time_scale)
-            self.tlFrame.bind_section_canvas_event(MOUSE.MOVE_TIME_SCALE, self.move_time_scale)
-            self.tlFrame.bind_section_canvas_event(MOUSE.ADJUST_CASCADING, self.adjust_cascading)
-
-    def _build_menu(self):
-
-        # "Go to" menu.
-        self.goMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Go to'), menu=self.goMenu)
-        self.goMenu.add_command(label=_('First event'), command=self.go_to_first)
-        self.goMenu.add_command(label=_('Last event'), command=self.go_to_last)
-        self.goMenu.add_command(label=_('Selected section'), command=self.go_to_selected)
-
-        self._substTime = tk.BooleanVar(value=self._substituteMissingTime)
-
-        # "Scale" menu.
-        self.scaleMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Scale'), menu=self.scaleMenu)
-        self.scaleMenu.add_command(label=_('Hours'), command=self.set_hour_scale)
-        self.scaleMenu.add_command(label=_('Days'), command=self.set_day_scale)
-        self.scaleMenu.add_command(label=_('Years'), command=self.set_year_scale)
-        self.scaleMenu.add_command(label=_('Fit to window'), command=self.fit_window)
-
-        # "Substitutions" menu.
-        self.substMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Substitutions'), menu=self.substMenu)
-        self.substMenu.add_checkbutton(
-            label=_('Use 00:00 for missing times'),
-            variable=self._substTime,
-            command=self._set_substitute_missing_time
-            )
-
-        # "Cascading" menu.
-        self.cascadeMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Cascading'), menu=self.cascadeMenu)
-        self.cascadeMenu.add_command(label=_('Tight'), command=self.set_casc_tight)
-        self.cascadeMenu.add_command(label=_('Relaxed'), command=self.set_casc_relaxed)
-        self.cascadeMenu.add_command(label=_('Standard'), command=self.reset_casc)
-
-        # "Help" menu.
-        self.helpMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Help'), menu=self.helpMenu)
-        self.helpMenu.add_command(label=_('Online help'), command=self.open_help)
-
-    def _build_toolbar(self):
-
-        # Moving the x position.
-        rewindLeftButton = ttk.Button(
-            self.toolbar,
-            text=_('Page back'),
-            image=self._toolbarIcons['rewindLeft'],
-            command=self._page_back
-            )
-        rewindLeftButton.pack(side='left')
-        rewindLeftButton.image = self._toolbarIcons['rewindLeft']
-
-        arrowLeftButton = ttk.Button(
-            self.toolbar,
-            text=_('Scroll back'),
-            image=self._toolbarIcons['arrowLeft'],
-            command=self._scroll_back
-            )
-        arrowLeftButton.pack(side='left')
-        arrowLeftButton.image = self._toolbarIcons['arrowLeft']
-
-        goToFirstButton = ttk.Button(
-            self.toolbar,
-            text=_('First event'),
-            image=self._toolbarIcons['goToFirst'],
-            command=self.go_to_first
-            )
-        goToFirstButton.pack(side='left')
-        goToFirstButton.image = self._toolbarIcons['goToFirst']
-
-        goToSelectedButton = ttk.Button(
-            self.toolbar,
-            text=_('Selected section'),
-            image=self._toolbarIcons['goToSelected'],
-            command=self.go_to_selected
-            )
-        goToSelectedButton.pack(side='left')
-        goToSelectedButton.image = self._toolbarIcons['goToSelected']
-
-        goToLastButton = ttk.Button(
-            self.toolbar,
-            text=_('Last event'),
-            image=self._toolbarIcons['goToLast'],
-            command=self.go_to_last
-            )
-        goToLastButton.pack(side='left')
-        goToLastButton.image = self._toolbarIcons['goToLast']
-
-        arrowRightButton = ttk.Button(
-            self.toolbar,
-            text=_('Scroll forward'),
-            image=self._toolbarIcons['arrowRight'],
-            command=self._scroll_forward
-            )
-        arrowRightButton.pack(side='left')
-        arrowRightButton.image = self._toolbarIcons['arrowRight']
-
-        rewindRightButton = ttk.Button(
-            self.toolbar,
-            text=_('Page forward'),
-            image=self._toolbarIcons['rewindRight'],
-            command=self._page_forward
-            )
-        rewindRightButton.pack(side='left')
-        rewindRightButton.image = self._toolbarIcons['rewindRight']
-
-        # Separator.
-        tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
-
-        # Changing the scale.
-        arrowDownButton = ttk.Button(
-            self.toolbar,
-            text=_('Reduce scale'),
-            image=self._toolbarIcons['arrowDown'],
-            command=self._reduce_scale
-            )
-        arrowDownButton.pack(side='left')
-        arrowDownButton.image = self._toolbarIcons['arrowDown']
-
-        fitToWindowButton = ttk.Button(
-            self.toolbar,
-            text=_('Fit to window'),
-            image=self._toolbarIcons['fitToWindow'],
-            command=self.fit_window
-            )
-        fitToWindowButton.pack(side='left')
-        fitToWindowButton.image = self._toolbarIcons['fitToWindow']
-
-        arrowUpButton = ttk.Button(
-            self.toolbar,
-            text=_('Increase scale'),
-            image=self._toolbarIcons['arrowUp'],
-            command=self._increase_scale
-            )
-        arrowUpButton.pack(side='left')
-        arrowUpButton.image = self._toolbarIcons['arrowUp']
-
-        # Separator.
-        tk.Frame(self.toolbar, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
-
-        self.undoButton = ttk.Button(
-            self.toolbar,
-            text=_('Undo'),
-            image=self._toolbarIcons['undo'],
-            command=self._tlvCtrl.pop_event,
-            state='disabled',
-            )
-        self.undoButton.pack(side='left')
-        self.undoButton.image = self._toolbarIcons['undo']
-
-        # "Close" button.
-        ttk.Button(
-            self.toolbar,
-            text=_('Close'),
-            command=self._close_view
-            ).pack(side='right')
-
-        # Initialize tooltips.
-        if not self._ctrl.get_preferences()['enable_hovertips']:
-            return
-
-        try:
-            from idlelib.tooltip import Hovertip
-        except ModuleNotFoundError:
-            return
-
-        Hovertip(rewindLeftButton, rewindLeftButton['text'])
-        Hovertip(arrowLeftButton, arrowLeftButton['text'])
-        Hovertip(goToFirstButton, goToFirstButton['text'])
-        Hovertip(goToSelectedButton, goToSelectedButton['text'])
-        Hovertip(goToLastButton, goToLastButton['text'])
-        Hovertip(arrowRightButton, arrowRightButton['text'])
-        Hovertip(rewindRightButton, rewindRightButton['text'])
-        Hovertip(arrowDownButton, arrowDownButton['text'])
-        Hovertip(fitToWindowButton, fitToWindowButton['text'])
-        Hovertip(arrowUpButton, arrowUpButton['text'])
-        Hovertip(self.undoButton, self.undoButton['text'])
-
-    def _close_view(self, event=None):
-        self.event_generate('<<close_view>>')
-
-    def _increase_scale(self):
-        self.scale /= 2
+            event_callbacks = {
+                MOUSE.STRETCH_TIME_SCALE: self.stretch_time_scale,
+                MOUSE.MOVE_TIME_SCALE: self.move_time_scale,
+                MOUSE.ADJUST_CASCADING: self.adjust_cascading,
+            }
+        event_callbacks.update({
+                MOUSE.RIGHT_CLICK: self._on_right_click,
+            })
+        for sequence, callback in event_callbacks.items():
+            self.tlFrame.bind_section_canvas_event(sequence, callback)
 
     def _on_drag(self, event):
         # Move the time scale.
@@ -588,25 +369,6 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         self.tlFrame.unbind_all(MOUSE.RIGHT_MOTION)
         self.tlFrame.set_normal_scrolling()
 
-    def _page_back(self, event=None):
-        deltaX = self.tlFrame.get_window_width() * 0.9 * self.scale
-        self.startTimestamp -= deltaX
-
-    def _page_forward(self, event=None):
-        deltaX = self.tlFrame.get_window_width() * 0.9 * self.scale
-        self.startTimestamp += deltaX
-
-    def _reduce_scale(self):
-        self.scale *= 2
-
-    def _scroll_back(self, event=None):
-        deltaX = self.tlFrame.get_window_width() * 0.2 * self.scale
-        self.startTimestamp -= deltaX
-
-    def _scroll_forward(self, event=None):
-        deltaX = self.tlFrame.get_window_width() * 0.2 * self.scale
-        self.startTimestamp += deltaX
-
     def _set_first_event(self):
         xPos = self.PAD_X
         self.startTimestamp = self.firstTimestamp - xPos * self.scale
@@ -618,10 +380,4 @@ class TlvMainFrame(ttk.Frame, Observer, SubController):
         xPos = self.tlFrame.get_window_width() - self.PAD_X
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos
-
-    def _set_substitute_missing_time(self):
-        self._substituteMissingTime = self._substTime.get()
-        self.prefs['substitute_missing_time'] = self._substituteMissingTime
-        self.sort_sections()
-        self.draw_timeline()
 

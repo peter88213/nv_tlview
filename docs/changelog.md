@@ -5,6 +5,21 @@
 ## Changelog
 
 
+### Version 5.2.0
+
+Refactored the code for better maintainability:
+ 
+- Implemented the menu and the toolbar as classes that are decoupled 
+  from the timeline view.
+- Made the timeline view independent from novelibre imports.
+- The timeline view doesn't know the application's
+  model/view/controller, but simply a data model which is a reference 
+  to model.novel.
+
+API: 5.0
+Based on novelibre 5.17.4
+
+
 ### Version 5.1.0
 
 - Fixed a bug where clicking on the "Close" button raises an exception.

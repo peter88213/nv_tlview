@@ -4,71 +4,61 @@ Copyright (c) 2025 Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
+
 from datetime import datetime
 
-from nvlib.model.data.date_time_tools import get_specific_date
-from nvlib.model.data.date_time_tools import get_unspecific_date
-from nvlib.novx_globals import SECTION_PREFIX
-from nvtlview.dt_helper import from_timestamp
-from nvtlview.dt_helper import get_duration
-from nvtlview.dt_helper import get_seconds
-from nvtlview.dt_helper import get_timestamp
-from nvtlview.section_canvas import SectionCanvas
+from nvtlview.tlv_helper import from_timestamp
+from nvtlview.tlv_helper import get_duration
+from nvtlview.tlv_helper import get_seconds
+from nvtlview.tlv_helper import get_specific_date
+from nvtlview.tlv_helper import get_timestamp
+from nvtlview.tlv_helper import get_unspecific_date
 from nvtlview.tlv_main_frame import TlvMainFrame
+from nvtlview.tlv_public_api import TlvPublicApi
+from nvtlview.tlv_section_canvas import TlvSectionCanvas
 
 
-class TlvController:
+class TlvController(TlvPublicApi):
 
-    def __init__(self, model, view, controller, window, menu, kwargs):
-        self._mdl = model
-        self._ui = view
-        self._ctrl = controller
+    def __init__(self, model, window, localizeDate, settings):
+        self._dataModel = model
+        self.localizeDate = localizeDate
+        self.settings = settings
 
         # Create the view component.
-        self.view = TlvMainFrame(self._mdl, self._ui, self._ctrl, window, self, menu, kwargs)
+        self.view = TlvMainFrame(
+            self._dataModel,
+            window,
+            self,
+            settings,
+            )
         self.isOpen = True
-
         self.firstTimestamp = None
         self.lastTimestamp = None
 
-        self._controlBuffer = []
+        self.controlBuffer = []
         # stack for operations that can be undone
-
-    @property
-    def canUndo(self):
-        # If True, recent operations can be undone.
-        if self._controlBuffer:
-            return True
-        else:
-            return False
-
-    @canUndo.setter
-    def canUndo(self, setFlag):
-        raise NotImplementedError
 
     def datestr(self, dt):
         """Return a localized date string, if the localize_date option is set.
         
         Otherwise return the ISO date string.
         """
-        if self._ctrl.get_preferences().get('localize_date', True):
+        if self.localizeDate:
             return dt.strftime("%x")
         else:
             return dt.isoformat().split('T')[0]
-
-    def get_canvas(self):
-        return self.view.get_canvas()
 
     def get_minutes(self, pixels):
         return pixels * self.view.scale // 60
 
     def get_section_timestamp(self, scId):
-        section = self._mdl.novel.sections[scId]
+        section = self._dataModel.sections[scId]
         if section.scType != 0:
             return
 
         try:
-            refIso = self._mdl.novel.referenceDate
+            refIso = self._dataModel.referenceDate
             if section.time is None:
                 if not self._kwargs['substitute_missing_time']:
                     return
@@ -92,26 +82,7 @@ class TlvController:
             return
 
     def get_section_title(self, scId):
-        return self._mdl.novel.sections[scId].title
-
-    def get_selected_section(self):
-        """Return the ID of the currently selected section.
-        
-        If no section is selected, return None.
-        """
-        scId = self._ui.selectedNode
-        if scId.startswith(SECTION_PREFIX):
-            return scId
-
-    def get_toolbar_icons(self):
-        return self._toolbarIcons
-
-    def lock(self):
-        """Inhibit changes on the model.
-        
-        Overrides the superclass method.
-        """
-        self.view.lock()
+        return self._dataModel.sections[scId].title
 
     def on_quit(self):
         """Actions to be performed when the viewer is closed."""
@@ -125,8 +96,8 @@ class TlvController:
         self.push_event(scId)
 
         deltaSeconds = int(pixels * self.view.scale)
-        section = self._mdl.novel.sections[scId]
-        refIso = self._mdl.novel.referenceDate
+        section = self._dataModel.sections[scId]
+        refIso = self._dataModel.referenceDate
         if section.time is None:
             scTime = '00:00'
         else:
@@ -153,9 +124,9 @@ class TlvController:
 
         deltaSeconds = int(pixels * self.view.scale)
         seconds = get_seconds(
-            self._mdl.novel.sections[scId].lastsDays,
-            self._mdl.novel.sections[scId].lastsHours,
-            self._mdl.novel.sections[scId].lastsMinutes
+            self._dataModel.sections[scId].lastsDays,
+            self._dataModel.sections[scId].lastsHours,
+            self._dataModel.sections[scId].lastsMinutes
             )
         seconds += deltaSeconds
         if seconds < 0:
@@ -163,27 +134,20 @@ class TlvController:
 
         days, hours, minutes = get_duration(seconds)
         if days:
-            self._mdl.novel.sections[scId].lastsDays = str(days)
+            self._dataModel.sections[scId].lastsDays = str(days)
         else:
-            self._mdl.novel.sections[scId].lastsDays = None
+            self._dataModel.sections[scId].lastsDays = None
         if hours:
-            self._mdl.novel.sections[scId].lastsHours = str(hours)
+            self._dataModel.sections[scId].lastsHours = str(hours)
         else:
-            self._mdl.novel.sections[scId].lastsHours = None
+            self._dataModel.sections[scId].lastsHours = None
         if minutes:
-            self._mdl.novel.sections[scId].lastsMinutes = str(minutes)
+            self._dataModel.sections[scId].lastsMinutes = str(minutes)
         else:
-            self._mdl.novel.sections[scId].lastsMinutes = None
+            self._dataModel.sections[scId].lastsMinutes = None
 
-    def unlock(self):
-        """Enable changes on the model.
-        
-        Overrides the superclass method.
-        """
-        self.view.unlock()
-
-    def push_event(self, scId, event=None):
-        section = self._mdl.novel.sections[scId]
+    def push_event(self, scId):
+        section = self._dataModel.sections[scId]
         eventData = (
             scId,
             section.date,
@@ -193,25 +157,27 @@ class TlvController:
             section.lastsHours,
             section.lastsMinutes
         )
-        self._controlBuffer.append(eventData)
-        self.view.undoButton.config(state='normal')
+        self.controlBuffer.append(eventData)
+        root = self.view.winfo_toplevel()
+        root.event_generate('<<enable_undo>>')
 
     def pop_event(self, event=None):
-        if not self._controlBuffer:
+        if not self.controlBuffer:
             return
 
-        if SectionCanvas.isLocked:
+        if TlvSectionCanvas.isLocked:
             return
 
-        eventData = self._controlBuffer.pop()
+        eventData = self.controlBuffer.pop()
         scId, sectionDate, sectionTime, sectionDay, sectionLastsDays, sectionLastsHours, sectionLastsMinutes = eventData
-        section = self._mdl.novel.sections[scId]
+        section = self._dataModel.sections[scId]
         section.date = sectionDate
         section.time = sectionTime
         section.day = sectionDay
         section.lastsDays = sectionLastsDays
         section.lastsHours = sectionLastsHours
         section.lastsMinutes = sectionLastsMinutes
-        if not self._controlBuffer:
-            self.view.undoButton.config(state='disabled')
+        if not self.controlBuffer:
+            root = self.view.winfo_toplevel()
+            root.event_generate('<<disable_undo>>')
 

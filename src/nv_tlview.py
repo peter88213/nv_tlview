@@ -18,11 +18,11 @@ GNU General Public License for more details.
 from pathlib import Path
 from tkinter import ttk
 
-from nvtlview.nvtlview_locale import _
+from nvtlview.tlv_locale import _
 from nvlib.controller.plugin.plugin_base import PluginBase
-from nvtlview.nvtlview_help import NvtlviewHelp
-import tkinter as tk
+from nvtlview.tlview_help import TlviewHelp
 from nvtlview.tlview_service import TlviewService
+import tkinter as tk
 
 
 class Plugin(PluginBase):
@@ -98,7 +98,7 @@ class Plugin(PluginBase):
         self.tlviewService.on_quit()
 
     def open_help(self, event=None):
-        NvtlviewHelp.open_help_page()
+        TlviewHelp.open_help_page()
 
     def open_viewer(self):
         self.tlviewService.open_viewer(self.FEATURE)

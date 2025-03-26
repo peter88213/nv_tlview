@@ -6,10 +6,10 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 import webbrowser
 
-from nvtlview.nvtlview_locale import _
+from nvtlview.tlv_locale import _
 
 
-class NvtlviewHelp:
+class TlviewHelp:
 
     HELP_URL = f'{_("https://peter88213.github.io/nvhelp-en")}/nv_tlview/'
 
