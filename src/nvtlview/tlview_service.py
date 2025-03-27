@@ -48,7 +48,7 @@ class TlviewService(SubController):
         }
 
     def close_main_window(self, event=None):
-        self._mdl.delete_observer(self)
+        self._mdl.delete_observer(self._tlvCtrl)
         self.prefs['window_geometry'] = self.mainWindow.winfo_geometry()
         self._tlvCtrl.on_quit()
         self.mainWindow.destroy()

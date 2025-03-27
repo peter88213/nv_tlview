@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.2.2
+
+- Fixed a bug where exception may occur because the observer is not properly deleted when closing the window. 
+
+API: 5.0
+Based on novelibre 5.17.4
+
+
 ### Version 5.2.1
 
 Refactored the code for better maintainability:
