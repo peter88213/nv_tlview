@@ -133,6 +133,7 @@ class TlviewService(SubController):
         self.mainWindow.focus()
         self.mainWindow.update()
         # for whatever reason, this helps keep the window size
+        self._tlvCtrl.fit_window()
 
     def _bind_events(self):
         self.mainWindow.protocol('WM_DELETE_WINDOW', self.close_main_window)

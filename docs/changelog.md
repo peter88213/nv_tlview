@@ -5,6 +5,18 @@
 ## Changelog
 
 
+### Version 5.2.1
+
+Refactored the code for better maintainability:
+ 
+- Revised the TlvMainFrame constructor.
+- Leave the initial scaling and position to TlviewService.open_viewer().
+- Moved the standalone viewer to its own project "timeline-viewer-tk".
+
+API: 5.0
+Based on novelibre 5.17.4
+
+
 ### Version 5.2.0
 
 Refactored the code for better maintainability:

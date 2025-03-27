@@ -60,6 +60,9 @@ class TlvMainFrame(ttk.Frame):
         self._startTimestamp = None
         self._minDist = 0
         self._specificDate = None
+        self.firstTimestamp = None
+        self.lastTimestamp = None
+        self.srtSections = None
 
         #--- Canvas position.
         self._xPos = None
@@ -73,7 +76,7 @@ class TlvMainFrame(ttk.Frame):
         self.settings = settings
 
         self._bind_events()
-        self.fit_window()
+        self.sort_sections()
 
     @property
     def startTimestamp(self):
