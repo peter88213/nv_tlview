@@ -123,6 +123,7 @@ class TlviewService(SubController):
             self._mdl.novel,
             self.mainWindow,
             self._ctrl.get_preferences().get('localize_date', True),
+            self._go_to_selected_event,
             self.settings,
             )
         if self._ctrl.isLocked:
@@ -164,9 +165,6 @@ class TlviewService(SubController):
         for sequence, callback in event_callbacks.items():
             self.mainWindow.bind(sequence, callback)
 
-        self.canvas = self._tlvCtrl.get_canvas()
-        self.canvas.bind('<<double-click>>', self._go_to_selected_event)
-
     def _disable_undo_button(self, event=None):
         self.toolbar.undoButton.config(state='disabled')
 
@@ -178,9 +176,8 @@ class TlviewService(SubController):
         if scId.startswith(SECTION_PREFIX):
             self._tlvCtrl.go_to(scId)
 
-    def _go_to_selected_event(self, event):
+    def _go_to_selected_event(self, scId):
         """Select the section corresponding to the double-clicked event."""
-        scId = self._tlvCtrl.get_section_id(event)
         self._ui.tv.go_to_node(scId)
 
     def _open_help(self, event=None):

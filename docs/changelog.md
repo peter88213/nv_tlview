@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.2.3
+
+- Refactored: TlvController providing a hook for the double-clicking event.
+
+API: 5.0
+Based on novelibre 5.17.6
+
+
 ### Version 5.2.2
 
 - Fixed a bug where exception may occur because the observer is not properly deleted when closing the window. 

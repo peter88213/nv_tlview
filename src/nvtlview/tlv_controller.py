@@ -20,7 +20,7 @@ from nvtlview.tlv_section_canvas import TlvSectionCanvas
 
 class TlvController(TlvPublicApi):
 
-    def __init__(self, model, window, localizeDate, settings):
+    def __init__(self, model, window, localizeDate, onDoubleClick, settings):
         self._dataModel = model
         self.localizeDate = localizeDate
         self.settings = settings
@@ -38,6 +38,10 @@ class TlvController(TlvPublicApi):
 
         self.controlBuffer = []
         # stack for operations that can be undone
+
+        self.on_double_click = onDoubleClick
+        # hook for double-clicking an event
+        self.view.get_canvas().bind('<<double-click>>', self._on_double_click)
 
     def datestr(self, dt):
         """Return a localized date string, if the localize_date option is set.
@@ -80,6 +84,13 @@ class TlvController(TlvPublicApi):
 
         except:
             return
+
+    def get_section_id(self, event):
+        """Return the ID of the section assigned to event.
+        
+        This can be used for <<double-click>> callbacks.
+        """
+        return self.view.get_canvas().get_section_id(event)
 
     def get_section_title(self, scId):
         return self._dataModel.sections[scId].title
@@ -180,4 +191,8 @@ class TlvController(TlvPublicApi):
         if not self.controlBuffer:
             root = self.view.winfo_toplevel()
             root.event_generate('<<disable_undo>>')
+
+    def _on_double_click(self, event):
+        scId = self.get_section_id(event)
+        self.on_double_click(scId)
 

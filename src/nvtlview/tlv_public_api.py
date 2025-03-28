@@ -10,6 +10,7 @@ class TlvPublicApi:
     """The public API methods of the timeline view.
     
     Not included for practical reasons: 
+    - on_double_click
     - is_open
     - on_quit()
     """
@@ -28,21 +29,6 @@ class TlvPublicApi:
         so that all sections fit into the window.
         """
         self.view.fit_window()
-
-    def get_canvas(self):
-        """Return a reference to the section canvas.
-        
-        This can be used for binding the <<double-click>> event
-        that is generated when double-clicking on a section.
-        """
-        return self.view.get_canvas()
-
-    def get_section_id(self, event):
-        """Return the ID of the section assigned to event.
-        
-        This can be used for <<double-click>> callbacks.
-        """
-        return self.view.get_canvas().get_section_id(event)
 
     def go_to(self, scId):
         """Show and mark the section identified by scId.
