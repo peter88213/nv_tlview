@@ -4,6 +4,15 @@
 
 ## Changelog
 
+### Version 5.2.4
+
+Refactored the code for better maintainability:
+
+- TlvController: Made onDoubleClick an optional argument.
+
+API: 5.0
+Based on novelibre 5.17.6
+
 
 ### Version 5.2.3
 
