@@ -20,7 +20,7 @@ from nvtlview.tlv_section_canvas import TlvSectionCanvas
 
 class TlvController(TlvPublicApi):
 
-    def __init__(self, model, window, localizeDate, onDoubleClick, settings):
+    def __init__(self, model, window, localizeDate, settings, onDoubleClick=None):
         self._dataModel = model
         self.localizeDate = localizeDate
         self.settings = settings
@@ -194,5 +194,6 @@ class TlvController(TlvPublicApi):
 
     def _on_double_click(self, event):
         scId = self.get_section_id(event)
-        self.on_double_click(scId)
+        if self.on_double_click is not None:
+            self.on_double_click(scId)
 

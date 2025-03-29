@@ -123,8 +123,8 @@ class TlviewService(SubController):
             self._mdl.novel,
             self.mainWindow,
             self._ctrl.get_preferences().get('localize_date', True),
-            self._go_to_selected_event,
             self.settings,
+            onDoubleClick=self._go_to_selected_event,
             )
         if self._ctrl.isLocked:
             self._tlvCtrl.lock()
