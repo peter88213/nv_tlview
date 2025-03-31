@@ -258,7 +258,7 @@ class TlvMainFrame(ttk.Frame):
                 durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
                 refIso = self._dataModel.referenceDate
                 if section.time is None:
-                    if not self.settings['substitute_missing_time'].get():
+                    if not self.settings.get('substitute_missing_time', False):
                         continue
 
                     scTime = '00:00'

@@ -29,14 +29,6 @@ class TlviewMenu(tk.Menu):
         self.scaleMenu.add_command(label=_('Years'), command=self._event('<<set_year_scale>>'))
         self.scaleMenu.add_command(label=_('Fit to window'), command=self._event('<<fit_window>>'))
 
-        # "Substitutions" menu.
-        self.substMenu = tk.Menu(self, tearoff=0)
-        self.add_cascade(label=_('Substitutions'), menu=self.substMenu)
-        self.substMenu.add_checkbutton(
-            label=_('Use 00:00 for missing times'),
-            variable=self.settings['substitute_missing_time'],
-            command=self._event('<<refresh_view>>')
-            )
         # "Cascading" menu.
         self.cascadeMenu = tk.Menu(self, tearoff=0)
         self.add_cascade(label=_('Cascading'), menu=self.cascadeMenu)
@@ -44,6 +36,16 @@ class TlviewMenu(tk.Menu):
         self.cascadeMenu.add_command(label=_('Relaxed'), command=self._event('<<set_casc_relaxed>>'))
         self.cascadeMenu.add_command(label=_('Standard'), command=self._event('<<reset_casc>>'))
 
+        # "Options" menu.
+        self.optionsMenu = tk.Menu(self, tearoff=0)
+        self.add_cascade(label=_('Options'), menu=self.optionsMenu)
+
+        self._substituteMissingTime = tk.BooleanVar(value=self.settings['substitute_missing_time'])
+        self.optionsMenu.add_checkbutton(
+            label=_('Use 00:00 for missing times'),
+            variable=self._substituteMissingTime,
+            command=self._change_substitution_mode,
+            )
         # "Help" menu.
         self.helpMenu = tk.Menu(self, tearoff=0)
         self.add_cascade(label=_('Help'), menu=self.helpMenu)
@@ -56,3 +58,8 @@ class TlviewMenu(tk.Menu):
             root.event_generate(sequence)
 
         return callback
+
+    def _change_substitution_mode(self):
+        self.settings['substitute_missing_time'] = self._substituteMissingTime.get()
+        root = self.master.winfo_toplevel()
+        root.event_generate('<<refresh_view>>')

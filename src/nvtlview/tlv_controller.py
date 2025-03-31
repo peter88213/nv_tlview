@@ -20,9 +20,26 @@ from nvtlview.tlv_section_canvas import TlvSectionCanvas
 
 class TlvController(TlvPublicApi):
 
-    def __init__(self, model, window, localizeDate, settings, onDoubleClick=None):
+    def __init__(self, model, window, settings, onDoubleClick=None):
+        """Initialize the timeline viewer.
+        
+        Positional arguments: 
+            model - Reference to the data model.
+            window - Parent window for the view.
+            settings - Dictionary with optional settings. 
+            
+        Optional arguments:
+            onDoubleClick - Callback for double-clicking a section.
+        
+        Optional members in the "settings" dictionary:
+            substitute_missing_time: Boolean  
+                - If True, use "00:00" for sections without time.
+                - If False, do not display sections without time. 
+            localize_date: Boolean 
+                - If True, display dates in localized format.
+                - If False, display dates in ISO-format.
+        """
         self._dataModel = model
-        self.localizeDate = localizeDate
         self.settings = settings
 
         # Create the view component.
@@ -48,7 +65,7 @@ class TlvController(TlvPublicApi):
         
         Otherwise return the ISO date string.
         """
-        if self.localizeDate:
+        if self.settings.get('localize_date', True):
             return dt.strftime("%x")
         else:
             return dt.isoformat().split('T')[0]
@@ -64,7 +81,7 @@ class TlvController(TlvPublicApi):
         try:
             refIso = self._dataModel.referenceDate
             if section.time is None:
-                if not self.settings['substitute_missing_time'].get():
+                if not self.settings.get('substitute_missing_time', False):
                     return
 
                 scTime = '00:00'

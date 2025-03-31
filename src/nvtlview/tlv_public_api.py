@@ -13,6 +13,7 @@ class TlvPublicApi:
     - on_double_click
     - is_open
     - on_quit()
+    - settings
     """
 
     def canUndo(self):

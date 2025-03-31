@@ -43,9 +43,6 @@ class TlviewService(SubController):
         self.prefs = {}
         self.prefs.update(self.configuration.settings)
         self.prefs.update(self.configuration.options)
-        self.settings = {
-            'substitute_missing_time':tk.BooleanVar(value=self.prefs['substitute_missing_time']),
-        }
 
     def close_main_window(self, event=None):
         self._mdl.delete_observer(self._tlvCtrl)
@@ -109,7 +106,7 @@ class TlviewService(SubController):
         set_icon(self.mainWindow, icon='tLogo32', default=False)
 
         #--- Create the menu.
-        mainMenu = TlviewMenu(self.mainWindow, self.settings)
+        mainMenu = TlviewMenu(self.mainWindow, self.prefs)
         self.mainWindow.config(menu=mainMenu)
 
         #--- Create the toolbar.
@@ -119,11 +116,11 @@ class TlviewService(SubController):
         self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
 
         #--- Create the timeline viewer.
+        self.prefs['localize_date'] = self._ctrl.get_preferences().get('localize_date', True)
         self._tlvCtrl = TlvController(
             self._mdl.novel,
             self.mainWindow,
-            self._ctrl.get_preferences().get('localize_date', True),
-            self.settings,
+            self.prefs,
             onDoubleClick=self._go_to_selected_event,
             )
         if self._ctrl.isLocked:
@@ -184,7 +181,6 @@ class TlviewService(SubController):
         TlviewHelp.open_help_page()
 
     def _save_configuration(self):
-        self.prefs['substitute_missing_time'] = self.settings['substitute_missing_time'].get()
         for keyword in self.prefs:
             if keyword in self.configuration.options:
                 self.configuration.options[keyword] = self.prefs[keyword]

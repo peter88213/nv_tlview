@@ -4,6 +4,15 @@
 
 ## Changelog
 
+### Version 5.3.0
+
+- Renamed the "Substitutions" menu to "Options".
+- Refactored the settings.
+
+API: 5.0
+Based on novelibre 5.18.0
+
+
 ### Version 5.2.5
 
 - Fixed a regression from version 5.2.0 where going to a section without a time is not possible.

@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.2.5\n"
-"POT-Creation-Date: 2025-03-31 13:58:28\n"
-"PO-Revision-Date: 2025-03-31 13:58:28\n"
+"Project-Id-Version: 5.3.0\n"
+"POT-Creation-Date: 2025-03-31 17:15:20\n"
+"PO-Revision-Date: 2025-03-31 17:15:20\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,9 @@ msgstr "Nebenfigur"
 msgid "Online help"
 msgstr "Online-Hilfe"
 
+msgid "Options"
+msgstr "Optionen"
+
 msgid "Page back"
 msgstr "Seite zurück"
 
@@ -90,9 +93,6 @@ msgstr "Verschiebe Anfang"
 
 msgid "Standard"
 msgstr "Normal"
-
-msgid "Substitutions"
-msgstr "Ersetzungen"
 
 msgid "Tight"
 msgstr "Dicht"

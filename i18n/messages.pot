@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.2.5\n"
-"POT-Creation-Date: 2025-03-31 13:58:28\n"
+"Project-Id-Version: 5.3.0\n"
+"POT-Creation-Date: 2025-03-31 17:15:20\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -59,6 +59,9 @@ msgstr ""
 msgid "Online help"
 msgstr ""
 
+msgid "Options"
+msgstr ""
+
 msgid "Page back"
 msgstr ""
 
@@ -90,9 +93,6 @@ msgid "Shift start"
 msgstr ""
 
 msgid "Standard"
-msgstr ""
-
-msgid "Substitutions"
 msgstr ""
 
 msgid "Tight"
