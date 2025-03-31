@@ -64,7 +64,7 @@ class TlvController(TlvPublicApi):
         try:
             refIso = self._dataModel.referenceDate
             if section.time is None:
-                if not self._kwargs['substitute_missing_time']:
+                if not self.settings['substitute_missing_time'].get():
                     return
 
                 scTime = '00:00'
