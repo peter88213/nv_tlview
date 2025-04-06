@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.4.0\n"
-"POT-Creation-Date: 2025-04-06 12:16:49\n"
-"PO-Revision-Date: 2025-04-06 12:16:49\n"
+"Project-Id-Version: 5.4.1\n"
+"POT-Creation-Date: 2025-04-06 13:47:27\n"
+"PO-Revision-Date: 2025-04-06 13:47:27\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,9 @@ msgstr "Tage"
 msgid "First event"
 msgstr "Erstes Ereignis"
 
+msgid "First section"
+msgstr "Erster Abschnitt"
+
 msgid "Fit to window"
 msgstr "Ans Fenster anpassen"
 
@@ -48,6 +51,9 @@ msgstr "Maßstab vergrößern"
 
 msgid "Last event"
 msgstr "Letztes Ereignis"
+
+msgid "Last section"
+msgstr "Letzter Abschnitt"
 
 msgid "Major Character"
 msgstr "Hauptfigur"

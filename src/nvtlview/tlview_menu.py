@@ -17,8 +17,8 @@ class TlviewMenu(tk.Menu):
         # "Go to" menu.
         self.goMenu = tk.Menu(self, tearoff=0)
         self.add_cascade(label=_('Go to'), menu=self.goMenu)
-        self.goMenu.add_command(label=_('First event'), command=self._event('<<go_to_first>>'))
-        self.goMenu.add_command(label=_('Last event'), command=self._event('<<go_to_last>>'))
+        self.goMenu.add_command(label=_('First section'), command=self._event('<<go_to_first>>'))
+        self.goMenu.add_command(label=_('Last section'), command=self._event('<<go_to_last>>'))
         self.goMenu.add_command(label=_('Selected section'), command=self._event('<<go_to_selected>>'))
 
         # "Scale" menu.
