@@ -8,7 +8,7 @@ from datetime import date
 from datetime import datetime
 from datetime import timedelta
 
-from nvtlview.tlv_locale import _
+from tlv.tlv_locale import _
 
 
 def from_timestamp(ts):

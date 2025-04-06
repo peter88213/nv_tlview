@@ -116,7 +116,7 @@ class TlvPublicApi:
 
     def undo(self, event=None):
         """Undo the most recent operation."""
-        self.pop_event()
+        self.pop_section()
 
     def unlock(self, event=None):
         """Allow changes to the data model."""

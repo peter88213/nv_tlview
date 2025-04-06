@@ -6,11 +6,11 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tkinter import ttk
 
-from nvtlview.platform.platform_settings import MOUSE
-from nvtlview.platform.platform_settings import PLATFORM
-from nvtlview.tlv_globals import MINOR_HEIGHT
-from nvtlview.tlv_scale_canvas import TlvScaleCanvas
-from nvtlview.tlv_section_canvas import TlvSectionCanvas
+from tlv.platform.platform_settings import MOUSE
+from tlv.platform.platform_settings import PLATFORM
+from tlv.tlv_globals import MINOR_HEIGHT
+from tlv.tlv_scale_canvas import TlvScaleCanvas
+from tlv.tlv_section_canvas import TlvSectionCanvas
 
 
 class TlvScrollFrame(ttk.Frame):
@@ -37,7 +37,7 @@ class TlvScrollFrame(ttk.Frame):
             fill='x',
             )
 
-        #--- Vertically scrollable event area.
+        #--- Vertically scrollable section area.
         self._sectionCanvas = TlvSectionCanvas(
             tlvController,
             self,

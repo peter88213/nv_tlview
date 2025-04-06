@@ -9,21 +9,21 @@ from calendar import day_abbr
 from datetime import datetime
 from tkinter import ttk
 
-from nvtlview.platform.platform_settings import KEYS
-from nvtlview.platform.platform_settings import MOUSE
-from nvtlview.platform.platform_settings import PLATFORM
-from nvtlview.tlv_globals import DAY
-from nvtlview.tlv_globals import HOUR
-from nvtlview.tlv_globals import SCALE_SPACING_MAX
-from nvtlview.tlv_globals import SCALE_SPACING_MIN
-from nvtlview.tlv_globals import YEAR
-from nvtlview.tlv_helper import get_duration_str
-from nvtlview.tlv_helper import get_seconds
-from nvtlview.tlv_helper import get_specific_date
-from nvtlview.tlv_helper import get_timestamp
-from nvtlview.tlv_locale import _
-from nvtlview.tlv_scroll_frame import TlvScrollFrame
-from nvtlview.tlv_section_canvas import TlvSectionCanvas
+from tlv.platform.platform_settings import KEYS
+from tlv.platform.platform_settings import MOUSE
+from tlv.platform.platform_settings import PLATFORM
+from tlv.tlv_globals import DAY
+from tlv.tlv_globals import HOUR
+from tlv.tlv_globals import SCALE_SPACING_MAX
+from tlv.tlv_globals import SCALE_SPACING_MIN
+from tlv.tlv_globals import YEAR
+from tlv.tlv_helper import get_duration_str
+from tlv.tlv_helper import get_seconds
+from tlv.tlv_helper import get_specific_date
+from tlv.tlv_helper import get_timestamp
+from tlv.tlv_locale import _
+from tlv.tlv_scroll_frame import TlvScrollFrame
+from tlv.tlv_section_canvas import TlvSectionCanvas
 
 
 class TlvMainFrame(ttk.Frame):
@@ -35,9 +35,9 @@ class TlvMainFrame(ttk.Frame):
     # Constants in pixels.
     DISTANCE_MIN = -100
     DISTANCE_MAX = 200
-    # minimum distance for cascading event marks
+    # minimum distance for cascading section marks
     PAD_X = 100
-    # used e.g. when going to an event
+    # used e.g. when going to a section
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
@@ -141,17 +141,17 @@ class TlvMainFrame(ttk.Frame):
         self.sort_sections()
         width = self.tlFrame.get_window_width() - 2 * self.PAD_X
         self.scale = (self.lastTimestamp - self.firstTimestamp) / width
-        self._set_first_event()
+        self._set_first_section()
 
     def get_canvas(self):
         return self.tlFrame.get_canvas()
 
     def go_to_first(self):
-        xPos = self._set_first_event()
+        xPos = self._set_first_section()
         self.tlFrame.draw_indicator(xPos)
 
     def go_to_last(self):
-        xPos = self._set_last_event()
+        xPos = self._set_last_section()
         self.tlFrame.draw_indicator(xPos)
 
     def go_to(self, scId):
@@ -179,7 +179,7 @@ class TlvMainFrame(ttk.Frame):
         return 'break'
 
     def adjust_cascading(self, event):
-        """Change the distance for cascading events using the mouse wheel."""
+        """Change the distance for cascading sections using the mouse wheel."""
         deltaDist = 10
         if event.num == 5 or event.delta == -120:
             self.minDist += deltaDist
@@ -314,8 +314,6 @@ class TlvMainFrame(ttk.Frame):
         self._calculating = False
         # semaphore to prevent overflow
         self.bind('<Configure>', self.draw_timeline)
-        # self.bind_all(KEYS.OPEN_HELP[0], self.open_help)
-        # self.bind_all(KEYS.UNDO[0], self._tlvCtrl.undo)
 
         # Bind mouse events to the canvas.
         if PLATFORM == 'win':
@@ -372,14 +370,14 @@ class TlvMainFrame(ttk.Frame):
         self.tlFrame.unbind_all(MOUSE.RIGHT_MOTION)
         self.tlFrame.set_normal_scrolling()
 
-    def _set_first_event(self):
+    def _set_first_section(self):
         xPos = self.PAD_X
         self.startTimestamp = self.firstTimestamp - xPos * self.scale
         if self.startTimestamp < self.MIN_TIMESTAMP:
             self.startTimestamp = self.MIN_TIMESTAMP
         return xPos
 
-    def _set_last_event(self):
+    def _set_last_section(self):
         xPos = self.tlFrame.get_window_width() - self.PAD_X
         self.startTimestamp = self.lastTimestamp - xPos * self.scale
         return xPos

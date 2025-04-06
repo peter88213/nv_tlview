@@ -18,7 +18,7 @@ GNU General Public License for more details.
 from pathlib import Path
 from tkinter import ttk
 
-from nvtlview.tlv_locale import _
+from tlv.tlv_locale import _
 from nvlib.controller.plugin.plugin_base import PluginBase
 from nvtlview.tlview_help import TlviewHelp
 from nvtlview.tlview_service import TlviewService

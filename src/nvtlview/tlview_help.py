@@ -6,7 +6,7 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 import webbrowser
 
-from nvtlview.tlv_locale import _
+from tlv.tlv_locale import _
 
 
 class TlviewHelp:

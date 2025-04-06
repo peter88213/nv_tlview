@@ -12,8 +12,11 @@ import sys
 
 sys.path.insert(0, f'{os.getcwd()}/../../novelibre/tools')
 from package_builder import PackageBuilder
+import inliner
 
-VERSION = '5.3.0'
+VERSION = '5.3.1'
+
+TEMP_FILE = '../test/temp.py'
 
 
 class PluginBuilder(PackageBuilder):
@@ -28,6 +31,28 @@ class PluginBuilder(PackageBuilder):
     def add_icons(self):
         super().add_icons()
         copy2('../icons/tLogo32.png', f'{self.buildDir}/icons')
+
+    def inline_modules(self, source, target):
+        """Inline all non-standard library modules."""
+        inliner.run(
+            source,
+            TEMP_FILE,
+            'tlviewer',
+            '../../nv_tlview/src/'
+            )
+        inliner.run(
+            TEMP_FILE,
+            TEMP_FILE,
+            'nvlib',
+            '../../novelibre/src/'
+            )
+        inliner.run(
+            TEMP_FILE,
+            target,
+            'tlv',
+            '../../nv_tlview/src/'
+            )
+        os.remove(TEMP_FILE)
 
 
 def main():

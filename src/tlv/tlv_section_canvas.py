@@ -6,15 +6,15 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 
 import tkinter as tk
-from nvtlview.tlv_locale import _
+from tlv.tlv_locale import _
 
 
 class TlvSectionCanvas(tk.Canvas):
     # Constants in pixels.
     EVENT_DIST_Y = 35
-    # vertical distance between event marks
+    # vertical distance between section marks
     LABEL_DIST_X = 10
-    # horizontal distance between event mark and label
+    # horizontal distance between section mark and label
     MARK_HALF = 5
     isLocked = False
     # class variable to be changed from the parent view component
@@ -23,9 +23,9 @@ class TlvSectionCanvas(tk.Canvas):
         super().__init__(master, cnf={}, **kw)
         self._tlvCtrl = tlvController
         self['background'] = 'black'
-        self.eventMarkColor = 'red'
-        self.eventTitleColor = 'white'
-        self.eventDateColor = 'gray60'
+        self.sectionMarkColor = 'red'
+        self.sectionTitleColor = 'white'
+        self.sectionDateColor = 'gray60'
         self.indicatorColor = 'lightblue'
         self.srtSections = []
         # list of tuples: (timestamp, duration in s, title)
@@ -53,7 +53,7 @@ class TlvSectionCanvas(tk.Canvas):
         yPos = yStart
         labelEnd = 0
         for section in srtSections:
-            timestamp, durationSeconds, title, timeStr, eventId = section
+            timestamp, durationSeconds, title, timeStr, sectionId = section
             xStart = (timestamp - startTimestamp) / scale
 
             # Cascade sections.
@@ -70,8 +70,8 @@ class TlvSectionCanvas(tk.Canvas):
                 (xEnd, yPos + self.MARK_HALF),
                 (xEnd + self.MARK_HALF, yPos),
                 (xEnd, yPos - self.MARK_HALF),
-                fill=self.eventMarkColor,
-                tags=eventId
+                fill=self.sectionMarkColor,
+                tags=sectionId
                 )
             self.tag_bind(sectionMark, '<Double-Button-1>', self._on_double_click)
             self.tag_bind(sectionMark, '<Shift-Button-1>', self._on_shift_click)
@@ -79,12 +79,12 @@ class TlvSectionCanvas(tk.Canvas):
 
             # Draw title and date/time.
             xLabel = xEnd + self.LABEL_DIST_X
-            titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.eventTitleColor, anchor='w')
+            titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.sectionTitleColor, anchor='w')
             titleBounds = self.bbox(titleLabel)
             # returns a tuple like (x1, y1, x2, y2)
             if titleBounds is not None:
                 # this is a workaround because bbox() sometimes returns None for no known reason
-                self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.eventDateColor, anchor='nw')
+                self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.sectionDateColor, anchor='nw')
                 __, __, x2, __ = self.bbox('all')
                 labelEnd = x2
             yPos += self.EVENT_DIST_Y
@@ -141,7 +141,7 @@ class TlvSectionCanvas(tk.Canvas):
             return
 
         deltaX = event.x - self._xStart
-        self._tlvCtrl.shift_event_end(self._active_object, deltaX)
+        self._tlvCtrl.shift_section_end(self._active_object, deltaX)
         self._active_object = None
 
     def _on_double_click(self, event):
@@ -184,6 +184,6 @@ class TlvSectionCanvas(tk.Canvas):
             return
 
         deltaX = event.x - self._xStart
-        self._tlvCtrl.shift_event(self._active_object, deltaX)
+        self._tlvCtrl.shift_section(self._active_object, deltaX)
         self._active_object = None
 

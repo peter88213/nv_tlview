@@ -7,15 +7,15 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 from datetime import datetime
 
-from nvtlview.tlv_helper import from_timestamp
-from nvtlview.tlv_helper import get_duration
-from nvtlview.tlv_helper import get_seconds
-from nvtlview.tlv_helper import get_specific_date
-from nvtlview.tlv_helper import get_timestamp
-from nvtlview.tlv_helper import get_unspecific_date
-from nvtlview.tlv_main_frame import TlvMainFrame
-from nvtlview.tlv_public_api import TlvPublicApi
-from nvtlview.tlv_section_canvas import TlvSectionCanvas
+from tlv.tlv_helper import from_timestamp
+from tlv.tlv_helper import get_duration
+from tlv.tlv_helper import get_seconds
+from tlv.tlv_helper import get_specific_date
+from tlv.tlv_helper import get_timestamp
+from tlv.tlv_helper import get_unspecific_date
+from tlv.tlv_main_frame import TlvMainFrame
+from tlv.tlv_public_api import TlvPublicApi
+from tlv.tlv_section_canvas import TlvSectionCanvas
 
 
 class TlvController(TlvPublicApi):
@@ -57,7 +57,7 @@ class TlvController(TlvPublicApi):
         # stack for operations that can be undone
 
         self.on_double_click = onDoubleClick
-        # hook for double-clicking an event
+        # hook for double-clicking a section marker
         self.view.get_canvas().bind('<<double-click>>', self._on_double_click)
 
     def datestr(self, dt):
@@ -120,8 +120,8 @@ class TlvController(TlvPublicApi):
         self.view.on_quit()
         self.isOpen = False
 
-    def shift_event(self, scId, pixels):
-        self.push_event(scId)
+    def shift_section(self, scId, pixels):
+        self.push_section(scId)
 
         deltaSeconds = int(pixels * self.view.scale)
         section = self._dataModel.sections[scId]
@@ -147,8 +147,8 @@ class TlvController(TlvPublicApi):
             dayStr = get_unspecific_date(dateStr, refIso)
             section.day = dayStr
 
-    def shift_event_end(self, scId, pixels):
-        self.push_event(scId)
+    def shift_section_end(self, scId, pixels):
+        self.push_section(scId)
 
         deltaSeconds = int(pixels * self.view.scale)
         seconds = get_seconds(
@@ -174,9 +174,9 @@ class TlvController(TlvPublicApi):
         else:
             self._dataModel.sections[scId].lastsMinutes = None
 
-    def push_event(self, scId):
+    def push_section(self, scId):
         section = self._dataModel.sections[scId]
-        eventData = (
+        scnData = (
             scId,
             section.date,
             section.time,
@@ -185,19 +185,19 @@ class TlvController(TlvPublicApi):
             section.lastsHours,
             section.lastsMinutes
         )
-        self.controlBuffer.append(eventData)
+        self.controlBuffer.append(scnData)
         root = self.view.winfo_toplevel()
         root.event_generate('<<enable_undo>>')
 
-    def pop_event(self, event=None):
+    def pop_section(self, event=None):
         if not self.controlBuffer:
             return
 
         if TlvSectionCanvas.isLocked:
             return
 
-        eventData = self.controlBuffer.pop()
-        scId, sectionDate, sectionTime, sectionDay, sectionLastsDays, sectionLastsHours, sectionLastsMinutes = eventData
+        scnData = self.controlBuffer.pop()
+        scId, sectionDate, sectionTime, sectionDay, sectionLastsDays, sectionLastsHours, sectionLastsMinutes = scnData
         section = self._dataModel.sections[scId]
         section.date = sectionDate
         section.time = sectionTime

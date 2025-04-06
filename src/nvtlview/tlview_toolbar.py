@@ -8,7 +8,7 @@ from pathlib import Path
 from tkinter import ttk
 
 import tkinter as tk
-from nvtlview.tlv_locale import _
+from tlv.tlv_locale import _
 
 
 class TlviewToolbar(ttk.Frame):

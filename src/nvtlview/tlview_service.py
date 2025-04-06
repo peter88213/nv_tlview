@@ -9,7 +9,7 @@ from pathlib import Path
 from nvlib.controller.sub_controller import SubController
 from nvlib.gui.set_icon_tk import set_icon
 from nvlib.novx_globals import SECTION_PREFIX
-from nvtlview.tlv_controller import TlvController
+from tlv.tlv_controller import TlvController
 from nvtlview.tlview_help import TlviewHelp
 from nvtlview.tlview_menu import TlviewMenu
 from nvtlview.tlview_toolbar import TlviewToolbar
@@ -121,7 +121,7 @@ class TlviewService(SubController):
             self._mdl.novel,
             self.mainWindow,
             self.prefs,
-            onDoubleClick=self._go_to_selected_event,
+            onDoubleClick=self._go_to_selected_section_in_tree,
             )
         if self._ctrl.isLocked:
             self._tlvCtrl.lock()
@@ -157,7 +157,7 @@ class TlviewService(SubController):
             '<<enable_undo>>': self._enable_undo_button,
             '<<close_view>>': self.close_main_window,
             '<<open_help>>': self._open_help,
-            '<<go_to_selected>>': self._go_to_selected_section,
+            '<<go_to_selected>>': self._go_to_selected_section_in_canvas,
         }
         for sequence, callback in event_callbacks.items():
             self.mainWindow.bind(sequence, callback)
@@ -168,12 +168,12 @@ class TlviewService(SubController):
     def _enable_undo_button(self, event=None):
         self.toolbar.undoButton.config(state='normal')
 
-    def _go_to_selected_section(self, event):
+    def _go_to_selected_section_in_canvas(self, event):
         scId = self._ui.selectedNode
         if scId.startswith(SECTION_PREFIX):
             self._tlvCtrl.go_to(scId)
 
-    def _go_to_selected_event(self, scId):
+    def _go_to_selected_section_in_tree(self, scId):
         """Select the section corresponding to the double-clicked event."""
         self._ui.tv.go_to_node(scId)
 

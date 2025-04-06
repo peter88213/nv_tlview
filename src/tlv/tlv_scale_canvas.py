@@ -8,17 +8,17 @@ from _datetime import date
 from calendar import day_abbr
 from calendar import month_abbr
 
-from nvtlview.tlv_globals import DAY
-from nvtlview.tlv_globals import HOUR
-from nvtlview.tlv_globals import MAJOR_HEIGHT
-from nvtlview.tlv_globals import MINOR_HEIGHT
-from nvtlview.tlv_globals import MINOR_SPACING_MIN
-from nvtlview.tlv_globals import MONTH
-from nvtlview.tlv_globals import SCALE_SPACING_MIN
-from nvtlview.tlv_globals import YEAR
-from nvtlview.tlv_helper import from_timestamp
-from nvtlview.tlv_helper import get_unspecific_date
-from nvtlview.tlv_locale import _
+from tlv.tlv_globals import DAY
+from tlv.tlv_globals import HOUR
+from tlv.tlv_globals import MAJOR_HEIGHT
+from tlv.tlv_globals import MINOR_HEIGHT
+from tlv.tlv_globals import MINOR_SPACING_MIN
+from tlv.tlv_globals import MONTH
+from tlv.tlv_globals import SCALE_SPACING_MIN
+from tlv.tlv_globals import YEAR
+from tlv.tlv_helper import from_timestamp
+from tlv.tlv_helper import get_unspecific_date
+from tlv.tlv_locale import _
 import tkinter as tk
 
 
