@@ -4,6 +4,18 @@
 
 ## Changelog
 
+### Version 5.4.0
+
+Refactored for better maintainability
+
+- Separated the reusable modules, moving them to the "tlv" package.
+- Changed the wording in order to prevent confusion between displayed events and tkinter events.
+- Removed unused key definitions from the platform module.
+
+API: 5.0
+Based on novelibre 5.18.0
+
+
 ### Version 5.3.0
 
 - Renamed the "Substitutions" menu to "Options".
