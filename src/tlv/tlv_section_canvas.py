@@ -27,8 +27,6 @@ class TlvSectionCanvas(tk.Canvas):
         self.sectionTitleColor = 'white'
         self.sectionDateColor = 'gray60'
         self.indicatorColor = 'lightblue'
-        self.srtSections = []
-        # list of tuples: (timestamp, duration in s, title)
         self.yMax = 0
 
         # Variables for mouse drag operations.

@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.4.2
+
+- Refactored the code for better performance.
+
+API: 5.0
+Based on novelibre 5.19.1
+
+
 ### Version 5.4.1
 
 - Menu rewording.
