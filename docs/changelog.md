@@ -5,6 +5,15 @@
 ## Changelog
 
 
+### Version 5.4.3
+
+- Fixed a bug where the "shift" indicator line stays visible when releasing
+  the mouse button without having changed the position or duration.
+
+API: 5.0
+Based on novelibre 5.23.2
+
+
 ### Version 5.4.2
 
 - Refactored the code for better performance.

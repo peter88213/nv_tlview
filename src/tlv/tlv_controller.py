@@ -151,10 +151,11 @@ class TlvController(TlvPublicApi):
         self.push_section(scId)
 
         deltaSeconds = int(pixels * self.view.scale)
+        section = self._dataModel.sections[scId]
         seconds = get_seconds(
-            self._dataModel.sections[scId].lastsDays,
-            self._dataModel.sections[scId].lastsHours,
-            self._dataModel.sections[scId].lastsMinutes
+            section.lastsDays,
+            section.lastsHours,
+            section.lastsMinutes
             )
         seconds += deltaSeconds
         if seconds < 0:
@@ -162,17 +163,17 @@ class TlvController(TlvPublicApi):
 
         days, hours, minutes = get_duration(seconds)
         if days:
-            self._dataModel.sections[scId].lastsDays = str(days)
+            section.lastsDays = str(days)
         else:
-            self._dataModel.sections[scId].lastsDays = None
+            section.lastsDays = None
         if hours:
-            self._dataModel.sections[scId].lastsHours = str(hours)
+            section.lastsHours = str(hours)
         else:
-            self._dataModel.sections[scId].lastsHours = None
+            section.lastsHours = None
         if minutes:
-            self._dataModel.sections[scId].lastsMinutes = str(minutes)
+            section.lastsMinutes = str(minutes)
         else:
-            self._dataModel.sections[scId].lastsMinutes = None
+            section.lastsMinutes = None
 
     def push_section(self, scId):
         section = self._dataModel.sections[scId]

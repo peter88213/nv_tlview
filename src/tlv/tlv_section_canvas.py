@@ -141,6 +141,7 @@ class TlvSectionCanvas(tk.Canvas):
         deltaX = event.x - self._xStart
         self._tlvCtrl.shift_section_end(self._active_object, deltaX)
         self._active_object = None
+        self.delete_indicator()
 
     def _on_double_click(self, event):
         self.event_generate('<<double-click>>', when='tail')
@@ -184,4 +185,5 @@ class TlvSectionCanvas(tk.Canvas):
         deltaX = event.x - self._xStart
         self._tlvCtrl.shift_section(self._active_object, deltaX)
         self._active_object = None
+        self.delete_indicator()
 
