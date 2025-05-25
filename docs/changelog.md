@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.5.0
+
+- Providing a small-scale overview at the bottom.
+
+API: 5.0
+Based on novelibre 5.23.5
+
+
 ### Version 5.4.3
 
 - Fixed a bug where the "shift" indicator line stays visible when releasing

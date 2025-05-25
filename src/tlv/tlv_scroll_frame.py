@@ -9,12 +9,13 @@ from tkinter import ttk
 from tlv.platform.platform_settings import MOUSE
 from tlv.platform.platform_settings import PLATFORM
 from tlv.tlv_globals import MINOR_HEIGHT
+from tlv.tlv_overview_canvas import TlvOverviewCanvas
 from tlv.tlv_scale_canvas import TlvScaleCanvas
 from tlv.tlv_section_canvas import TlvSectionCanvas
 
 
 class TlvScrollFrame(ttk.Frame):
-    SCALE_HEIGHT = MINOR_HEIGHT
+    scaleHeight = MINOR_HEIGHT
 
     def __init__(self, parent, tlvController, *args, **kw):
 
@@ -28,7 +29,7 @@ class TlvScrollFrame(ttk.Frame):
         self._scaleCanvas = TlvScaleCanvas(
             tlvController,
             self,
-            height=self.SCALE_HEIGHT,
+            height=self.scaleHeight,
             borderwidth=0,
             highlightthickness=0
             )
@@ -63,6 +64,19 @@ class TlvScrollFrame(ttk.Frame):
 
         self._yscrollincrement = self._sectionCanvas['yscrollincrement']
 
+        # Fixed overview.
+        self._ovCanvas = TlvOverviewCanvas(
+            tlvController,
+            self,
+            height=self.scaleHeight,
+            borderwidth=0,
+            highlightthickness=0
+            )
+        self._ovCanvas.pack(
+            anchor='n',
+            fill='x',
+            )
+
     def bind_section_canvas_event(self, event, command):
         self._sectionCanvas.bind(event, command)
 
@@ -94,13 +108,20 @@ class TlvScrollFrame(ttk.Frame):
             startTimestamp,
             scale,
             specificDate,
-            referenceDate
+            referenceDate,
             )
         self._sectionCanvas.draw(
             startTimestamp,
             scale,
             srtSections,
             minDist,
+            )
+        self._ovCanvas.draw(
+            startTimestamp,
+            scale,
+            specificDate,
+            referenceDate,
+            srtSections,
             )
 
     def get_canvas(self):

@@ -44,29 +44,16 @@ class TlvScaleCanvas(tk.Canvas):
 
         #--- Draw the major scale.
 
-        # Calculate the resolution.
-        resolution = HOUR
-        self.majorSpacing = resolution / scale
-        units = 0
-        while self.majorSpacing < SCALE_SPACING_MIN:
-            resolution *= 2
-            if units == 0 and resolution >= DAY:
-                resolution = DAY
-                units = 1
-            elif units == 1 and resolution >= MONTH:
-                resolution = MONTH
-                units = 2
-            elif units == 2 and resolution >= YEAR:
-                resolution = YEAR
-                units = 3
-            self.majorSpacing = resolution / scale
-
-        # Calculate the position of the first scale line.
-        tsOffset = resolution - startTimestamp % resolution
-        if tsOffset == resolution:
-            tsOffset = 0
-        xPos = tsOffset / scale
-        timestamp = startTimestamp + tsOffset
+        resolution, self.majorSpacing, units = self._calculate_resolution(
+            scale,
+            HOUR,
+            SCALE_SPACING_MIN
+            )
+        xPos, timestamp = self._calculate_first_scale_line(
+            resolution,
+            startTimestamp,
+            scale
+            )
 
         # Draw the scale lines.
         xMax = self.winfo_width()
@@ -81,7 +68,7 @@ class TlvScaleCanvas(tk.Canvas):
                 month = month_abbr[dt.month]
                 if units == 0:
                     dtStr = f"{weekDay} {self._tlvCtrl.datestr(dt)}"
-                if units == 1:
+                elif units == 1:
                     dtStr = f"{weekDay} {self._tlvCtrl.datestr(dt)}"
                 elif units == 2:
                     dtStr = f"{month} {dt.year}"
@@ -95,7 +82,7 @@ class TlvScaleCanvas(tk.Canvas):
                     weekDay = ''
                 if units == 0:
                     dtStr = f"{weekDay} {_('Day')} {day}"
-                if units == 1:
+                elif units == 1:
                     dtStr = f"{weekDay} {_('Day')} {day}"
                 elif units == 2:
                     dtStr = f"{_('Day')} {day}"
@@ -109,23 +96,15 @@ class TlvScaleCanvas(tk.Canvas):
 
         #--- Draw the minor scale.
 
-        # Calculate the resolution.
-        resolution /= 4
-        self.minorSpacing = resolution / scale
-        while self.minorSpacing < MINOR_SPACING_MIN:
-            resolution *= 2
-            if units == 0 and resolution >= DAY:
-                resolution = DAY
-            elif units == 1 and resolution >= YEAR:
-                resolution = YEAR
-            self.minorSpacing = resolution / scale
-
-        # Calculate the position of the first scale line.
-        tsOffset = resolution - startTimestamp % resolution
-        if tsOffset == resolution:
-            tsOffset = 0
-        xPos = tsOffset / scale
-        timestamp = startTimestamp + tsOffset
+        resolution, self.minorSpacing, units = self._calculate_resolution(
+            scale, resolution / 4,
+            MINOR_SPACING_MIN
+            )
+        xPos, timestamp = self._calculate_first_scale_line(
+            resolution,
+            startTimestamp,
+            scale
+            )
 
         # Draw the scale lines.
         xMax = self.winfo_width()
@@ -158,8 +137,18 @@ class TlvScaleCanvas(tk.Canvas):
                 elif units == 3:
                     dtStr = day
 
-            self.create_line((xPos, MAJOR_HEIGHT), (xPos, MINOR_HEIGHT), width=1, fill=self._minorScaleColor)
-            self.create_text((xPos + 5, MAJOR_HEIGHT + 1), text=dtStr, fill=self._minorScaleColor, anchor='nw')
+            self.create_line(
+                (xPos, MAJOR_HEIGHT),
+                (xPos, MINOR_HEIGHT),
+                width=1,
+                fill=self._minorScaleColor,
+                )
+            self.create_text(
+                (xPos + 5, MAJOR_HEIGHT + 1),
+                text=dtStr,
+                fill=self._minorScaleColor,
+                anchor='nw',
+                )
             xPos += self.minorSpacing
             timestamp += resolution
 
@@ -167,3 +156,29 @@ class TlvScaleCanvas(tk.Canvas):
         self.update()
         return self.winfo_width()
         # in pixels
+
+    def _calculate_first_scale_line(self, resolution, startTimestamp, scale):
+        tsOffset = resolution - startTimestamp % resolution
+        if tsOffset == resolution:
+            tsOffset = 0
+        xPos = tsOffset / scale
+        timestamp = startTimestamp + tsOffset
+        return xPos, timestamp
+
+    def _calculate_resolution(self, scale, resolution, spacingMin):
+        spacing = resolution / scale
+        units = 0
+        while spacing < spacingMin:
+            resolution *= 2
+            if units == 0 and resolution >= DAY:
+                resolution = DAY
+                units = 1
+            elif units == 1 and resolution >= MONTH:
+                resolution = MONTH
+                units = 2
+            elif units == 2 and resolution >= YEAR:
+                resolution = YEAR
+                units = 3
+            spacing = resolution / scale
+        return resolution, spacing, units
+
