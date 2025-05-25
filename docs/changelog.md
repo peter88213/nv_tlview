@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.5.1
+
+- Preventing the small-size overview from shrinking. 
+
+API: 5.0
+Based on novelibre 5.23.5
+
+
 ### Version 5.5.0
 
 - Providing a small-scale overview at the bottom.

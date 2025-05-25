@@ -38,6 +38,20 @@ class TlvScrollFrame(ttk.Frame):
             fill='x',
             )
 
+        # Fixed overview.
+        self._ovCanvas = TlvOverviewCanvas(
+            tlvController,
+            self,
+            height=self.scaleHeight,
+            borderwidth=0,
+            highlightthickness=0
+            )
+        self._ovCanvas.pack(
+            side='bottom',
+            anchor='n',
+            fill='x',
+            )
+
         #--- Vertically scrollable section area.
         self._sectionCanvas = TlvSectionCanvas(
             tlvController,
@@ -63,19 +77,6 @@ class TlvScrollFrame(ttk.Frame):
             self._sectionCanvas.bind('<MouseWheel>', self.on_mouse_wheel)
 
         self._yscrollincrement = self._sectionCanvas['yscrollincrement']
-
-        # Fixed overview.
-        self._ovCanvas = TlvOverviewCanvas(
-            tlvController,
-            self,
-            height=self.scaleHeight,
-            borderwidth=0,
-            highlightthickness=0
-            )
-        self._ovCanvas.pack(
-            anchor='n',
-            fill='x',
-            )
 
     def bind_section_canvas_event(self, event, command):
         self._sectionCanvas.bind(event, command)
