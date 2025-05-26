@@ -5,6 +5,16 @@
 ## Changelog
 
 
+### Version 5.6.0
+
+- Fixed a regression from version 5.5.0 where the minor scale units may not be set the right way.
+- Resized the overview canvas.
+- Refactored the code, making the colors configurable.
+
+API: 5.0
+Based on novelibre 5.23.5
+
+
 ### Version 5.5.1
 
 - Preventing the small-size overview from shrinking. 

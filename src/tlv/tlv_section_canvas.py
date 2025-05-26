@@ -6,27 +6,22 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 
 import tkinter as tk
+from tlv.tlv_globals import SC_EVENT_DIST_Y
+from tlv.tlv_globals import SC_LABEL_DIST_X
+from tlv.tlv_globals import SC_MARK_HALF
+from tlv.tlv_globals import prefs
 from tlv.tlv_locale import _
 
 
 class TlvSectionCanvas(tk.Canvas):
-    # Constants in pixels.
-    EVENT_DIST_Y = 35
-    # vertical distance between section marks
-    LABEL_DIST_X = 10
-    # horizontal distance between section mark and label
-    MARK_HALF = 5
+
     isLocked = False
     # class variable to be changed from the parent view component
 
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._tlvCtrl = tlvController
-        self['background'] = 'black'
-        self.sectionMarkColor = 'red'
-        self.sectionTitleColor = 'white'
-        self.sectionDateColor = 'gray60'
-        self.indicatorColor = 'lightblue'
+        self['background'] = prefs['color_section_background']
         self.yMax = 0
 
         # Variables for mouse drag operations.
@@ -45,8 +40,8 @@ class TlvSectionCanvas(tk.Canvas):
 
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
-        self.yMax = (len(srtSections) + 2) * self.EVENT_DIST_Y
-        yStart = self.EVENT_DIST_Y
+        self.yMax = (len(srtSections) + 2) * SC_EVENT_DIST_Y
+        yStart = SC_EVENT_DIST_Y
         xEnd = 0
         yPos = yStart
         labelEnd = 0
@@ -62,30 +57,54 @@ class TlvSectionCanvas(tk.Canvas):
             # Draw section mark.
             xEnd = (timestamp - startTimestamp + durationSeconds) / scale
             sectionMark = self.create_polygon(
-                (xStart, yPos - self.MARK_HALF),
-                (xStart - self.MARK_HALF, yPos),
-                (xStart, yPos + self.MARK_HALF),
-                (xEnd, yPos + self.MARK_HALF),
-                (xEnd + self.MARK_HALF, yPos),
-                (xEnd, yPos - self.MARK_HALF),
-                fill=self.sectionMarkColor,
+                (xStart, yPos - SC_MARK_HALF),
+                (xStart - SC_MARK_HALF, yPos),
+                (xStart, yPos + SC_MARK_HALF),
+                (xEnd, yPos + SC_MARK_HALF),
+                (xEnd + SC_MARK_HALF, yPos),
+                (xEnd, yPos - SC_MARK_HALF),
+                fill=prefs['color_section_mark'],
                 tags=sectionId
                 )
-            self.tag_bind(sectionMark, '<Double-Button-1>', self._on_double_click)
-            self.tag_bind(sectionMark, '<Shift-Button-1>', self._on_shift_click)
-            self.tag_bind(sectionMark, '<Control-Shift-Button-1>', self._on_ctrl_shift_click)
+            self.tag_bind(
+                sectionMark,
+                '<Double-Button-1>',
+                self._on_double_click,
+                )
+            self.tag_bind(
+                sectionMark,
+                '<Shift-Button-1>',
+                self._on_shift_click,
+                )
+            self.tag_bind(
+                sectionMark,
+                '<Control-Shift-Button-1>',
+                self._on_ctrl_shift_click,
+                )
 
             # Draw title and date/time.
-            xLabel = xEnd + self.LABEL_DIST_X
-            titleLabel = self.create_text((xLabel, yPos), text=title, fill=self.sectionTitleColor, anchor='w')
+            xLabel = xEnd + SC_LABEL_DIST_X
+            titleLabel = self.create_text(
+                (xLabel, yPos),
+                text=title,
+                fill=prefs['color_section_title'],
+                anchor='w',
+                )
             titleBounds = self.bbox(titleLabel)
             # returns a tuple like (x1, y1, x2, y2)
             if titleBounds is not None:
-                # this is a workaround because bbox() sometimes returns None for no known reason
-                self.create_text(xLabel, titleBounds[3], text=timeStr, fill=self.sectionDateColor, anchor='nw')
+                # this is a workaround because bbox()
+                # sometimes returns None for no known reason
+                self.create_text(
+                    xLabel,
+                    titleBounds[3],
+                    text=timeStr,
+                    fill=prefs['color_section_date'],
+                    anchor='nw'
+                    )
                 __, __, x2, __ = self.bbox('all')
                 labelEnd = x2
-            yPos += self.EVENT_DIST_Y
+            yPos += SC_EVENT_DIST_Y
         totalBounds = self.bbox('all')
         if totalBounds is not None:
             self.configure(scrollregion=(0, 0, 0, totalBounds[3]))
@@ -97,13 +116,13 @@ class TlvSectionCanvas(tk.Canvas):
             (xPos, self.yMax),
             width=1,
             dash=(2, 2),
-            fill=self.indicatorColor,
+            fill=prefs['color_indicator'],
             )
         self._indicatorText = self.create_text(
             (xPos + 5, 5),
             text=text,
             anchor='nw',
-            fill=self.indicatorColor
+            fill=prefs['color_indicator'],
             )
 
     def get_section_id(self, event):
@@ -119,10 +138,18 @@ class TlvSectionCanvas(tk.Canvas):
 
         # Begin increasing/decreasing the duration.
         self._active_object = self.get_section_id(event)
-        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_ctrl_shift_release)
-        self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
+        self.tag_bind(
+            self._active_object,
+            '<ButtonRelease-1>',
+            self._on_ctrl_shift_release,
+            )
+        self.tag_bind(
+            self._active_object,
+            '<B1-Motion>',
+            self._on_drag,
+            )
         __, __, x2, __ = self.bbox(self._active_object)
-        self._xStart = x2 - self.MARK_HALF
+        self._xStart = x2 - SC_MARK_HALF
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,
@@ -163,10 +190,18 @@ class TlvSectionCanvas(tk.Canvas):
 
         # Begin moving the event in time.
         self._active_object = self.get_section_id(event)
-        self.tag_bind(self._active_object, '<ButtonRelease-1>', self._on_shift_release)
-        self.tag_bind(self._active_object, '<B1-Motion>', self._on_drag)
+        self.tag_bind(
+            self._active_object,
+            '<ButtonRelease-1>',
+            self._on_shift_release,
+            )
+        self.tag_bind(
+            self._active_object,
+            '<B1-Motion>',
+            self._on_drag,
+            )
         x1, __, __, __ = self.bbox(self._active_object)
-        self._xStart = x1 + self.MARK_HALF
+        self._xStart = x1 + SC_MARK_HALF
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,

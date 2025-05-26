@@ -8,14 +8,14 @@ from tkinter import ttk
 
 from tlv.platform.platform_settings import MOUSE
 from tlv.platform.platform_settings import PLATFORM
-from tlv.tlv_globals import MINOR_HEIGHT
+from tlv.tlv_globals import SCALE_HEIGHT
+from tlv.tlv_globals import OVERVIEW_HEIGHT
 from tlv.tlv_overview_canvas import TlvOverviewCanvas
 from tlv.tlv_scale_canvas import TlvScaleCanvas
 from tlv.tlv_section_canvas import TlvSectionCanvas
 
 
 class TlvScrollFrame(ttk.Frame):
-    scaleHeight = MINOR_HEIGHT
 
     def __init__(self, parent, tlvController, *args, **kw):
 
@@ -29,7 +29,7 @@ class TlvScrollFrame(ttk.Frame):
         self._scaleCanvas = TlvScaleCanvas(
             tlvController,
             self,
-            height=self.scaleHeight,
+            height=SCALE_HEIGHT,
             borderwidth=0,
             highlightthickness=0
             )
@@ -42,7 +42,7 @@ class TlvScrollFrame(ttk.Frame):
         self._ovCanvas = TlvOverviewCanvas(
             tlvController,
             self,
-            height=self.scaleHeight,
+            height=OVERVIEW_HEIGHT,
             borderwidth=0,
             highlightthickness=0
             )

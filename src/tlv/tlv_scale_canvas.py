@@ -8,18 +8,19 @@ from _datetime import date
 from calendar import day_abbr
 from calendar import month_abbr
 
+import tkinter as tk
 from tlv.tlv_globals import DAY
 from tlv.tlv_globals import HOUR
 from tlv.tlv_globals import MAJOR_HEIGHT
-from tlv.tlv_globals import MINOR_HEIGHT
 from tlv.tlv_globals import MINOR_SPACING_MIN
 from tlv.tlv_globals import MONTH
+from tlv.tlv_globals import SCALE_HEIGHT
 from tlv.tlv_globals import SCALE_SPACING_MIN
 from tlv.tlv_globals import YEAR
+from tlv.tlv_globals import prefs
 from tlv.tlv_helper import from_timestamp
 from tlv.tlv_helper import get_unspecific_date
 from tlv.tlv_locale import _
-import tkinter as tk
 
 
 class TlvScaleCanvas(tk.Canvas):
@@ -27,9 +28,7 @@ class TlvScaleCanvas(tk.Canvas):
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._tlvCtrl = tlvController
-        self['background'] = 'gray25'
-        self._majorScaleColor = 'white'
-        self._minorScaleColor = 'gray60'
+        self['background'] = prefs['color_scale_background']
         self.majorSpacing = None
         self.minorSpacing = None
 
@@ -55,7 +54,7 @@ class TlvScaleCanvas(tk.Canvas):
             scale
             )
 
-        # Draw the scale lines.
+        # Draw the major scale lines.
         xMax = self.winfo_width()
         while xPos < xMax:
             try:
@@ -89,24 +88,40 @@ class TlvScaleCanvas(tk.Canvas):
                 elif units == 3:
                     dtStr = f"{_('Day')} {day}"
 
-            self.create_line((xPos, 0), (xPos, MAJOR_HEIGHT), width=1, fill=self._majorScaleColor)
-            self.create_text((xPos + 5, 2), text=dtStr, fill=self._majorScaleColor, anchor='nw')
+            self.create_line(
+                (xPos, 0),
+                (xPos, MAJOR_HEIGHT),
+                width=1,
+                fill=prefs['color_major_scale'],
+                )
+            self.create_text(
+                (xPos + 5, 2),
+                text=dtStr,
+                fill=prefs['color_major_scale'],
+                anchor='nw',
+                )
             xPos += self.majorSpacing
             timestamp += resolution
 
         #--- Draw the minor scale.
 
-        resolution, self.minorSpacing, units = self._calculate_resolution(
-            scale, resolution / 4,
-            MINOR_SPACING_MIN
-            )
+        # Calculate the resolution.
+        resolution /= 4
+        self.minorSpacing = resolution / scale
+        while self.minorSpacing < MINOR_SPACING_MIN:
+            resolution *= 2
+            if units == 0 and resolution >= DAY:
+                resolution = DAY
+            elif units == 1 and resolution >= YEAR:
+                resolution = YEAR
+            self.minorSpacing = resolution / scale
         xPos, timestamp = self._calculate_first_scale_line(
             resolution,
             startTimestamp,
             scale
             )
 
-        # Draw the scale lines.
+        # Draw the minor scale lines.
         xMax = self.winfo_width()
         while xPos < xMax:
             try:
@@ -139,14 +154,14 @@ class TlvScaleCanvas(tk.Canvas):
 
             self.create_line(
                 (xPos, MAJOR_HEIGHT),
-                (xPos, MINOR_HEIGHT),
+                (xPos, SCALE_HEIGHT),
                 width=1,
-                fill=self._minorScaleColor,
+                fill=prefs['color_minor_scale'],
                 )
             self.create_text(
                 (xPos + 5, MAJOR_HEIGHT + 1),
                 text=dtStr,
-                fill=self._minorScaleColor,
+                fill=prefs['color_minor_scale'],
                 anchor='nw',
                 )
             xPos += self.minorSpacing

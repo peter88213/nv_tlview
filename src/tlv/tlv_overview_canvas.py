@@ -9,9 +9,15 @@ from calendar import day_abbr
 from calendar import month_abbr
 
 from tlv.tlv_globals import HOUR
-from tlv.tlv_globals import MAJOR_HEIGHT
-from tlv.tlv_globals import MINOR_HEIGHT
+from tlv.tlv_globals import OVERVIEW_HEIGHT
+from tlv.tlv_globals import OV_SCALE_RATIO
+from tlv.tlv_globals import OV_SC_THICKNESS
+from tlv.tlv_globals import OV_DATE_POS
+from tlv.tlv_globals import OV_SC_Y_POS
+from tlv.tlv_globals import OV_SC_X_MIN
+from tlv.tlv_globals import OV_SPACING_RATIO
 from tlv.tlv_globals import SCALE_SPACING_MIN
+from tlv.tlv_globals import prefs
 from tlv.tlv_helper import from_timestamp
 from tlv.tlv_helper import get_unspecific_date
 from tlv.tlv_locale import _
@@ -20,39 +26,26 @@ from tlv.tlv_scale_canvas import TlvScaleCanvas
 
 class TlvOverviewCanvas(TlvScaleCanvas):
 
-    SPACING_RATIO = 2
-    SCALE_RATIO = 9
-    # for symmetry, this should be an odd number
-    SC_X_MIN = 2
-    # minimum width limit of a section marker to be visible
-    SC_THICKNESS = 4
-
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(tlvController, master, **kw)
-        self.sectionMarkColor = 'red'
-        self.scaleHeight = MAJOR_HEIGHT + MINOR_HEIGHT
-        self.scYPos = MAJOR_HEIGHT / 2
 
     def draw(self, startTimestamp, scale, specificDate, refIso, srtSections):
         self.delete("all")
         if not specificDate:
             if refIso is None:
                 refIso = '0001-01-01'
-                showWeekDay = False
-            else:
-                showWeekDay = True
 
         #--- Draw the regular scale window mark.
-        scale *= self.SCALE_RATIO
+        scale *= OV_SCALE_RATIO
         xMax = self.winfo_width()
-        windowMarkWidth = xMax / self.SCALE_RATIO
-        windowMarkStart = windowMarkWidth * (self.SCALE_RATIO // 2)
+        windowMarkWidth = xMax / OV_SCALE_RATIO
+        windowMarkStart = windowMarkWidth * (OV_SCALE_RATIO // 2)
         self.create_rectangle(
             windowMarkStart,
             0,
             windowMarkStart + windowMarkWidth,
-            self.scaleHeight,
-            fill=self._minorScaleColor,
+            OVERVIEW_HEIGHT,
+            fill=prefs['color_window_mark'],
             )
 
         #--- Draw the overview scale.
@@ -60,7 +53,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
         resolution, self.majorSpacing, units = self._calculate_resolution(
             scale,
             HOUR,
-            SCALE_SPACING_MIN * self.SPACING_RATIO,
+            SCALE_SPACING_MIN * OV_SPACING_RATIO,
             )
         xPos, timestamp = self._calculate_first_scale_line(
             resolution,
@@ -75,35 +68,27 @@ class TlvOverviewCanvas(TlvScaleCanvas):
                 break
 
             if specificDate:
-                weekDay = day_abbr[dt.weekday()]
                 month = month_abbr[dt.month]
+                weekDay = day_abbr[dt.weekday()]
                 if units == 0:
-                    dtStr = f"{weekDay} {self._tlvCtrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}"
+                    dtStr = f"{weekDay} {dt.hour:02}:{dt.minute:02}"
                 elif units == 1:
-                    dtStr = f"{weekDay} {self._tlvCtrl.datestr(dt)}"
+                    dtStr = self._tlvCtrl.datestr(dt)
                 elif units == 2:
                     dtStr = f"{month} {dt.year}"
                 elif units == 3:
                     dtStr = f"{dt.year}"
             else:
                 day = get_unspecific_date(date.isoformat(dt), refIso)
-                if showWeekDay:
-                    weekDay = f'{day_abbr[dt.weekday()]} '
-                else:
-                    weekDay = ''
                 if units == 0:
-                    dtStr = f"{weekDay} {_('Day')} {day} {dt.hour:02}:{dt.minute:02}"
-                elif units == 1:
-                    dtStr = f"{weekDay} {_('Day')} {day}"
-                elif units == 2:
-                    dtStr = f"{_('Day')} {day}"
-                elif units == 3:
+                    dtStr = f"{_('Day')} {day} {dt.hour:02}:{dt.minute:02}"
+                else:
                     dtStr = f"{_('Day')} {day}"
 
             self.create_text(
-                (xPos + 5, MAJOR_HEIGHT),
+                (xPos + 5, OV_DATE_POS),
                 text=dtStr,
-                fill=self._majorScaleColor,
+                fill=prefs['color_major_scale'],
                 anchor='nw',
                 )
             xPos += self.majorSpacing
@@ -114,14 +99,14 @@ class TlvOverviewCanvas(TlvScaleCanvas):
             timestamp, durationSeconds, __, __, __ = section
             xStart = (timestamp - startTimestamp) / scale
             xEnd = (timestamp - startTimestamp + durationSeconds) / scale
-            if xEnd - xStart < self.SC_X_MIN:
-                xEnd += self.SC_X_MIN
+            if xEnd - xStart < OV_SC_X_MIN:
+                xEnd += OV_SC_X_MIN
             self.create_line(
                 xStart,
-                self.scYPos,
+                OV_SC_Y_POS,
                 xEnd,
-                self.scYPos,
-                width=self.SC_THICKNESS,
-                fill=self.sectionMarkColor,
+                OV_SC_Y_POS,
+                width=OV_SC_THICKNESS,
+                fill=prefs['color_section_mark'],
                 )
 
