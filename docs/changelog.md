@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.6.1
+
+- Fixed a bug where the scale is not adjusted when maximizing the window.
+
+API: 5.0
+Based on novelibre 5.23.5
+
+
 ### Version 5.6.0
 
 - Fixed a regression from version 5.5.0 where the minor scale units may not be set the right way.

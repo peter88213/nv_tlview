@@ -55,7 +55,7 @@ class TlvScaleCanvas(tk.Canvas):
             )
 
         # Draw the major scale lines.
-        xMax = self.winfo_width()
+        xMax = self.get_window_width()
         while xPos < xMax:
             try:
                 dt = from_timestamp(timestamp)
@@ -122,7 +122,6 @@ class TlvScaleCanvas(tk.Canvas):
             )
 
         # Draw the minor scale lines.
-        xMax = self.winfo_width()
         while xPos < xMax:
             try:
                 dt = from_timestamp(timestamp)

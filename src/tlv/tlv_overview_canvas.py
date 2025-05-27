@@ -37,7 +37,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
 
         #--- Draw the regular scale window mark.
         scale *= OV_SCALE_RATIO
-        xMax = self.winfo_width()
+        xMax = self.get_window_width()
         windowMarkWidth = xMax / OV_SCALE_RATIO
         windowMarkStart = windowMarkWidth * (OV_SCALE_RATIO // 2)
         self.create_rectangle(
