@@ -14,14 +14,13 @@ from tlv.platform.platform_settings import MOUSE
 from tlv.platform.platform_settings import PLATFORM
 from tlv.tlv_globals import DAY
 from tlv.tlv_globals import HOUR
-from tlv.tlv_globals import SCALE_SPACING_MAX
-from tlv.tlv_globals import SCALE_SPACING_MIN
 from tlv.tlv_globals import YEAR
 from tlv.tlv_helper import get_duration_str
 from tlv.tlv_helper import get_seconds
 from tlv.tlv_helper import get_specific_date
 from tlv.tlv_helper import get_timestamp
 from tlv.tlv_locale import _
+from tlv.tlv_scale_canvas import TlvScaleCanvas
 from tlv.tlv_scroll_frame import TlvScrollFrame
 from tlv.tlv_section_canvas import TlvSectionCanvas
 
@@ -38,6 +37,7 @@ class TlvMainFrame(ttk.Frame):
     # minimum distance for cascading section marks
     PAD_X = 100
     # used e.g. when going to a section
+    SCALE_SPACING_MAX = 480
 
     # Constants in seconds per pixel.
     SCALE_MIN = 10
@@ -237,13 +237,13 @@ class TlvMainFrame(ttk.Frame):
         self.minDist = self.DISTANCE_MIN
 
     def set_day_scale(self):
-        self.scale = (DAY * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
+        self.scale = (DAY * 2) / (self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN)
 
     def set_hour_scale(self):
-        self.scale = (HOUR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
+        self.scale = (HOUR * 2) / (self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN)
 
     def set_year_scale(self):
-        self.scale = (YEAR * 2) / (SCALE_SPACING_MAX - SCALE_SPACING_MIN)
+        self.scale = (YEAR * 2) / (self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN)
 
     def sort_sections(self):
         srtSections = []

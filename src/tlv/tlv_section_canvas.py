@@ -6,14 +6,19 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 
 import tkinter as tk
-from tlv.tlv_globals import SC_EVENT_DIST_Y
-from tlv.tlv_globals import SC_LABEL_DIST_X
-from tlv.tlv_globals import SC_MARK_HALF
 from tlv.tlv_globals import prefs
 from tlv.tlv_locale import _
 
 
 class TlvSectionCanvas(tk.Canvas):
+
+    # Constants in pixels.
+    SC_EVENT_DIST_Y = 35
+    # vertical distance between section marks
+    SC_LABEL_DIST_X = 10
+    # horizontal distance between section mark and label
+    SC_MARK_HALF = 5
+    # half of the section marker's height
 
     isLocked = False
     # class variable to be changed from the parent view component
@@ -40,8 +45,8 @@ class TlvSectionCanvas(tk.Canvas):
 
     def draw(self, startTimestamp, scale, srtSections, minDist):
         self.delete("all")
-        self.yMax = (len(srtSections) + 2) * SC_EVENT_DIST_Y
-        yStart = SC_EVENT_DIST_Y
+        self.yMax = (len(srtSections) + 2) * self.SC_EVENT_DIST_Y
+        yStart = self.SC_EVENT_DIST_Y
         xEnd = 0
         yPos = yStart
         labelEnd = 0
@@ -57,12 +62,12 @@ class TlvSectionCanvas(tk.Canvas):
             # Draw section mark.
             xEnd = (timestamp - startTimestamp + durationSeconds) / scale
             sectionMark = self.create_polygon(
-                (xStart, yPos - SC_MARK_HALF),
-                (xStart - SC_MARK_HALF, yPos),
-                (xStart, yPos + SC_MARK_HALF),
-                (xEnd, yPos + SC_MARK_HALF),
-                (xEnd + SC_MARK_HALF, yPos),
-                (xEnd, yPos - SC_MARK_HALF),
+                (xStart, yPos - self.SC_MARK_HALF),
+                (xStart - self.SC_MARK_HALF, yPos),
+                (xStart, yPos + self.SC_MARK_HALF),
+                (xEnd, yPos + self.SC_MARK_HALF),
+                (xEnd + self.SC_MARK_HALF, yPos),
+                (xEnd, yPos - self.SC_MARK_HALF),
                 fill=prefs['color_section_mark'],
                 tags=sectionId
                 )
@@ -83,7 +88,7 @@ class TlvSectionCanvas(tk.Canvas):
                 )
 
             # Draw title and date/time.
-            xLabel = xEnd + SC_LABEL_DIST_X
+            xLabel = xEnd + self.SC_LABEL_DIST_X
             titleLabel = self.create_text(
                 (xLabel, yPos),
                 text=title,
@@ -104,7 +109,7 @@ class TlvSectionCanvas(tk.Canvas):
                     )
                 __, __, x2, __ = self.bbox('all')
                 labelEnd = x2
-            yPos += SC_EVENT_DIST_Y
+            yPos += self.SC_EVENT_DIST_Y
         totalBounds = self.bbox('all')
         if totalBounds is not None:
             self.configure(scrollregion=(0, 0, 0, totalBounds[3]))
@@ -149,7 +154,7 @@ class TlvSectionCanvas(tk.Canvas):
             self._on_drag,
             )
         __, __, x2, __ = self.bbox(self._active_object)
-        self._xStart = x2 - SC_MARK_HALF
+        self._xStart = x2 - self.SC_MARK_HALF
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,
@@ -201,7 +206,7 @@ class TlvSectionCanvas(tk.Canvas):
             self._on_drag,
             )
         x1, __, __, __ = self.bbox(self._active_object)
-        self._xStart = x1 + SC_MARK_HALF
+        self._xStart = x1 + self.SC_MARK_HALF
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,

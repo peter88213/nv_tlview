@@ -9,14 +9,6 @@ from calendar import day_abbr
 from calendar import month_abbr
 
 from tlv.tlv_globals import HOUR
-from tlv.tlv_globals import OVERVIEW_HEIGHT
-from tlv.tlv_globals import OV_SCALE_RATIO
-from tlv.tlv_globals import OV_SC_THICKNESS
-from tlv.tlv_globals import OV_DATE_POS
-from tlv.tlv_globals import OV_SC_Y_POS
-from tlv.tlv_globals import OV_SC_X_MIN
-from tlv.tlv_globals import OV_SPACING_RATIO
-from tlv.tlv_globals import SCALE_SPACING_MIN
 from tlv.tlv_globals import prefs
 from tlv.tlv_helper import from_timestamp
 from tlv.tlv_helper import get_unspecific_date
@@ -25,6 +17,20 @@ from tlv.tlv_scale_canvas import TlvScaleCanvas
 
 
 class TlvOverviewCanvas(TlvScaleCanvas):
+
+    # Constants in pixels.
+    CANVAS_HEIGHT = 30
+    OV_DATE_POS = 12
+    OV_SC_Y_POS = 7
+    # position of the section marks
+    OV_SC_X_MIN = 2
+    # minimum width limit of a section marker to be visible
+    OV_SC_THICKNESS = 4
+
+    # Small scale overview ratio.
+    OV_SPACING_RATIO = 2
+    OV_SCALE_RATIO = 9
+    # for symmetry, this should be an odd number
 
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(tlvController, master, **kw)
@@ -36,15 +42,15 @@ class TlvOverviewCanvas(TlvScaleCanvas):
                 refIso = '0001-01-01'
 
         #--- Draw the regular scale window mark.
-        scale *= OV_SCALE_RATIO
+        scale *= self.OV_SCALE_RATIO
         xMax = self.get_window_width()
-        windowMarkWidth = xMax / OV_SCALE_RATIO
-        windowMarkStart = windowMarkWidth * (OV_SCALE_RATIO // 2)
+        windowMarkWidth = xMax / self.OV_SCALE_RATIO
+        windowMarkStart = windowMarkWidth * (self.OV_SCALE_RATIO // 2)
         self.create_rectangle(
             windowMarkStart,
             0,
             windowMarkStart + windowMarkWidth,
-            OVERVIEW_HEIGHT,
+            self.CANVAS_HEIGHT,
             fill=prefs['color_window_mark'],
             )
 
@@ -53,7 +59,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
         resolution, self.majorSpacing, units = self._calculate_resolution(
             scale,
             HOUR,
-            SCALE_SPACING_MIN * OV_SPACING_RATIO,
+            self.SCALE_SPACING_MIN * self.OV_SPACING_RATIO,
             )
         xPos, timestamp = self._calculate_first_scale_line(
             resolution,
@@ -86,7 +92,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
                     dtStr = f"{_('Day')} {day}"
 
             self.create_text(
-                (xPos + 5, OV_DATE_POS),
+                (xPos + 5, self.OV_DATE_POS),
                 text=dtStr,
                 fill=prefs['color_major_scale'],
                 anchor='nw',
@@ -99,14 +105,14 @@ class TlvOverviewCanvas(TlvScaleCanvas):
             timestamp, durationSeconds, __, __, __ = section
             xStart = (timestamp - startTimestamp) / scale
             xEnd = (timestamp - startTimestamp + durationSeconds) / scale
-            if xEnd - xStart < OV_SC_X_MIN:
-                xEnd += OV_SC_X_MIN
+            if xEnd - xStart < self.OV_SC_X_MIN:
+                xEnd += self.OV_SC_X_MIN
             self.create_line(
                 xStart,
-                OV_SC_Y_POS,
+                self.OV_SC_Y_POS,
                 xEnd,
-                OV_SC_Y_POS,
-                width=OV_SC_THICKNESS,
+                self.OV_SC_Y_POS,
+                width=self.OV_SC_THICKNESS,
                 fill=prefs['color_section_mark'],
                 )
 

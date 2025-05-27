@@ -11,11 +11,7 @@ from calendar import month_abbr
 import tkinter as tk
 from tlv.tlv_globals import DAY
 from tlv.tlv_globals import HOUR
-from tlv.tlv_globals import MAJOR_HEIGHT
-from tlv.tlv_globals import MINOR_SPACING_MIN
 from tlv.tlv_globals import MONTH
-from tlv.tlv_globals import SCALE_HEIGHT
-from tlv.tlv_globals import SCALE_SPACING_MIN
 from tlv.tlv_globals import YEAR
 from tlv.tlv_globals import prefs
 from tlv.tlv_helper import from_timestamp
@@ -24,6 +20,13 @@ from tlv.tlv_locale import _
 
 
 class TlvScaleCanvas(tk.Canvas):
+
+    # Constants in pixels.
+    CANVAS_HEIGHT = 30
+    MAJOR_HEIGHT = 15
+    # height of the major scale lines
+    SCALE_SPACING_MIN = 120
+    MINOR_SPACING_MIN = 40
 
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
@@ -46,7 +49,7 @@ class TlvScaleCanvas(tk.Canvas):
         resolution, self.majorSpacing, units = self._calculate_resolution(
             scale,
             HOUR,
-            SCALE_SPACING_MIN
+            self.SCALE_SPACING_MIN
             )
         xPos, timestamp = self._calculate_first_scale_line(
             resolution,
@@ -90,7 +93,7 @@ class TlvScaleCanvas(tk.Canvas):
 
             self.create_line(
                 (xPos, 0),
-                (xPos, MAJOR_HEIGHT),
+                (xPos, self.MAJOR_HEIGHT),
                 width=1,
                 fill=prefs['color_major_scale'],
                 )
@@ -108,7 +111,7 @@ class TlvScaleCanvas(tk.Canvas):
         # Calculate the resolution.
         resolution /= 4
         self.minorSpacing = resolution / scale
-        while self.minorSpacing < MINOR_SPACING_MIN:
+        while self.minorSpacing < self.MINOR_SPACING_MIN:
             resolution *= 2
             if units == 0 and resolution >= DAY:
                 resolution = DAY
@@ -152,13 +155,13 @@ class TlvScaleCanvas(tk.Canvas):
                     dtStr = day
 
             self.create_line(
-                (xPos, MAJOR_HEIGHT),
-                (xPos, SCALE_HEIGHT),
+                (xPos, self.MAJOR_HEIGHT),
+                (xPos, self.CANVAS_HEIGHT),
                 width=1,
                 fill=prefs['color_minor_scale'],
                 )
             self.create_text(
-                (xPos + 5, MAJOR_HEIGHT + 1),
+                (xPos + 5, self.MAJOR_HEIGHT + 1),
                 text=dtStr,
                 fill=prefs['color_minor_scale'],
                 anchor='nw',
