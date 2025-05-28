@@ -18,7 +18,7 @@ prefs = {
     'color_window_mark': 'gray40',
 }
 
-# Constants in seconds per pixel.
+# Constants in seconds.
 HOUR = 3600
 DAY = HOUR * 24
 YEAR = DAY * 365
