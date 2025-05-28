@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.6.2
+
+- Refactored, replacing global constants with class constants.
+
+API: 5.0
+Based on novelibre 5.23.5
+
+
 ### Version 5.6.1
 
 - Fixed a bug where the scale is not adjusted when maximizing the window.
