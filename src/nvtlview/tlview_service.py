@@ -100,8 +100,6 @@ class TlviewService(SubController):
             return
 
         self.mainWindow = tk.Toplevel()
-        self.mainWindow.geometry(self.prefs['window_geometry'])
-        self.mainWindow.minsize(400, 200)
         self.mainWindow.title(f'{self._mdl.novel.title} - {windowTitle}')
         set_icon(self.mainWindow, icon='tLogo32', default=False)
 
@@ -129,8 +127,9 @@ class TlviewService(SubController):
         self._bind_events()
         self.mainWindow.lift()
         self.mainWindow.focus()
-        self.mainWindow.update()
-        # for whatever reason, this helps keep the window size
+        self.mainWindow.update_idletasks()
+        self.mainWindow.geometry(self.prefs['window_geometry'])
+        self.mainWindow.minsize(400, 200)
         self._tlvCtrl.fit_window()
 
     def _bind_events(self):

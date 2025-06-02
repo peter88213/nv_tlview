@@ -5,12 +5,12 @@
 ## Changelog
 
 
-### Version 5.6.2
+### Version 5.6.3
 
-- Refactored, replacing global constants with class constants.
+- Making sure the window reopens at the last size.
 
 API: 5.0
-Based on novelibre 5.23.5
+Based on novelibre 5.24.3
 
 
 ### Version 5.6.1
