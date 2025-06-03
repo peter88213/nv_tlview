@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.6.4
+
+- Prevent flickering when opening the window.
+
+API: 5.0
+Based on novelibre 5.24.3
+
+
 ### Version 5.6.3
 
 - Making sure the window reopens at the last size.
