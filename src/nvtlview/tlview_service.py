@@ -25,7 +25,9 @@ class TlviewService(SubController):
     )
 
     def __init__(self, model, view, controller):
-        super().initialize_controller(model, view, controller)
+        self._mdl = model
+        self._ui = view
+        self._ctrl = controller
         self._tlvCtrl = None
 
         #--- Load configuration.
@@ -37,8 +39,8 @@ class TlviewService(SubController):
         self.iniFile = f'{configDir}/tlview.ini'
         self.configuration = self._mdl.nvService.new_configuration(
             settings=self.SETTINGS,
-            options=self.OPTIONS
-            )
+            options=self.OPTIONS,
+        )
         self.configuration.read(self.iniFile)
         self.prefs = {}
         self.prefs.update(self.configuration.settings)
@@ -122,7 +124,7 @@ class TlviewService(SubController):
             self.mainWindow,
             self.prefs,
             onDoubleClick=self._go_to_selected_section_in_tree,
-            )
+        )
         if self._ctrl.isLocked:
             self._tlvCtrl.lock()
         self._mdl.add_observer(self._tlvCtrl)

@@ -52,7 +52,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
             windowMarkStart + windowMarkWidth,
             self.CANVAS_HEIGHT,
             fill=prefs['color_window_mark'],
-            )
+        )
 
         #--- Draw the overview scale.
         startTimestamp -= (windowMarkStart * scale)
@@ -60,12 +60,12 @@ class TlvOverviewCanvas(TlvScaleCanvas):
             scale,
             HOUR,
             self.SCALE_SPACING_MIN * self.OV_SPACING_RATIO,
-            )
+        )
         xPos, timestamp = self._calculate_first_scale_line(
             resolution,
             startTimestamp,
             scale,
-            )
+        )
 
         while xPos < xMax:
             try:
@@ -96,7 +96,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
                 text=dtStr,
                 fill=prefs['color_major_scale'],
                 anchor='nw',
-                )
+            )
             xPos += self.majorSpacing
             timestamp += resolution
 
@@ -114,5 +114,5 @@ class TlvOverviewCanvas(TlvScaleCanvas):
                 self.OV_SC_Y_POS,
                 width=self.OV_SC_THICKNESS,
                 fill=prefs['color_section_mark'],
-                )
+            )
 

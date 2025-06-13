@@ -133,8 +133,8 @@ class TlvMainFrame(ttk.Frame):
             self.srtSections,
             self.minDist,
             self._specificDate,
-            self._dataModel.referenceDate
-            )
+            self._dataModel.referenceDate,
+        )
         self._calculating = False
 
     def fit_window(self):
@@ -166,8 +166,8 @@ class TlvMainFrame(ttk.Frame):
         self.startTimestamp = sectionTimestamp - xPos * self.scale
         self.tlFrame.draw_indicator(
             xPos,
-            text=self._tlvCtrl.get_section_title(scId)
-            )
+            text=self._tlvCtrl.get_section_title(scId),
+        )
 
     def stretch_time_scale(self, event):
         """Stretch the time scale using the mouse wheel."""
@@ -255,7 +255,11 @@ class TlvMainFrame(ttk.Frame):
                 continue
 
             try:
-                durationStr = get_duration_str(section.lastsDays, section.lastsHours, section.lastsMinutes)
+                durationStr = get_duration_str(
+                    section.lastsDays,
+                    section.lastsHours,
+                    section.lastsMinutes,
+                )
                 refIso = self._dataModel.referenceDate
                 if section.time is None:
                     if not self.settings.get('substitute_missing_time', False):
@@ -288,14 +292,18 @@ class TlvMainFrame(ttk.Frame):
                     continue
 
                 srtSections.append(
-                        (
+                    (
                         get_timestamp(dt),
-                        get_seconds(section.lastsDays, section.lastsHours, section.lastsMinutes),
+                        get_seconds(
+                            section.lastsDays,
+                            section.lastsHours,
+                            section.lastsMinutes,
+                        ),
                         section.title,
                         timeStr,
-                        scId
-                        )
+                        scId,
                     )
+                )
             except:
                 pass
         self.srtSections = sorted(srtSections)
