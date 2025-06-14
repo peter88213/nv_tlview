@@ -48,11 +48,17 @@ class Plugin(PluginBase):
         self.tlviewService = TlviewService(model, view, controller)
 
         # Add an entry to the Tools menu.
-        self._ui.toolsMenu.add_command(label=self.FEATURE, command=self.open_viewer)
+        self._ui.toolsMenu.add_command(
+            label=self.FEATURE,
+            command=self.open_viewer,
+        )
         self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
 
         # Add an entry to the Help menu.
-        self._ui.helpMenu.add_command(label=_('Timeline view Online help'), command=self.open_help)
+        self._ui.helpMenu.add_command(
+            label=_('Timeline view Online help'),
+            command=self.open_help,
+        )
 
         #--- Configure the toolbar.
         self._configure_toolbar()
@@ -129,7 +135,11 @@ class Plugin(PluginBase):
             tlIcon = None
 
         # Put a Separator on the toolbar.
-        tk.Frame(self._ui.toolbar.buttonBar, bg='light gray', width=1).pack(side='left', fill='y', padx=4)
+        tk.Frame(
+            self._ui.toolbar.buttonBar,
+            bg='light gray',
+            width=1,
+        ).pack(side='left', fill='y', padx=4)
 
         # Put a button on the toolbar.
         self._tlButton = ttk.Button(
