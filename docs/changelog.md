@@ -5,6 +5,15 @@
 ## Changelog
 
 
+### Version 5.6.5
+
+- Refactored the code for better maintainability.
+- Reformatted parts of the code according to PEP-8.
+
+API: 5.0
+Based on novelibre 5.26.4
+
+
 ### Version 5.6.4
 
 - Prevent flickering when opening the window.
