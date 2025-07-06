@@ -8,6 +8,7 @@
 ### Version 5.7.0
 
 - Changed the icon.
+- Added icon to menu entries.
 - Reformatted the code according to PEP-8.
 
 API: 5.0
