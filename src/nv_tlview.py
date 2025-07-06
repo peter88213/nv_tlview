@@ -46,17 +46,22 @@ class Plugin(PluginBase):
         """
         super().install(model, view, controller)
         self.tlviewService = TlviewService(model, view, controller)
+        self._icon = self._get_icon('tlview.png')
 
         # Add an entry to the Tools menu.
         self._ui.toolsMenu.add_command(
             label=self.FEATURE,
-            command=self.open_viewer,
+            image=self._icon,
+            compound='left',
+            command=self.start_viewer,
+            state='disabled',
         )
-        self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
 
         # Add an entry to the Help menu.
         self._ui.helpMenu.add_command(
             label=_('Timeline view Online help'),
+            image=self._icon,
+            compound='left',
             command=self.open_help,
         )
 
@@ -106,8 +111,8 @@ class Plugin(PluginBase):
     def open_help(self, event=None):
         TlviewHelp.open_help_page()
 
-    def open_viewer(self):
-        self.tlviewService.open_viewer(self.FEATURE)
+    def start_viewer(self):
+        self.tlviewService.start_viewer(self.FEATURE)
 
     def unlock(self):
         """Enable changes on the model.
@@ -117,22 +122,6 @@ class Plugin(PluginBase):
         self.tlviewService.unlock()
 
     def _configure_toolbar(self):
-
-        # Get the icons.
-        prefs = self._ctrl.get_preferences()
-        if prefs.get('large_icons', False):
-            size = 24
-        else:
-            size = 16
-        try:
-            homeDir = str(Path.home()).replace('\\', '/')
-            iconPath = f'{homeDir}/.novx/icons/{size}'
-        except:
-            iconPath = None
-        try:
-            tlIcon = tk.PhotoImage(file=f'{iconPath}/tlview.png')
-        except:
-            tlIcon = None
 
         # Put a Separator on the toolbar.
         tk.Frame(
@@ -145,14 +134,14 @@ class Plugin(PluginBase):
         self._tlButton = ttk.Button(
             self._ui.toolbar.buttonBar,
             text=self.FEATURE,
-            image=tlIcon,
-            command=self.open_viewer
-            )
+            image=self._icon,
+            command=self.start_viewer,
+        )
         self._tlButton.pack(side='left')
-        self._tlButton.image = tlIcon
+        self._tlButton.image = self._icon
 
         # Initialize tooltip.
-        if not prefs['enable_hovertips']:
+        if not self._ctrl.get_preferences()['enable_hovertips']:
             return
 
         try:
@@ -162,3 +151,16 @@ class Plugin(PluginBase):
 
         Hovertip(self._tlButton, self._tlButton['text'])
 
+    def _get_icon(self, fileName):
+        # Return the icon for the main view.
+        if self._ctrl.get_preferences().get('large_icons', False):
+            size = 24
+        else:
+            size = 16
+        try:
+            homeDir = str(Path.home()).replace('\\', '/')
+            iconPath = f'{homeDir}/.novx/icons/{size}'
+            icon = tk.PhotoImage(file=f'{iconPath}/{fileName}')
+        except:
+            icon = None
+        return icon

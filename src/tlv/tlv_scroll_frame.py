@@ -102,7 +102,15 @@ class TlvScrollFrame(ttk.Frame):
     def draw_indicator(self, xPos, text=''):
         self._sectionCanvas.draw_indicator(xPos, text)
 
-    def draw_timeline(self, startTimestamp, scale, srtSections, minDist, specificDate, referenceDate):
+    def draw_timeline(
+            self,
+            startTimestamp,
+            scale,
+            srtSections,
+            minDist,
+            specificDate,
+            referenceDate
+    ):
         self._scaleCanvas.draw(
             startTimestamp,
             scale,

@@ -70,22 +70,22 @@ class TlvSectionCanvas(tk.Canvas):
                 (xEnd, yPos - self.SC_MARK_HALF),
                 fill=prefs['color_section_mark'],
                 tags=sectionId
-                )
+            )
             self.tag_bind(
                 sectionMark,
                 '<Double-Button-1>',
                 self._on_double_click,
-                )
+            )
             self.tag_bind(
                 sectionMark,
                 '<Shift-Button-1>',
                 self._on_shift_click,
-                )
+            )
             self.tag_bind(
                 sectionMark,
                 '<Control-Shift-Button-1>',
                 self._on_ctrl_shift_click,
-                )
+            )
 
             # Draw title and date/time.
             xLabel = xEnd + self.SC_LABEL_DIST_X
@@ -94,7 +94,7 @@ class TlvSectionCanvas(tk.Canvas):
                 text=title,
                 fill=prefs['color_section_title'],
                 anchor='w',
-                )
+            )
             titleBounds = self.bbox(titleLabel)
             # returns a tuple like (x1, y1, x2, y2)
             if titleBounds is not None:
@@ -106,7 +106,7 @@ class TlvSectionCanvas(tk.Canvas):
                     text=timeStr,
                     fill=prefs['color_section_date'],
                     anchor='nw'
-                    )
+                )
                 __, __, x2, __ = self.bbox('all')
                 labelEnd = x2
             yPos += self.SC_EVENT_DIST_Y
@@ -122,13 +122,13 @@ class TlvSectionCanvas(tk.Canvas):
             width=1,
             dash=(2, 2),
             fill=prefs['color_indicator'],
-            )
+        )
         self._indicatorText = self.create_text(
             (xPos + 5, 5),
             text=text,
             anchor='nw',
             fill=prefs['color_indicator'],
-            )
+        )
 
     def get_section_id(self, event):
         return event.widget.itemcget('current', 'tag').split(' ')[0]
@@ -147,19 +147,22 @@ class TlvSectionCanvas(tk.Canvas):
             self._active_object,
             '<ButtonRelease-1>',
             self._on_ctrl_shift_release,
-            )
+        )
         self.tag_bind(
             self._active_object,
             '<B1-Motion>',
             self._on_drag,
-            )
+        )
         __, __, x2, __ = self.bbox(self._active_object)
         self._xStart = x2 - self.SC_MARK_HALF
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,
-            text=f'{_("Shift end")}: {self._tlvCtrl.get_section_title(self._active_object)}'
+            text=(
+                f'{_("Shift end")}: '
+                f'{self._tlvCtrl.get_section_title(self._active_object)}'
             )
+        )
         self._xStart = event.x
 
     def _on_ctrl_shift_release(self, event):
@@ -199,19 +202,22 @@ class TlvSectionCanvas(tk.Canvas):
             self._active_object,
             '<ButtonRelease-1>',
             self._on_shift_release,
-            )
+        )
         self.tag_bind(
             self._active_object,
             '<B1-Motion>',
             self._on_drag,
-            )
+        )
         x1, __, __, __ = self.bbox(self._active_object)
         self._xStart = x1 + self.SC_MARK_HALF
         self._xPos = event.x
         self.draw_indicator(
             self._xStart,
-            text=f'{_("Shift start")}: {self._tlvCtrl.get_section_title(self._active_object)}'
+            text=(
+                f'{_("Shift start")}: '
+                f'{self._tlvCtrl.get_section_title(self._active_object)}'
             )
+        )
         self._xStart = event.x
 
     def _on_shift_release(self, event):

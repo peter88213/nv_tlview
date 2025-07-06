@@ -196,7 +196,10 @@ class TlvMainFrame(ttk.Frame):
 
     def move_time_scale(self, event):
         """Move the time scale horizontally using the mouse wheel."""
-        deltaOffset = self.scale / self.SCALE_MIN * self.tlFrame.get_scale_mark_spacing()
+        deltaOffset = (
+            self.scale
+            / self.SCALE_MIN
+        ) * self.tlFrame.get_scale_mark_spacing()
         if event.num == 5 or event.delta == -120:
             self.startTimestamp += deltaOffset
         if event.num == 4 or event.delta == 120:
@@ -237,13 +240,22 @@ class TlvMainFrame(ttk.Frame):
         self.minDist = self.DISTANCE_MIN
 
     def set_day_scale(self):
-        self.scale = (DAY * 2) / (self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN)
+        self.scale = (
+            DAY * 2) / (
+                self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN
+        )
 
     def set_hour_scale(self):
-        self.scale = (HOUR * 2) / (self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN)
+        self.scale = (
+            HOUR * 2) / (
+                self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN
+        )
 
     def set_year_scale(self):
-        self.scale = (YEAR * 2) / (self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN)
+        self.scale = (
+            YEAR * 2) / (
+                self.SCALE_SPACING_MAX - TlvScaleCanvas.SCALE_SPACING_MIN
+        )
 
     def sort_sections(self):
         srtSections = []
@@ -262,7 +274,10 @@ class TlvMainFrame(ttk.Frame):
                 )
                 refIso = self._dataModel.referenceDate
                 if section.time is None:
-                    if not self.settings.get('substitute_missing_time', False):
+                    if not self.settings.get(
+                        'substitute_missing_time',
+                        False
+                    ):
                         continue
 
                     scTime = '00:00'
@@ -274,7 +289,10 @@ class TlvMainFrame(ttk.Frame):
                     scDate = section.date
                     dt = datetime.fromisoformat(f'{scDate} {scTime}')
                     weekDay = day_abbr[dt.weekday()]
-                    timeStr = f"{weekDay} {self._tlvCtrl.datestr(dt)} {dt.hour:02}:{dt.minute:02}{durationStr}"
+                    timeStr = (
+                        f"{weekDay} {self._tlvCtrl.datestr(dt)} "
+                        f"{dt.hour:02}:{dt.minute:02}{durationStr}"
+                    )
                 elif section.day is not None:
                     if refIso is None:
                         refIso = '0001-01-01'
@@ -287,7 +305,10 @@ class TlvMainFrame(ttk.Frame):
                         weekDay = f'{day_abbr[dt.weekday()]} '
                     else:
                         weekDay = ''
-                    timeStr = f"{weekDay}{_('Day')} {section.day} {dt.hour:02}:{dt.minute:02}{durationStr}"
+                    timeStr = (
+                        f"{weekDay}{_('Day')} {section.day} "
+                        f"{dt.hour:02}:{dt.minute:02}{durationStr}"
+                    )
                 else:
                     continue
 
@@ -309,7 +330,9 @@ class TlvMainFrame(ttk.Frame):
         self.srtSections = sorted(srtSections)
         if len(self.srtSections) > 1:
             self.firstTimestamp = self.srtSections[0][0]
-            self.lastTimestamp = self.srtSections[-1][0] + self.srtSections[-1][1]
+            self.lastTimestamp = (
+                self.srtSections[-1][0] + self.srtSections[-1][1]
+            )
         else:
             self.firstTimestamp = self.MIN_TIMESTAMP
             self.lastTimestamp = self.MAX_TIMESTAMP
@@ -346,9 +369,11 @@ class TlvMainFrame(ttk.Frame):
                 MOUSE.MOVE_TIME_SCALE: self.move_time_scale,
                 MOUSE.ADJUST_CASCADING: self.adjust_cascading,
             }
-        event_callbacks.update({
+        event_callbacks.update(
+            {
                 MOUSE.RIGHT_CLICK: self._on_right_click,
-            })
+            }
+        )
         for sequence, callback in event_callbacks.items():
             self.tlFrame.bind_section_canvas_event(sequence, callback)
 
@@ -367,9 +392,15 @@ class TlvMainFrame(ttk.Frame):
     def _on_right_click(self, event):
         self._xPos = event.x
         self._yPos = event.y
-        self.tlFrame.bind_section_canvas_event(MOUSE.RIGHT_RELEASE, self._on_right_release)
+        self.tlFrame.bind_section_canvas_event(
+            MOUSE.RIGHT_RELEASE,
+            self._on_right_release
+        )
         self.tlFrame.config(cursor='fleur')
-        self.tlFrame.bind_section_canvas_event(MOUSE.RIGHT_MOTION, self._on_drag)
+        self.tlFrame.bind_section_canvas_event(
+            MOUSE.RIGHT_MOTION,
+            self._on_drag
+        )
         self.tlFrame.set_drag_scrolling()
 
     def _on_right_release(self, event):

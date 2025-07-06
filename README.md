@@ -1,10 +1,10 @@
-[![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v5.6.5.pyzw)
+[![Download the latest release](docs/img/download-button.png)](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v5.7.0.pyzw)
 [![Changelog](docs/img/changelog-button.png)](docs/changelog.md)
 [![News/Feedback](docs/img/news-button.png)](https://github.com/peter88213/novelibre/discussions)
 [![Online help](docs/img/help-button.png)](https://peter88213.github.io/nvhelp-en/nv_tlview/)
 
 
-# ![T](icons/tLogo32.png) nv_tlview
+# ![T](icons/tlview.png) nv_tlview
 
 The [novelibre](https://github.com/peter88213/novelibre/) Python program helps authors organize novels.  
 
@@ -23,10 +23,10 @@ that are given a narrative date/day and time.
 
 ### Default: Executable Python zip archive
 
-Download the latest release [nv_tlview_v5.6.5.pyzw](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v5.6.5.pyzw)
+Download the latest release [nv_tlview_v5.7.0.pyzw](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v5.7.0.pyzw)
 
-- Launch *nv_tlview_v5.6.5.pyzw* by double-clicking (Windows/Linux desktop),
-- or execute `python nv_tlview_v5.6.5.pyzw` (Windows), resp. `python3 nv_tlview_v5.6.5.pyzw` (Linux) on the command line.
+- Launch *nv_tlview_v5.7.0.pyzw* by double-clicking (Windows/Linux desktop),
+- or execute `python nv_tlview_v5.7.0.pyzw` (Windows), resp. `python3 nv_tlview_v5.7.0.pyzw` (Linux) on the command line.
 
 #### Important
 
@@ -42,9 +42,9 @@ the zip file.
 
 ### Alternative: Zip file
 
-The package is also available in zip format: [nv_tlview_v5.6.5.zip](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v5.6.5.zip)
+The package is also available in zip format: [nv_tlview_v5.7.0.zip](https://github.com/peter88213/nv_tlview/raw/main/dist/nv_tlview_v5.7.0.zip)
 
-- Extract the *nv_tlview_v5.6.5* folder from the downloaded zipfile "nv_tlview_v5.6.5.zip".
+- Extract the *nv_tlview_v5.7.0* folder from the downloaded zipfile "nv_tlview_v5.7.0.zip".
 - Move into this new folder and launch *setup.pyw* by double-clicking (Windows/Linux desktop), 
 - or execute `python setup.pyw` (Windows), resp. `python3 setup.pyw` (Linux) on the command line.
 
@@ -60,7 +60,6 @@ See the [online manual](https://peter88213.github.io/nvhelp-en/nv_tlview/)
 
 ## Credits
 
-- The logo is made using the free *Pusab* font by Ryoichi Tsunekawa, [Flat-it](http://flat-it.com/).
 - The toolbar icons are based on the [Eva Icons](https://akveo.github.io/eva-icons/#/), published under the [MIT License](http://www.opensource.org/licenses/mit-license.php). The original black and white icons were adapted for this application by the maintainer. 
 
 ---

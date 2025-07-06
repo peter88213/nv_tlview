@@ -14,7 +14,7 @@ sys.path.insert(0, f'{os.getcwd()}/../../novelibre/tools')
 from package_builder import PackageBuilder
 import inliner
 
-VERSION = '5.6.5'
+VERSION = '5.7.0'
 
 TEMP_FILE = '../test/temp.py'
 
@@ -30,7 +30,7 @@ class PluginBuilder(PackageBuilder):
 
     def add_icons(self):
         super().add_icons()
-        copy2('../icons/tLogo32.png', f'{self.buildDir}/icons')
+        copy2('../icons/tlview.png', f'{self.buildDir}/icons')
 
     def inline_modules(self, source, target):
         """Inline all non-standard library modules."""

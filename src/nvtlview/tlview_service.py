@@ -90,7 +90,7 @@ class TlviewService(SubController):
             if self._tlvCtrl.canUndo():
                 self._enable_undo_button()
 
-    def open_viewer(self, windowTitle):
+    def start_viewer(self, windowTitle):
         if not self._mdl.prjFile:
             return
 
@@ -105,7 +105,7 @@ class TlviewService(SubController):
         self.mainWindow.geometry(self.prefs['window_geometry'])
         self.mainWindow.minsize(400, 200)
         self.mainWindow.title(f'{self._mdl.novel.title} - {windowTitle}')
-        set_icon(self.mainWindow, icon='tLogo32', default=False)
+        set_icon(self.mainWindow, icon='tlview', default=False)
 
         #--- Create the menu.
         mainMenu = TlviewMenu(self.mainWindow, self.prefs)
@@ -113,12 +113,22 @@ class TlviewService(SubController):
 
         #--- Create the toolbar.
         largeIcons = self._ctrl.get_preferences().get('large_icons', False)
-        enableHovertips = self._ctrl.get_preferences().get('enable_hovertips', False)
-        self.toolbar = TlviewToolbar(self.mainWindow, largeIcons, enableHovertips)
+        enableHovertips = self._ctrl.get_preferences().get(
+            'enable_hovertips',
+            False
+        )
+        self.toolbar = TlviewToolbar(
+            self.mainWindow,
+            largeIcons,
+            enableHovertips
+        )
         self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
 
         #--- Create the timeline viewer.
-        self.prefs['localize_date'] = self._ctrl.get_preferences().get('localize_date', True)
+        self.prefs['localize_date'] = self._ctrl.get_preferences().get(
+            'localize_date',
+            True
+        )
         self._tlvCtrl = TlvController(
             self._mdl.novel,
             self.mainWindow,

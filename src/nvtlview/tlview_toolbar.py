@@ -43,7 +43,9 @@ class TlviewToolbar(ttk.Frame):
         ]
         for icon in icons:
             try:
-                self._toolbarIcons[icon] = tk.PhotoImage(file=f'{iconPath}/{icon}.png')
+                self._toolbarIcons[icon] = tk.PhotoImage(
+                    file=f'{iconPath}/{icon}.png'
+                )
             except:
                 self._toolbarIcons[icon] = None
 
@@ -112,7 +114,11 @@ class TlviewToolbar(ttk.Frame):
         rewindRightButton.image = self._toolbarIcons['rewindRight']
 
         # Separator.
-        tk.Frame(self, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
+        tk.Frame(self, bg='light gray', width=1).pack(
+            side='left',
+            fill='y',
+            padx=6,
+        )
 
         # Changing the scale.
         arrowDownButton = ttk.Button(
@@ -143,7 +149,11 @@ class TlviewToolbar(ttk.Frame):
         arrowUpButton.image = self._toolbarIcons['arrowUp']
 
         # Separator.
-        tk.Frame(self, bg='light gray', width=1).pack(side='left', fill='y', padx=6)
+        tk.Frame(self, bg='light gray', width=1).pack(
+            side='left',
+            fill='y',
+            padx=6,
+        )
 
         self.undoButton = ttk.Button(
             self,

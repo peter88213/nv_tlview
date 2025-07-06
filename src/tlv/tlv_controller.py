@@ -48,7 +48,7 @@ class TlvController(TlvPublicApi):
             window,
             self,
             settings,
-            )
+        )
         self.isOpen = True
         self.firstTimestamp = None
         self.lastTimestamp = None
@@ -137,7 +137,9 @@ class TlvController(TlvPublicApi):
         else:
             scDate = refIso
 
-        timestamp = get_timestamp(datetime.fromisoformat(f'{scDate} {scTime}')) + deltaSeconds
+        timestamp = get_timestamp(
+            datetime.fromisoformat(f'{scDate} {scTime}')
+        ) + deltaSeconds
         dt = from_timestamp(timestamp)
         dateStr, timeStr = datetime.isoformat(dt).split('T')
         section.time = timeStr
@@ -156,7 +158,7 @@ class TlvController(TlvPublicApi):
             section.lastsDays,
             section.lastsHours,
             section.lastsMinutes
-            )
+        )
         seconds += deltaSeconds
         if seconds < 0:
             seconds = 0
@@ -198,7 +200,15 @@ class TlvController(TlvPublicApi):
             return
 
         scnData = self.controlBuffer.pop()
-        scId, sectionDate, sectionTime, sectionDay, sectionLastsDays, sectionLastsHours, sectionLastsMinutes = scnData
+        (
+            scId,
+            sectionDate,
+            sectionTime,
+            sectionDay,
+            sectionLastsDays,
+            sectionLastsHours,
+            sectionLastsMinutes
+        ) = scnData
         section = self._dataModel.sections[scId]
         section.date = sectionDate
         section.time = sectionTime
