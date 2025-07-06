@@ -15,7 +15,12 @@ from pathlib import Path
 try:
     from tkinter import *
 except ModuleNotFoundError:
-    print('The tkinter module is missing. Please install the tk support package for your python3 version.')
+    print(
+        (
+            'The tkinter module is missing. '
+            'Please install the tk support package for your python3 version.'
+        )
+    )
     sys.exit(1)
 
 PLUGIN = 'nv_tlview.py'
@@ -86,10 +91,20 @@ def main(zipped=True):
         output('Copying icons ...')
         copy_tree('icons', applicationDir)
 
-        output(f'Sucessfully installed "{PLUGIN}" at "{os.path.normpath(pluginDir)}"')
+        # Show a success message.
+        output(
+            (
+                f'Sucessfully installed "{PLUGIN}" '
+                f'at "{os.path.normpath(pluginDir)}".'
+            )
+        )
     else:
-        output(f'ERROR: Cannot find a novelibre installation at "{applicationDir}"')
-
+        output(
+            (
+                'ERROR: Cannot find a novelibre installation '
+                f'at "{os.path.normpath(applicationDir)}".'
+            )
+        )
     root.quitButton = Button(text="Quit", command=quit)
     root.quitButton.config(height=1, width=30)
     root.quitButton.pack(padx=5, pady=5)
