@@ -14,7 +14,7 @@ import sys
 import zipfile
 
 PLUGIN = 'nv_tlview.py'
-VERSION = ' @release'
+VERSION = '@release'
 
 pyz = os.path.dirname(__file__)
 
