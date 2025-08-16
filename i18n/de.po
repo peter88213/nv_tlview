@@ -4,14 +4,20 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 5.7.0\n"
-"POT-Creation-Date: 2025-07-06 21:32:00\n"
-"PO-Revision-Date: 2025-07-06 21:32:00\n"
+"POT-Creation-Date: 2025-08-16 15:24:49\n"
+"PO-Revision-Date: 2025-08-16 15:24:49\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+
+msgid "1st Edit"
+msgstr "1. Überarbeitung"
+
+msgid "2nd Edit"
+msgstr "2. Überarbeitung"
 
 msgid "Cascading"
 msgstr "Kaskadieren"
@@ -27,6 +33,12 @@ msgstr "Tag"
 
 msgid "Days"
 msgstr "Tage"
+
+msgid "Done"
+msgstr "Fertiggestellt"
+
+msgid "Draft"
+msgstr "Entwurf"
 
 msgid "First event"
 msgstr "Erstes Ereignis"
@@ -66,6 +78,9 @@ msgstr "Online-Hilfe"
 
 msgid "Options"
 msgstr "Optionen"
+
+msgid "Outline"
+msgstr "Gliederung"
 
 msgid "Page back"
 msgstr "Seite zurück"

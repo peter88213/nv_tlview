@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 5.7.0\n"
-"POT-Creation-Date: 2025-07-06 21:32:00\n"
+"POT-Creation-Date: 2025-08-16 15:24:49\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -13,6 +13,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: novxlib pgettext.py 0.3\n"
 
+
+msgid "1st Edit"
+msgstr ""
+
+msgid "2nd Edit"
+msgstr ""
 
 msgid "Cascading"
 msgstr ""
@@ -27,6 +33,12 @@ msgid "Day"
 msgstr ""
 
 msgid "Days"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "Draft"
 msgstr ""
 
 msgid "First event"
@@ -66,6 +78,9 @@ msgid "Online help"
 msgstr ""
 
 msgid "Options"
+msgstr ""
+
+msgid "Outline"
 msgstr ""
 
 msgid "Page back"
