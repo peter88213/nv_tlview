@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.7.0\n"
-"POT-Creation-Date: 2025-08-16 15:24:49\n"
-"PO-Revision-Date: 2025-08-16 15:24:49\n"
+"Project-Id-Version: 5.8.0\n"
+"POT-Creation-Date: 2025-09-03 10:12:55\n"
+"PO-Revision-Date: 2025-09-03 10:12:55\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -19,8 +19,14 @@ msgstr "1. Überarbeitung"
 msgid "2nd Edit"
 msgstr "2. Überarbeitung"
 
+msgid "Bio"
+msgstr "Biographie"
+
 msgid "Cascading"
 msgstr "Kaskadieren"
+
+msgid "Characterization"
+msgstr "Charakterisierung"
 
 msgid "Close"
 msgstr "Schließen"
@@ -40,6 +46,9 @@ msgstr "Fertiggestellt"
 msgid "Draft"
 msgstr "Entwurf"
 
+msgid "Ending"
+msgstr "Ende"
+
 msgid "First event"
 msgstr "Erstes Ereignis"
 
@@ -51,6 +60,9 @@ msgstr "Ans Fenster anpassen"
 
 msgid "Go to"
 msgstr "Gehe zu"
+
+msgid "Goals"
+msgstr "Ziele"
 
 msgid "Help"
 msgstr "Hilfe"
@@ -76,6 +88,9 @@ msgstr "Nebenfigur"
 msgid "Online help"
 msgstr "Online-Hilfe"
 
+msgid "Opening"
+msgstr "Eröffnung"
+
 msgid "Options"
 msgstr "Optionen"
 
@@ -87,6 +102,12 @@ msgstr "Seite zurück"
 
 msgid "Page forward"
 msgstr "Seite vor"
+
+msgid "Peak emotional moment"
+msgstr "Emotionaler Höhepunkt"
+
+msgid "Plot progress"
+msgstr "Handlungsfortschritt"
 
 msgid "Reduce scale"
 msgstr "Maßstab verkleinern"
@@ -129,6 +150,9 @@ msgstr "Rückgängig"
 
 msgid "Use 00:00 for missing times"
 msgstr "Benutze 00:00 für fehlende Zeiten"
+
+msgid "World building"
+msgstr "Weltenbau"
 
 msgid "Years"
 msgstr "Jahre"

@@ -28,7 +28,7 @@ import tkinter as tk
 class Plugin(PluginBase):
     """Plugin class for the timeline view."""
     VERSION = '@release'
-    API_VERSION = '5.0'
+    API_VERSION = '5.35'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
 
@@ -144,12 +144,9 @@ class Plugin(PluginBase):
         if not self._ctrl.get_preferences()['enable_hovertips']:
             return
 
-        try:
-            from idlelib.tooltip import Hovertip
-        except ModuleNotFoundError:
-            return
-
-        Hovertip(self._tlButton, self._tlButton['text'])
+        self._mdl.nvService.new_hovertip(
+            self._tlButton, self._tlButton['text']
+        )
 
     def _get_icon(self, fileName):
         # Return the icon for the main view.

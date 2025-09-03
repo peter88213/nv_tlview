@@ -113,14 +113,14 @@ class TlviewService(SubController):
 
         #--- Create the toolbar.
         largeIcons = self._ctrl.get_preferences().get('large_icons', False)
-        enableHovertips = self._ctrl.get_preferences().get(
-            'enable_hovertips',
-            False
-        )
+        if self._ctrl.get_preferences()['enable_hovertips']:
+            Hovertip = self._mdl.nvService.new_hovertip
+        else:
+            Hovertip = None
         self.toolbar = TlviewToolbar(
             self.mainWindow,
             largeIcons,
-            enableHovertips
+            Hovertip,
         )
         self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
 

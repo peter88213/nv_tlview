@@ -13,7 +13,7 @@ from tlv.tlv_locale import _
 
 class TlviewToolbar(ttk.Frame):
 
-    def __init__(self, master, largeIcons, enableHovertips):
+    def __init__(self, master, largeIcons, Hovertip):
         ttk.Frame.__init__(self, master)
 
         # Prepare the toolbar icons.
@@ -173,12 +173,7 @@ class TlviewToolbar(ttk.Frame):
         ).pack(side='right')
 
         # Initialize tooltips.
-        if not enableHovertips:
-            return
-
-        try:
-            from idlelib.tooltip import Hovertip
-        except ModuleNotFoundError:
+        if Hovertip is None:
             return
 
         Hovertip(rewindLeftButton, rewindLeftButton['text'])

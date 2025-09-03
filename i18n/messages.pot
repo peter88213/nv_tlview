@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.7.0\n"
-"POT-Creation-Date: 2025-08-16 15:24:49\n"
+"Project-Id-Version: 5.8.0\n"
+"POT-Creation-Date: 2025-09-03 10:12:55\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -20,7 +20,13 @@ msgstr ""
 msgid "2nd Edit"
 msgstr ""
 
+msgid "Bio"
+msgstr ""
+
 msgid "Cascading"
+msgstr ""
+
+msgid "Characterization"
 msgstr ""
 
 msgid "Close"
@@ -41,6 +47,9 @@ msgstr ""
 msgid "Draft"
 msgstr ""
 
+msgid "Ending"
+msgstr ""
+
 msgid "First event"
 msgstr ""
 
@@ -51,6 +60,9 @@ msgid "Fit to window"
 msgstr ""
 
 msgid "Go to"
+msgstr ""
+
+msgid "Goals"
 msgstr ""
 
 msgid "Help"
@@ -77,6 +89,9 @@ msgstr ""
 msgid "Online help"
 msgstr ""
 
+msgid "Opening"
+msgstr ""
+
 msgid "Options"
 msgstr ""
 
@@ -87,6 +102,12 @@ msgid "Page back"
 msgstr ""
 
 msgid "Page forward"
+msgstr ""
+
+msgid "Peak emotional moment"
+msgstr ""
+
+msgid "Plot progress"
 msgstr ""
 
 msgid "Reduce scale"
@@ -129,6 +150,9 @@ msgid "Undo"
 msgstr ""
 
 msgid "Use 00:00 for missing times"
+msgstr ""
+
+msgid "World building"
 msgstr ""
 
 msgid "Years"
