@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.9.0
+
+- Using the toolbar methods provided with novelibre 5.44.
+
+API: 5.44
+Based on novelibre 5.44.0
+
+
 ### Version 5.8.0
 
 - Under Linux, the *idle3* package is no longer needed for displaying tooltips.

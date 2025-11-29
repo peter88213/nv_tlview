@@ -16,7 +16,6 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
 from pathlib import Path
-from tkinter import ttk
 
 from tlv.tlv_locale import _
 from nvlib.controller.plugin.plugin_base import PluginBase
@@ -28,7 +27,7 @@ import tkinter as tk
 class Plugin(PluginBase):
     """Plugin class for the timeline view."""
     VERSION = '@release'
-    API_VERSION = '5.35'
+    API_VERSION = '5.44'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
 
@@ -77,7 +76,6 @@ class Plugin(PluginBase):
         Overrides the superclass method.
         """
         self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
-        self._tlButton.config(state='disabled')
 
     def enable_menu(self):
         """Enable menu entries when a project is open.
@@ -85,7 +83,6 @@ class Plugin(PluginBase):
         Overrides the superclass method.
         """
         self._ui.toolsMenu.entryconfig(self.FEATURE, state='normal')
-        self._tlButton.config(state='normal')
 
     def lock(self):
         """Inhibit changes on the model.
@@ -123,30 +120,16 @@ class Plugin(PluginBase):
 
     def _configure_toolbar(self):
 
-        # Put a Separator on the toolbar.
-        tk.Frame(
-            self._ui.toolbar.buttonBar,
-            bg='light gray',
-            width=1,
-        ).pack(side='left', fill='y', padx=4)
+        self._ui.toolbar.add_separator(),
 
         # Put a button on the toolbar.
-        self._tlButton = ttk.Button(
-            self._ui.toolbar.buttonBar,
+        self._tlButton = self._ui.toolbar.new_button(
             text=self.FEATURE,
             image=self._icon,
             command=self.start_viewer,
+            disableOnLock=False,
         )
         self._tlButton.pack(side='left')
-        self._tlButton.image = self._icon
-
-        # Initialize tooltip.
-        if not self._ctrl.get_preferences()['enable_hovertips']:
-            return
-
-        self._mdl.nvService.new_hovertip(
-            self._tlButton, self._tlButton['text']
-        )
 
     def _get_icon(self, fileName):
         # Return the icon for the main view.
