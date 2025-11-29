@@ -45,6 +45,7 @@ class Plugin(PluginBase):
         """
         super().install(model, view, controller)
         self.tlviewService = TlviewService(model, view, controller)
+        self._ctrl.register_client(self.tlviewService)
         zimIcon = self._get_icon('tlview.png')
 
         #--- Configure the main menu.
@@ -80,23 +81,11 @@ class Plugin(PluginBase):
             disableOnLock=False,
         ).pack(side='left')
 
-    def lock(self):
-        self.tlviewService.lock()
-
-    def on_close(self):
-        self.tlviewService.on_close()
-
-    def on_quit(self):
-        self.tlviewService.on_quit()
-
     def open_help(self, event=None):
         TlviewHelp.open_help_page()
 
     def start_viewer(self):
         self.tlviewService.start_viewer(self.FEATURE)
-
-    def unlock(self):
-        self.tlviewService.unlock()
 
     def _get_icon(self, fileName):
         # Return the icon for the main view.

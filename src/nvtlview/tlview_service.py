@@ -66,6 +66,9 @@ class TlviewService(SubController):
         
         Overrides the superclass method.
         """
+        if self._tlvCtrl is None:
+            return
+
         self.close_main_window()
 
     def on_quit(self):
