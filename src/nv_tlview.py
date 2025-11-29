@@ -45,64 +45,48 @@ class Plugin(PluginBase):
         """
         super().install(model, view, controller)
         self.tlviewService = TlviewService(model, view, controller)
-        self._icon = self._get_icon('tlview.png')
+        zimIcon = self._get_icon('tlview.png')
+
+        #--- Configure the main menu.
 
         # Add an entry to the Tools menu.
+        label = self.FEATURE
         self._ui.toolsMenu.add_command(
-            label=self.FEATURE,
-            image=self._icon,
+            label=label,
+            image=zimIcon,
             compound='left',
             command=self.start_viewer,
             state='disabled',
         )
+        self._ui.toolsMenu.disableOnClose.append(label)
 
         # Add an entry to the Help menu.
+        label = _('Timeline view Online help')
         self._ui.helpMenu.add_command(
-            label=_('Timeline view Online help'),
-            image=self._icon,
+            label=label,
+            image=zimIcon,
             compound='left',
             command=self.open_help,
         )
 
         #--- Configure the toolbar.
-        self._configure_toolbar()
+        self._ui.toolbar.add_separator(),
 
-    def close_main_window(self, event=None):
-        self.tlviewService.close_main_window()
-
-    def disable_menu(self):
-        """Disable menu entries when no project is open.
-        
-        Overrides the superclass method.
-        """
-        self._ui.toolsMenu.entryconfig(self.FEATURE, state='disabled')
-
-    def enable_menu(self):
-        """Enable menu entries when a project is open.
-        
-        Overrides the superclass method.
-        """
-        self._ui.toolsMenu.entryconfig(self.FEATURE, state='normal')
+        # Put a button on the toolbar.
+        self._ui.toolbar.new_button(
+            text=self.FEATURE,
+            image=zimIcon,
+            command=self.start_viewer,
+            disableOnLock=False,
+        ).pack(side='left')
 
     def lock(self):
-        """Inhibit changes on the model.
-        
-        Overrides the superclass method.
-        """
         self.tlviewService.lock()
 
     def on_close(self):
-        """Actions to be performed when a project is closed.
-        
-        Overrides the superclass method.
-        """
         self.tlviewService.on_close()
 
     def on_quit(self):
-        """Actions to be performed when novelibre is closed.
-        
-        Overrides the superclass method.
-        """
         self.tlviewService.on_quit()
 
     def open_help(self, event=None):
@@ -112,24 +96,7 @@ class Plugin(PluginBase):
         self.tlviewService.start_viewer(self.FEATURE)
 
     def unlock(self):
-        """Enable changes on the model.
-        
-        Overrides the superclass method.
-        """
         self.tlviewService.unlock()
-
-    def _configure_toolbar(self):
-
-        self._ui.toolbar.add_separator(),
-
-        # Put a button on the toolbar.
-        self._tlButton = self._ui.toolbar.new_button(
-            text=self.FEATURE,
-            image=self._icon,
-            command=self.start_viewer,
-            disableOnLock=False,
-        )
-        self._tlButton.pack(side='left')
 
     def _get_icon(self, fileName):
         # Return the icon for the main view.
