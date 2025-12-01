@@ -15,13 +15,10 @@ but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 """
-from pathlib import Path
-
 from tlv.tlv_locale import _
 from nvlib.controller.plugin.plugin_base import PluginBase
 from nvtlview.tlview_help import TlviewHelp
 from nvtlview.tlview_service import TlviewService
-import tkinter as tk
 
 
 class Plugin(PluginBase):
@@ -45,7 +42,7 @@ class Plugin(PluginBase):
         """
         super().install(model, view, controller)
         self.tlviewService = TlviewService(model, view, controller)
-        zimIcon = self._get_icon('tlview.png')
+        self._icon = self._get_icon('tlview.png')
 
         #--- Configure the main menu.
 
@@ -53,7 +50,7 @@ class Plugin(PluginBase):
         label = self.FEATURE
         self._ui.toolsMenu.add_command(
             label=label,
-            image=zimIcon,
+            image=self._icon,
             compound='left',
             command=self.start_viewer,
             state='disabled',
@@ -64,7 +61,7 @@ class Plugin(PluginBase):
         label = _('Timeline view Online help')
         self._ui.helpMenu.add_command(
             label=label,
-            image=zimIcon,
+            image=self._icon,
             compound='left',
             command=self.open_help,
         )
@@ -75,7 +72,7 @@ class Plugin(PluginBase):
         # Put a button on the toolbar.
         self._ui.toolbar.new_button(
             text=self.FEATURE,
-            image=zimIcon,
+            image=self._icon,
             command=self.start_viewer,
             disableOnLock=False,
         ).pack(side='left')
@@ -98,16 +95,3 @@ class Plugin(PluginBase):
     def unlock(self):
         self.tlviewService.unlock()
 
-    def _get_icon(self, fileName):
-        # Return the icon for the main view.
-        if self._ctrl.get_preferences().get('large_icons', False):
-            size = 24
-        else:
-            size = 16
-        try:
-            homeDir = str(Path.home()).replace('\\', '/')
-            iconPath = f'{homeDir}/.novx/icons/{size}'
-            icon = tk.PhotoImage(file=f'{iconPath}/{fileName}')
-        except:
-            icon = None
-        return icon
