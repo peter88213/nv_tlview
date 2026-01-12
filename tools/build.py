@@ -14,7 +14,7 @@ sys.path.insert(0, f'{os.getcwd()}/../../novelibre/tools')
 from package_builder import PackageBuilder
 import inliner
 
-VERSION = '5.9.2'
+VERSION = '5.10.0'
 
 TEMP_FILE = '../test/temp.py'
 

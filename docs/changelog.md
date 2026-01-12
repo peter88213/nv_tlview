@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.10.0
+
+- Refactored the code for better maintainability.
+
+API: 5.50
+Based on novelibre 5.50.0
+
+
 ### Version 5.9.2
 
 - Using the toolbar and menu methods provided with novelibre 5.44.
