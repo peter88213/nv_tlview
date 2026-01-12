@@ -1,7 +1,7 @@
 """A timeline view plugin for novelibre.
 
 Requires Python 3.7+
-Copyright (c) 2025 Peter Triesberger
+Copyright (c) Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
