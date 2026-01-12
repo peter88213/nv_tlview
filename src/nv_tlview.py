@@ -24,7 +24,7 @@ from nvtlview.tlview_service import TlviewService
 class Plugin(PluginBase):
     """Plugin class for the timeline view."""
     VERSION = '@release'
-    API_VERSION = '5.44'
+    API_VERSION = '5.50'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
 
