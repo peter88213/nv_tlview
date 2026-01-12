@@ -17,6 +17,8 @@ import tkinter as tk
 
 
 class TlviewService(SubController):
+    INI_FILENAME = 'tlview.ini'
+    INI_FILEPATH = '.novx/config'
     SETTINGS = dict(
         window_geometry='600x800',
     )
@@ -33,15 +35,15 @@ class TlviewService(SubController):
         #--- Load configuration.
         try:
             homeDir = str(Path.home()).replace('\\', '/')
-            configDir = f'{homeDir}/.novx/config'
+            configDir = f'{homeDir}/{self.INI_FILEPATH}'
         except:
             configDir = '.'
-        self.iniFile = f'{configDir}/tlview.ini'
         self.configuration = self._mdl.nvService.new_configuration(
             settings=self.SETTINGS,
             options=self.OPTIONS,
+            filePath=f'{configDir}/{self.INI_FILENAME}',
         )
-        self.configuration.read(self.iniFile)
+        self.configuration.read()
         self.prefs = {}
         self.prefs.update(self.configuration.settings)
         self.prefs.update(self.configuration.options)
@@ -199,4 +201,4 @@ class TlviewService(SubController):
                 self.configuration.options[keyword] = self.prefs[keyword]
             elif keyword in self.configuration.settings:
                 self.configuration.settings[keyword] = self.prefs[keyword]
-        self.configuration.write(self.iniFile)
+        self.configuration.write()
