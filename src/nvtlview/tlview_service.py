@@ -14,6 +14,7 @@ from nvtlview.tlview_help import TlviewHelp
 from nvtlview.tlview_menu import TlviewMenu
 from nvtlview.tlview_toolbar import TlviewToolbar
 import tkinter as tk
+from tlv.tlv_globals import prefs
 
 
 class TlviewService(SubController):
@@ -21,6 +22,15 @@ class TlviewService(SubController):
     INI_FILEPATH = '.novx/config'
     SETTINGS = dict(
         window_geometry='600x800',
+        color_scale_background='gray25',
+        color_major_scale='white',
+        color_minor_scale='gray60',
+        color_section_background='black',
+        color_section_mark='white',
+        color_section_title='white',
+        color_section_date='gray60',
+        color_indicator='lightblue',
+        color_window_mark='gray40',
     )
     OPTIONS = dict(
         substitute_missing_time=False,
@@ -44,13 +54,12 @@ class TlviewService(SubController):
             filePath=f'{configDir}/{self.INI_FILENAME}',
         )
         self.configuration.read()
-        self.prefs = {}
-        self.prefs.update(self.configuration.settings)
-        self.prefs.update(self.configuration.options)
+        prefs.update(self.configuration.settings)
+        prefs.update(self.configuration.options)
 
     def close_main_window(self, event=None):
         self._mdl.delete_observer(self._tlvCtrl)
-        self.prefs['window_geometry'] = self.mainWindow.winfo_geometry()
+        prefs['window_geometry'] = self.mainWindow.winfo_geometry()
         self._tlvCtrl.on_quit()
         self.mainWindow.destroy()
 
@@ -104,13 +113,13 @@ class TlviewService(SubController):
             return
 
         self.mainWindow = tk.Toplevel()
-        self.mainWindow.geometry(self.prefs['window_geometry'])
+        self.mainWindow.geometry(prefs['window_geometry'])
         self.mainWindow.minsize(400, 200)
         self.mainWindow.title(f'{self._mdl.novel.title} - {windowTitle}')
         set_icon(self.mainWindow, icon='tlview', default=False)
 
         #--- Create the menu.
-        mainMenu = TlviewMenu(self.mainWindow, self.prefs)
+        mainMenu = TlviewMenu(self.mainWindow)
         self.mainWindow.config(menu=mainMenu)
 
         #--- Create the toolbar.
@@ -127,14 +136,14 @@ class TlviewService(SubController):
         self.toolbar.pack(side='bottom', fill='x', padx=5, pady=2)
 
         #--- Create the timeline viewer.
-        self.prefs['localize_date'] = self._ctrl.get_preferences().get(
+        prefs['localize_date'] = self._ctrl.get_preferences().get(
             'localize_date',
             True
         )
         self._tlvCtrl = TlvController(
             self._mdl.novel,
             self.mainWindow,
-            self.prefs,
+            prefs,
             onDoubleClick=self._go_to_selected_section_in_tree,
         )
         if self._ctrl.isLocked:
@@ -144,7 +153,7 @@ class TlviewService(SubController):
         self.mainWindow.lift()
         self.mainWindow.focus()
         self.mainWindow.update_idletasks()
-        self.mainWindow.geometry(self.prefs['window_geometry'])
+        self.mainWindow.geometry(prefs['window_geometry'])
 
         self._tlvCtrl.fit_window()
 
@@ -196,9 +205,9 @@ class TlviewService(SubController):
         TlviewHelp.open_help_page()
 
     def _save_configuration(self):
-        for keyword in self.prefs:
+        for keyword in prefs:
             if keyword in self.configuration.options:
-                self.configuration.options[keyword] = self.prefs[keyword]
+                self.configuration.options[keyword] = prefs[keyword]
             elif keyword in self.configuration.settings:
-                self.configuration.settings[keyword] = self.prefs[keyword]
+                self.configuration.settings[keyword] = prefs[keyword]
         self.configuration.write()

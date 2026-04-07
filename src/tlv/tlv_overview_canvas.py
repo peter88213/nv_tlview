@@ -102,7 +102,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
 
         #--- Draw the section marks.
         for section in srtSections:
-            timestamp, durationSeconds, __, __, __ = section
+            timestamp, durationSeconds, __, __, __, sectionColor = section
             xStart = (timestamp - startTimestamp) / scale
             xEnd = (timestamp - startTimestamp + durationSeconds) / scale
             if xEnd - xStart < self.OV_SC_X_MIN:
@@ -113,6 +113,6 @@ class TlvOverviewCanvas(TlvScaleCanvas):
                 xEnd,
                 self.OV_SC_Y_POS,
                 width=self.OV_SC_THICKNESS,
-                fill=prefs['color_section_mark'],
+                fill=sectionColor,
             )
 

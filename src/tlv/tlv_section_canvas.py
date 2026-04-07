@@ -51,7 +51,14 @@ class TlvSectionCanvas(tk.Canvas):
         yPos = yStart
         labelEnd = 0
         for section in srtSections:
-            timestamp, durationSeconds, title, timeStr, sectionId = section
+            (
+                timestamp,
+                durationSeconds,
+                title,
+                timeStr,
+                sectionId,
+                sectionColor,
+            ) = section
             xStart = (timestamp - startTimestamp) / scale
 
             # Cascade sections.
@@ -68,8 +75,8 @@ class TlvSectionCanvas(tk.Canvas):
                 (xEnd, yPos + self.SC_MARK_HALF),
                 (xEnd + self.SC_MARK_HALF, yPos),
                 (xEnd, yPos - self.SC_MARK_HALF),
-                fill=prefs['color_section_mark'],
-                tags=sectionId
+                fill=sectionColor,
+                tags=sectionId,
             )
             self.tag_bind(
                 sectionMark,

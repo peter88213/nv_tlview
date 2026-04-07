@@ -6,13 +6,13 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tlv.tlv_locale import _
 import tkinter as tk
+from tlv.tlv_globals import prefs
 
 
 class TlviewMenu(tk.Menu):
 
-    def __init__(self, master, settings, cnf={}, **kw):
+    def __init__(self, master, cnf={}, **kw):
         super().__init__(master=master, cnf=cnf, **kw)
-        self.settings = settings
 
         # "Go to" menu.
         self.goMenu = tk.Menu(self, tearoff=0)
@@ -71,7 +71,7 @@ class TlviewMenu(tk.Menu):
         self.add_cascade(label=_('Options'), menu=self.optionsMenu)
 
         self._substituteMissingTime = tk.BooleanVar(
-            value=self.settings['substitute_missing_time'],
+            value=prefs['substitute_missing_time'],
         )
         self.optionsMenu.add_checkbutton(
             label=_('Use 00:00 for missing times'),
@@ -95,7 +95,7 @@ class TlviewMenu(tk.Menu):
         return callback
 
     def _change_substitution_mode(self):
-        self.settings['substitute_missing_time'] = (
+        prefs['substitute_missing_time'] = (
             self._substituteMissingTime.get()
         )
         root = self.master.winfo_toplevel()

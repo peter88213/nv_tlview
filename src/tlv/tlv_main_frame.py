@@ -15,6 +15,7 @@ from tlv.platform.platform_settings import PLATFORM
 from tlv.tlv_globals import DAY
 from tlv.tlv_globals import HOUR
 from tlv.tlv_globals import YEAR
+from tlv.tlv_globals import prefs
 from tlv.tlv_helper import get_duration_str
 from tlv.tlv_helper import get_seconds
 from tlv.tlv_helper import get_specific_date
@@ -312,6 +313,7 @@ class TlvMainFrame(ttk.Frame):
                 else:
                     continue
 
+                sectionColor = section.color or prefs['color_section_mark']
                 srtSections.append(
                     (
                         get_timestamp(dt),
@@ -323,6 +325,7 @@ class TlvMainFrame(ttk.Frame):
                         section.title,
                         timeStr,
                         scId,
+                        sectionColor,
                     )
                 )
             except:

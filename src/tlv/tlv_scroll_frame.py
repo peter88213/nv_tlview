@@ -116,20 +116,20 @@ class TlvScrollFrame(ttk.Frame):
             scale,
             specificDate,
             referenceDate,
-            )
+        )
         self._sectionCanvas.draw(
             startTimestamp,
             scale,
             srtSections,
             minDist,
-            )
+        )
         self._ovCanvas.draw(
             startTimestamp,
             scale,
             specificDate,
             referenceDate,
             srtSections,
-            )
+        )
 
     def get_canvas(self):
         return self._sectionCanvas
