@@ -4,9 +4,9 @@ Copyright (c) Peter Triesberger
 For further information see https://github.com/peter88213/nv_tlview
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
-from tlv.tlv_locale import _
 import tkinter as tk
 from tlv.tlv_globals import prefs
+from tlv.tlv_locale import _
 
 
 class TlviewMenu(tk.Menu):
@@ -70,14 +70,26 @@ class TlviewMenu(tk.Menu):
         self.optionsMenu = tk.Menu(self, tearoff=0)
         self.add_cascade(label=_('Options'), menu=self.optionsMenu)
 
-        self._substituteMissingTime = tk.BooleanVar(
+        # Substitute missing time checkbutton.
+        self._substituteMissingTimeVar = tk.BooleanVar(
             value=prefs['substitute_missing_time'],
         )
         self.optionsMenu.add_checkbutton(
             label=_('Use 00:00 for missing times'),
-            variable=self._substituteMissingTime,
+            variable=self._substituteMissingTimeVar,
             command=self._change_substitution_mode,
         )
+
+        # Dark mode checkbutton.
+        self._darkModeVar = tk.BooleanVar(
+            value=prefs['dark_mode'],
+        )
+        self.optionsMenu.add_checkbutton(
+            label=_('Dark mode'),
+            variable=self._darkModeVar,
+            command=self._change_color_mode,
+        )
+
         # "Help" menu.
         self.helpMenu = tk.Menu(self, tearoff=0)
         self.add_cascade(label=_('Help'), menu=self.helpMenu)
@@ -94,9 +106,33 @@ class TlviewMenu(tk.Menu):
 
         return callback
 
+    def _change_color_mode(self):
+        prefs['dark_mode'] = self._darkModeVar.get()
+        if prefs['dark_mode']:
+            prefs['color_section_background'] = 'black'
+            prefs['color_section_mark'] = 'white'
+            prefs['color_section_title'] = 'white'
+            prefs['color_scale_background'] = 'gray25'
+            prefs['color_minor_scale'] = 'gray60'
+            prefs['color_major_scale'] = 'white'
+            prefs['color_section_date'] = 'gray60'
+            prefs['color_window_mark'] = 'gray40'
+
+        else:
+            prefs['color_section_background'] = 'white'
+            prefs['color_section_mark'] = 'black'
+            prefs['color_section_title'] = 'black'
+            prefs['color_scale_background'] = 'gray85'
+            prefs['color_minor_scale'] = 'gray50'
+            prefs['color_major_scale'] = 'black'
+            prefs['color_section_date'] = 'gray20'
+            prefs['color_window_mark'] = 'gray95'
+        root = self.master.winfo_toplevel()
+        root.event_generate('<<refresh_view>>')
+
     def _change_substitution_mode(self):
         prefs['substitute_missing_time'] = (
-            self._substituteMissingTime.get()
+            self._substituteMissingTimeVar.get()
         )
         root = self.master.winfo_toplevel()
         root.event_generate('<<refresh_view>>')

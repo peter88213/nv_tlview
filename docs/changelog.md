@@ -5,6 +5,15 @@
 ## Changelog
 
 
+### Version 5.11.0
+
+- Displaying the section colors.
+- Offering dark mode/bright mode.
+
+API: 5.55
+Based on novelibre 5.55.9
+
+
 ### Version 5.10.0
 
 - Refactored the code for better maintainability.

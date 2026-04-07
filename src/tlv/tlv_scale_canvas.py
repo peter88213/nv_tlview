@@ -31,11 +31,18 @@ class TlvScaleCanvas(tk.Canvas):
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._tlvCtrl = tlvController
-        self['background'] = prefs['color_scale_background']
         self.majorSpacing = None
         self.minorSpacing = None
 
-    def draw(self, startTimestamp, scale, specificDate, refIso):
+    def draw(
+        self,
+        startTimestamp,
+        scale,
+        specificDate,
+        refIso,
+        background,
+    ):
+        self['background'] = background
         self.delete("all")
         if not specificDate:
             if refIso is None:

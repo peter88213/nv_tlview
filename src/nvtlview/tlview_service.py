@@ -34,6 +34,7 @@ class TlviewService(SubController):
     )
     OPTIONS = dict(
         substitute_missing_time=False,
+        dark_mode=True,
     )
 
     def __init__(self, model, view, controller):

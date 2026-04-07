@@ -26,7 +26,6 @@ class TlvSectionCanvas(tk.Canvas):
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(master, cnf={}, **kw)
         self._tlvCtrl = tlvController
-        self['background'] = prefs['color_section_background']
         self.yMax = 0
 
         # Variables for mouse drag operations.
@@ -43,7 +42,14 @@ class TlvSectionCanvas(tk.Canvas):
         self.delete(self._indicator)
         self.delete(self._indicatorText)
 
-    def draw(self, startTimestamp, scale, srtSections, minDist):
+    def draw(
+        self,
+        startTimestamp,
+        scale, srtSections,
+        minDist,
+        background,
+    ):
+        self['background'] = background
         self.delete("all")
         self.yMax = (len(srtSections) + 2) * self.SC_EVENT_DIST_Y
         yStart = self.SC_EVENT_DIST_Y

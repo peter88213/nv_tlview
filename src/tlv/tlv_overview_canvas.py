@@ -35,7 +35,16 @@ class TlvOverviewCanvas(TlvScaleCanvas):
     def __init__(self, tlvController, master=None, **kw):
         super().__init__(tlvController, master, **kw)
 
-    def draw(self, startTimestamp, scale, specificDate, refIso, srtSections):
+    def draw(
+        self,
+        startTimestamp,
+        scale,
+        specificDate,
+        refIso,
+        srtSections,
+        background,
+    ):
+        self['background'] = background
         self.delete("all")
         if not specificDate:
             if refIso is None:
