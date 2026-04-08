@@ -125,7 +125,7 @@ class TlviewMenu(tk.Menu):
             prefs['color_scale_background'] = 'gray85'
             prefs['color_minor_scale'] = 'gray50'
             prefs['color_major_scale'] = 'black'
-            prefs['color_section_date'] = 'gray20'
+            prefs['color_section_date'] = 'gray60'
             prefs['color_window_mark'] = 'gray95'
         root = self.master.winfo_toplevel()
         root.event_generate('<<refresh_view>>')

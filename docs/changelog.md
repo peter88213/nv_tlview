@@ -5,7 +5,7 @@
 ## Changelog
 
 
-### Version 5.11.2
+### Version 5.11.3
 
 - Displaying the section colors.
 - Offering dark mode/bright mode.
