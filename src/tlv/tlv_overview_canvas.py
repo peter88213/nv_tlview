@@ -61,6 +61,7 @@ class TlvOverviewCanvas(TlvScaleCanvas):
             windowMarkStart + windowMarkWidth,
             self.CANVAS_HEIGHT,
             fill=prefs['color_window_mark'],
+            width=0,
         )
 
         #--- Draw the overview scale.
