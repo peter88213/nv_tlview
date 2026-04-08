@@ -7,6 +7,7 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 from datetime import datetime
 
+from tlv.tlv_globals import prefs
 from tlv.tlv_helper import from_timestamp
 from tlv.tlv_helper import get_duration
 from tlv.tlv_helper import get_seconds
@@ -20,18 +21,17 @@ from tlv.tlv_section_canvas import TlvSectionCanvas
 
 class TlvController(TlvPublicApi):
 
-    def __init__(self, model, window, settings, onDoubleClick=None):
+    def __init__(self, model, window, onDoubleClick=None):
         """Initialize the timeline viewer.
         
         Positional arguments: 
             model - Reference to the data model.
             window - Parent window for the view.
-            settings - Dictionary with optional settings. 
             
         Optional arguments:
             onDoubleClick - Callback for double-clicking a section.
         
-        Optional members in the "settings" dictionary:
+        Optional members in the "prefs" dictionary:
             substitute_missing_time: Boolean  
                 - If True, use "00:00" for sections without time.
                 - If False, do not display sections without time. 
@@ -40,14 +40,12 @@ class TlvController(TlvPublicApi):
                 - If False, display dates in ISO-format.
         """
         self._dataModel = model
-        self.settings = settings
 
         # Create the view component.
         self.view = TlvMainFrame(
             self._dataModel,
             window,
             self,
-            settings,
         )
         self.isOpen = True
         self.firstTimestamp = None
@@ -65,7 +63,7 @@ class TlvController(TlvPublicApi):
         
         Otherwise return the ISO date string.
         """
-        if self.settings.get('localize_date', True):
+        if prefs.get('localize_date', True):
             return dt.strftime("%x")
         else:
             return dt.isoformat().split('T')[0]
@@ -81,7 +79,7 @@ class TlvController(TlvPublicApi):
         try:
             refIso = self._dataModel.referenceDate
             if section.time is None:
-                if not self.settings.get('substitute_missing_time', False):
+                if not prefs.get('substitute_missing_time', False):
                     return
 
                 scTime = '00:00'

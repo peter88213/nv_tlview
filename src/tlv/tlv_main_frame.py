@@ -44,7 +44,7 @@ class TlvMainFrame(ttk.Frame):
     SCALE_MIN = 10
     SCALE_MAX = YEAR * 5
 
-    def __init__(self, model, master, tlvController, settings):
+    def __init__(self, model, master, tlvController):
         ttk.Frame.__init__(self, master)
 
         self._dataModel = model
@@ -74,8 +74,6 @@ class TlvMainFrame(ttk.Frame):
         self.tlFrame.pack(side='top', fill='both', expand=True)
 
         #--- Settings and options.
-        self.settings = settings
-
         self._bind_events()
         self.sort_sections()
 
@@ -275,7 +273,7 @@ class TlvMainFrame(ttk.Frame):
                 )
                 refIso = self._dataModel.referenceDate
                 if section.time is None:
-                    if not self.settings.get(
+                    if not prefs.get(
                         'substitute_missing_time',
                         False
                     ):

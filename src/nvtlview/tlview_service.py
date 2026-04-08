@@ -144,7 +144,6 @@ class TlviewService(SubController):
         self._tlvCtrl = TlvController(
             self._mdl.novel,
             self.mainWindow,
-            prefs,
             onDoubleClick=self._go_to_selected_section_in_tree,
         )
         if self._ctrl.isLocked:
