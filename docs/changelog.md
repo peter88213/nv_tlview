@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.11.4
+
+- Adapting the selection indicator to the color mode.
+
+API: 5.55
+Based on novelibre 5.57.0
+
+
 ### Version 5.11.3
 
 - Displaying the section colors.
