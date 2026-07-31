@@ -31,7 +31,7 @@ class Plugin(PluginBase):
     FEATURE = _('Timeline view')
 
     def install(self, model, view, controller):
-        """Install the plugin.
+        """Install the plugin at runtime.
         
         Positional arguments:
             model -- reference to the novelibre main model instance.
