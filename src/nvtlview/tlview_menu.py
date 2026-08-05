@@ -91,10 +91,8 @@ class TlviewMenu(tk.Menu):
         )
 
         # "Help" menu.
-        self.helpMenu = tk.Menu(self, tearoff=0)
-        self.add_cascade(label=_('Help'), menu=self.helpMenu)
-        self.helpMenu.add_command(
-            label=_('Online help'),
+        self.add_command(
+            label=_('Help'),
             command=self._event('<<open_help>>'),
         )
 

@@ -17,16 +17,17 @@ GNU General Public License for more details.
 """
 from tlv.tlv_locale import _
 from nvlib.controller.plugin.plugin_base import PluginBase
-from nvtlview.tlview_help import TlviewHelp
+from nvtlview.tlview_globals import HELP_PAGE
 from nvtlview.tlview_service import TlviewService
 
 
 class Plugin(PluginBase):
     """Plugin class for the timeline view."""
     VERSION = '@release'
-    API_VERSION = '5.55'
+    API_VERSION = '5.63'
     DESCRIPTION = 'A timeline view'
     URL = 'https://github.com/peter88213/nv_tlview'
+    HELP_PAGE = HELP_PAGE
 
     FEATURE = _('Timeline view')
 
@@ -44,7 +45,10 @@ class Plugin(PluginBase):
         self.tlviewService = TlviewService(model, view, controller)
         self._icon = self._get_icon('tlview.png')
 
-        #--- Configure the main menu.
+        #--- Configure the user interface.
+
+        def start_viewer():
+            self.tlviewService.start_viewer(self.FEATURE)
 
         # Add an entry to the Tools menu.
         label = self.FEATURE
@@ -52,28 +56,19 @@ class Plugin(PluginBase):
             label=label,
             image=self._icon,
             compound='left',
-            command=self.start_viewer,
+            command=start_viewer,
             state='disabled',
         )
         self._ui.toolsMenu.disableOnClose.append(label)
 
-        # Add an entry to the Help menu.
-        label = _('Timeline view Online help')
-        self._ui.helpMenu.add_command(
-            label=label,
-            image=self._icon,
-            compound='left',
-            command=self.open_help,
-        )
-
-        #--- Configure the toolbar.
-        self._ui.toolbar.add_separator(),
+        self._add_help_menu_entry(_('Timeline view plugin help'))
 
         # Put a button on the toolbar.
+        self._ui.toolbar.add_separator(),
         self._ui.toolbar.new_button(
             text=self.FEATURE,
             image=self._icon,
-            command=self.start_viewer,
+            command=start_viewer,
             disableOnLock=False,
         ).pack(side='left')
 
@@ -85,12 +80,6 @@ class Plugin(PluginBase):
 
     def on_quit(self):
         self.tlviewService.on_quit()
-
-    def open_help(self, event=None):
-        TlviewHelp.open_help_page()
-
-    def start_viewer(self):
-        self.tlviewService.start_viewer(self.FEATURE)
 
     def unlock(self):
         self.tlviewService.unlock()

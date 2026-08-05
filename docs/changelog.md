@@ -5,6 +5,15 @@
 ## Changelog
 
 
+### Version 5.12.0
+
+- Using the novelibre 5.63+ help service.
+- Refactored the code
+
+API: 5.63
+Based on novelibre 5.63.1
+
+
 ### Version 5.11.4
 
 - Adapting the selection indicator to the color mode.

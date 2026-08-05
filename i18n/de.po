@@ -3,9 +3,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.11.4\n"
+"Project-Id-Version: 5.12.0\n"
 "POT-Creation-Date: 2025-09-04 13:03:01\n"
-"PO-Revision-Date: 2026-05-28 11:47:39\n"
+"PO-Revision-Date: 2026-08-05 16:21:37\n"
 "Last-Translator: Peter Triesberger\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -88,9 +88,6 @@ msgstr "Hauptfigur"
 msgid "Minor Character"
 msgstr "Nebenfigur"
 
-msgid "Online help"
-msgstr "Online-Hilfe"
-
 msgid "Opening"
 msgstr "Eröffnung"
 
@@ -145,8 +142,8 @@ msgstr "Dicht"
 msgid "Timeline view"
 msgstr "Zeitleistenansicht"
 
-msgid "Timeline view Online help"
-msgstr "Zeitleistenansicht Online-Hilfe"
+msgid "Timeline view plugin help"
+msgstr "Zeitleistenansicht-Plugin Hilfe"
 
 msgid "Undo"
 msgstr "Rückgängig"
@@ -165,9 +162,6 @@ msgstr "d"
 
 msgid "h"
 msgstr "h"
-
-msgid "https://peter88213.github.io/nvhelp-en"
-msgstr "https://peter88213.github.io/nvhelp-de"
 
 msgid "m"
 msgstr "m"

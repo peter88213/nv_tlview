@@ -9,11 +9,11 @@ from pathlib import Path
 from nvlib.controller.sub_controller import SubController
 from nvlib.gui.set_icon_tk import set_icon
 from nvlib.novx_globals import SECTION_PREFIX
-from tlv.tlv_controller import TlvController
-from nvtlview.tlview_help import TlviewHelp
+from nvtlview.tlview_globals import HELP_PAGE
 from nvtlview.tlview_menu import TlviewMenu
 from nvtlview.tlview_toolbar import TlviewToolbar
 import tkinter as tk
+from tlv.tlv_controller import TlvController
 from tlv.tlv_globals import prefs
 
 
@@ -202,7 +202,7 @@ class TlviewService(SubController):
         self._ui.tv.go_to_node(scId)
 
     def _open_help(self, event=None):
-        TlviewHelp.open_help_page()
+        self._ctrl.helpService.open_help_page(HELP_PAGE)
 
     def _save_configuration(self):
         for keyword in prefs:

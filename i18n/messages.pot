@@ -3,8 +3,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: 5.11.4\n"
-"POT-Creation-Date: 2026-05-28 11:47:39\n"
+"Project-Id-Version: 5.12.0\n"
+"POT-Creation-Date: 2026-08-05 16:21:37\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: LANGUAGE\n"
@@ -89,9 +89,6 @@ msgstr ""
 msgid "Minor Character"
 msgstr ""
 
-msgid "Online help"
-msgstr ""
-
 msgid "Opening"
 msgstr ""
 
@@ -146,7 +143,7 @@ msgstr ""
 msgid "Timeline view"
 msgstr ""
 
-msgid "Timeline view Online help"
+msgid "Timeline view plugin help"
 msgstr ""
 
 msgid "Undo"
@@ -165,9 +162,6 @@ msgid "d"
 msgstr ""
 
 msgid "h"
-msgstr ""
-
-msgid "https://peter88213.github.io/nvhelp-en"
 msgstr ""
 
 msgid "m"
