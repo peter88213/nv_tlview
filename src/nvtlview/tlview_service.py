@@ -202,7 +202,7 @@ class TlviewService(SubController):
         self._ui.tv.go_to_node(scId)
 
     def _open_help(self, event=None):
-        self._ctrl.helpService.open_help_page(HELP_PAGE)
+        self._ctrl.open_help(page=HELP_PAGE)
 
     def _save_configuration(self):
         for keyword in prefs:
