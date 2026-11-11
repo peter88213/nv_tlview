@@ -11,10 +11,10 @@ import tkinter as tk
 from tlv.tlv_locale import _
 
 
-class TlviewToolbar(ttk.Frame):
+class TlviewToolbar(tk.Frame):
 
     def __init__(self, master, largeIcons, Hovertip):
-        ttk.Frame.__init__(self, master)
+        super().__init__(master)
 
         # Prepare the toolbar icons.
         if largeIcons:
@@ -49,9 +49,12 @@ class TlviewToolbar(ttk.Frame):
             except:
                 self._toolbarIcons[icon] = None
 
+        buttonsFrame = ttk.Frame(self)
+        buttonsFrame.pack(padx=5, pady=5, side='left')
+
         # Moving the x position.
         rewindLeftButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Page back'),
             image=self._toolbarIcons['rewindLeft'],
             command=self._event('<<page_back>>'),
@@ -60,7 +63,7 @@ class TlviewToolbar(ttk.Frame):
         rewindLeftButton.image = self._toolbarIcons['rewindLeft']
 
         arrowLeftButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Scroll back'),
             image=self._toolbarIcons['arrowLeft'],
             command=self._event('<<scroll_back>>'),
@@ -69,7 +72,7 @@ class TlviewToolbar(ttk.Frame):
         arrowLeftButton.image = self._toolbarIcons['arrowLeft']
 
         goToFirstButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('First event'),
             image=self._toolbarIcons['goToFirst'],
             command=self._event('<<go_to_first>>'),
@@ -78,7 +81,7 @@ class TlviewToolbar(ttk.Frame):
         goToFirstButton.image = self._toolbarIcons['goToFirst']
 
         goToSelectedButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Selected section'),
             image=self._toolbarIcons['goToSelected'],
             command=self._event('<<go_to_selected>>'),
@@ -87,7 +90,7 @@ class TlviewToolbar(ttk.Frame):
         goToSelectedButton.image = self._toolbarIcons['goToSelected']
 
         goToLastButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Last event'),
             image=self._toolbarIcons['goToLast'],
             command=self._event('<<go_to_last>>'),
@@ -96,7 +99,7 @@ class TlviewToolbar(ttk.Frame):
         goToLastButton.image = self._toolbarIcons['goToLast']
 
         arrowRightButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Scroll forward'),
             image=self._toolbarIcons['arrowRight'],
             command=self._event('<<scroll_forward>>'),
@@ -105,7 +108,7 @@ class TlviewToolbar(ttk.Frame):
         arrowRightButton.image = self._toolbarIcons['arrowRight']
 
         rewindRightButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Page forward'),
             image=self._toolbarIcons['rewindRight'],
             command=self._event('<<page_forward>>'),
@@ -113,16 +116,11 @@ class TlviewToolbar(ttk.Frame):
         rewindRightButton.pack(side='left')
         rewindRightButton.image = self._toolbarIcons['rewindRight']
 
-        # Separator.
-        tk.Frame(self, bg='light gray', width=1).pack(
-            side='left',
-            fill='y',
-            padx=6,
-        )
+        ttk.Separator(buttonsFrame, orient='vertical').pack(side='left', padx=6, fill='y')
 
         # Changing the scale.
         arrowDownButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Reduce scale'),
             image=self._toolbarIcons['arrowDown'],
             command=self._event('<<reduce_scale>>'),
@@ -131,7 +129,7 @@ class TlviewToolbar(ttk.Frame):
         arrowDownButton.image = self._toolbarIcons['arrowDown']
 
         fitToWindowButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Fit to window'),
             image=self._toolbarIcons['fitToWindow'],
             command=self._event('<<fit_window>>'),
@@ -140,7 +138,7 @@ class TlviewToolbar(ttk.Frame):
         fitToWindowButton.image = self._toolbarIcons['fitToWindow']
 
         arrowUpButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Increase scale'),
             image=self._toolbarIcons['arrowUp'],
             command=self._event('<<increase_scale>>'),
@@ -148,15 +146,10 @@ class TlviewToolbar(ttk.Frame):
         arrowUpButton.pack(side='left')
         arrowUpButton.image = self._toolbarIcons['arrowUp']
 
-        # Separator.
-        tk.Frame(self, bg='light gray', width=1).pack(
-            side='left',
-            fill='y',
-            padx=6,
-        )
+        ttk.Separator(buttonsFrame, orient='vertical').pack(side='left', padx=6, fill='y')
 
         self.undoButton = ttk.Button(
-            self,
+            buttonsFrame,
             text=_('Undo'),
             image=self._toolbarIcons['undo'],
             command=self._event('<<undo>>'),
@@ -170,7 +163,7 @@ class TlviewToolbar(ttk.Frame):
             self,
             text=_('Close'),
             command=self._event('<<close_view>>'),
-        ).pack(side='right')
+        ).pack(padx=5, pady=5, side='right')
 
         # Initialize tooltips.
         if Hovertip is None:
