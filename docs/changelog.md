@@ -5,6 +5,16 @@
 ## Changelog
 
 
+### Version 5.12.2
+
+- Improved the display in dark mode. 
+    - Redesigned the toolbar.
+    - Made the button icons' background white instead of transparent.
+
+API: 5.63
+Based on novelibre 5.67.4
+
+
 ### Version 5.12.1
 
 - Using the novelibre 5.63+ help service.
