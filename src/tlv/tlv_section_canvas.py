@@ -39,8 +39,11 @@ class TlvSectionCanvas(tk.Canvas):
         self.bind_all('<Escape>', self._on_escape)
 
     def delete_indicator(self):
-        self.delete(self._indicator)
-        self.delete(self._indicatorText)
+        try:
+            self.delete(self._indicator)
+            self.delete(self._indicatorText)
+        except:
+            pass
 
     def draw(
         self,
