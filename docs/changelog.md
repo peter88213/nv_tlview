@@ -5,6 +5,14 @@
 ## Changelog
 
 
+### Version 5.12.3
+
+- Handling a TclError that might occur due to ESC button binding.
+
+API: 5.63
+Based on novelibre 5.68.1
+
+
 ### Version 5.12.2
 
 - Improved the display in dark mode. 
